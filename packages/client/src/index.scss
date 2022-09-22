@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+
+.main{
+  @apply grid grid-cols-4 gap-10;
+}
+
+.main-friendlist{
+  @apply col-span-1 bg-black;
+}
+
+.main-content{
+  @apply col-span-3 bg-white;
+}
