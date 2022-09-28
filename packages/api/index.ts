@@ -36,6 +36,7 @@ app.use(passport.session());
 require("./src/middleware/passport")(passport);
 //Routes
 require("./src/routes/auth.route")(app);
+require("./src/routes/user.route")(app);
 //Routes
 
 app.get("/", (req, res) => {

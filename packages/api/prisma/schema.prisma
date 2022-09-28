@@ -11,16 +11,17 @@ datasource db {
 }
 
 model Users {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  firstName         String
-  lastName          String
-  birthday          DateTime  @default(now())
-  email             String    @unique
-  password          String
-  friendList        String[]
-  friendRequestList String[]
-  chats             Inboxes[] @relation(fields: [chatIds], references: [id])
-  chatIds           String[]  @db.ObjectId
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstName            String
+  lastName             String
+  birthday             DateTime  @default(now())
+  email                String    @unique
+  password             String
+  friendList           String[]
+  friendRequestList    String[]
+  pendingFriendRequest String[]
+  chats                Inboxes[] @relation(fields: [chatIds], references: [id])
+  chatIds              String[]  @db.ObjectId
 }
 
 model Inboxes {
