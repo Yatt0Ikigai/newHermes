@@ -64,6 +64,8 @@ export const sendFriendRequestController = async ({ friendId, selfId }: { friend
 
 export const userAcceptFriendRequestController = async ({ userId, selfId }: { userId: string, selfId: string }) => {
     if (selfId === userId) throw new Error("Cant accept yourself to friendlist");
+    console.log("START")
+    console.log(userId,selfId)
     const user = await prisma.users.findFirst({
         where: {
             id: userId
@@ -75,11 +77,14 @@ export const userAcceptFriendRequestController = async ({ userId, selfId }: { us
             id: selfId
         }
     })
+
     if (!user) throw new Error("User doesnt exist");
     if (!user.pendingFriendRequest.includes(selfId)) throw new Error("Cant accept nonexistent request");
 
     const newUserPendingFriendRequest = user.pendingFriendRequest.filter((id: string) => { return id != selfId })
     const newSelfFriendRequest = self.friendRequestList.filter((id: string) => { return id != userId })
+    console.log("HALF DONE")
+
 
     await updateUser({ id: userId }, {
         pendingFriendRequest: newUserPendingFriendRequest,
@@ -94,7 +99,7 @@ export const userAcceptFriendRequestController = async ({ userId, selfId }: { us
             push: userId
         }
     })
-
+    console.log("DONE")
     return true;
 }
 
@@ -144,12 +149,8 @@ export const userUnfirendUserController = async ({ userId, selfId }: { userId: s
         }
     })
 
-    console.log(userId, selfId)
-
     if (!user) throw new Error("User doesnt exist");
     if (!user.friendList.includes(selfId)) throw new Error("Cant decline nonexistent request");
-
-    console.log("Deleting friend 2");
 
     const newUserFriendList = user.friendList.filter((id: string) => { return id != selfId })
     const newSelfFriendList = self.friendList.filter((id: string) => { return id != userId })
@@ -236,6 +237,7 @@ export const userGetInfoController = async ({ selfId }: { selfId: string }) => {
             chatIds: true,
         },
     })
+
     return user;
 }
 

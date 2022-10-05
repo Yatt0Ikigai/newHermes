@@ -5,8 +5,12 @@ import { getRequest, postRequest } from "./utils/axios.util";
 const authStore = create<IauthStore>()(
     devtools(
         (set) => ({
-            userStatus: { logged: false, loading: true, error: null },
+            userStatus: { logged: false, loading: false, error: null },
             authIsLogged: async () => {
+                set((state) => ({
+                   ...state,
+                   userStatus: { logged: false, loading: true, error: null}, 
+                }))
                 const res = await getRequest("is-logged");
                 if (res.status === 200) set({ userStatus: { logged: true, loading: false, error: null } });
                 else if (res.status === 290) set({ userStatus: { logged: false, loading: false, error: null } });

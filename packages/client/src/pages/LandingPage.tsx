@@ -9,7 +9,8 @@ import userStore from '../userStore';
 import AddFriendsModal from "../components/AddFriendModal";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import FriendRequestListModal from "../components/FriendRequestListModal"
+import FriendRequestListModal from "../components/FriendRequestListModal";
+import LoadingSpinner from "../components/LoadingSpinner";
 interface chat {
   participants: String[]
   lastMessage: String
@@ -28,30 +29,30 @@ export default function LoginPage() {
 
   useEffect(() => {
     storeAuth.authIsLogged();
-  },[])
+  }, [])
 
   useEffect(() => {
-    if(storeAuth.userStatus.logged) storeUser.getUserInfo();
-  },[storeAuth.userStatus.logged])
+    if (storeAuth.userStatus.logged) storeUser.getUserInfo();
+  }, [storeAuth.userStatus.logged])
 
-  if(storeAuth.userStatus.loading){
-    return(
-      <div>
-        LOADING....
+  if (storeAuth.userStatus.loading || storeUser.status.loading) {
+    return (
+      <div className="w-screen h-screen flex justify-center items-center">
+        <LoadingSpinner />
       </div>
     )
   }
 
-  if (storeAuth.userStatus.logged && !storeUser.status.loading ) {
+  if (storeAuth.userStatus.logged && !storeUser.status.loading) {
     return (
       <div className='h-screen flex flex-col'>
-        <AddFriendsModal/>
-        <FriendRequestListModal/>
-        <Navbar/>
+        <AddFriendsModal />
+        <FriendRequestListModal />
+        <Navbar />
         <div className='grow main relative'>
-          <Sidebar friendList={[{firstName: "", lastName: "", id: ""}]}/>
+          <Sidebar/>
           <div className='main-content h-full'>
-
+            
           </div>
         </div>
       </div>
@@ -167,7 +168,7 @@ export default function LoginPage() {
                   <button className="btn btn-primary" onClick={(e) => {
                     e.preventDefault();
                     if (userEmail && userFirstName && userLastName && (userPassword === userConfirmPassword) && userPassword)
-                    storeAuth.authRegister(userFirstName, userLastName, userEmail, userPassword);
+                      storeAuth.authRegister(userFirstName, userLastName, userEmail, userPassword);
                     else alert("Make sure u filled all forms correct");
                   }}>Register</button>
                 </div>

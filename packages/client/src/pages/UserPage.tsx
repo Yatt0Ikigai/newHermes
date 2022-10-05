@@ -4,6 +4,7 @@ import { getRequest, postRequest } from "../utils/axios.util";
 
 import lStore from "../loginStore";
 import uStore from '../userStore';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function UserPage() {
     const { userId } = useParams();
@@ -40,6 +41,8 @@ export default function UserPage() {
     useEffect(() => {
         console.log(userInfo.friend, userInfo.friendRequest, userInfo.sentFriendRequest)
     }, [userInfo])
+
+    if (loading) return <LoadingSpinner />
     return (
         <div className="container bg-gray-300 h-full rounded-xl grid items-center grid-cols-2">
             <div>
@@ -70,16 +73,12 @@ export default function UserPage() {
                                 <button className="btn btn-success" onClick={(e) => {
                                     if (userId) userStore.acceptFriendRequest(
                                         userId,
-                                        userInfo.firstName,
-                                        userInfo.lastName,
                                     );
                                     setUserInfo({ ...userInfo, friend: true, friendRequest: false })
                                 }}>Accept</button>
                                 <button className="btn btn-error" onClick={(e) => {
                                     if (userId) userStore.declineFriendRequest(
                                         userId,
-                                        userInfo.firstName,
-                                        userInfo.lastName,
                                     );
                                     setUserInfo({ ...userInfo, friend: false, friendRequest: false })
                                 }}>Decline</button>
@@ -89,9 +88,8 @@ export default function UserPage() {
                             userInfo.sentFriendRequest &&
                             <button className="btn btn-warning" onClick={(e) => {
                                 if (userId) userStore.cancelFriendRequest(
-                                    userId,
-                                    userInfo.firstName,
-                                    userInfo.lastName,);
+                                    userId
+                                );
                                 setUserInfo({ ...userInfo, sentFriendRequest: false })
                             }}>Decline</button>
                         }
@@ -99,9 +97,7 @@ export default function UserPage() {
                             !userInfo.sentFriendRequest && !userInfo.friendRequest && !userInfo.friend &&
                             <button className="btn btn-info" onClick={(e) => {
                                 if (userId) userStore.sendFriendRequest(
-                                    userId,
-                                    userInfo.firstName,
-                                    userInfo.lastName,
+                                    userId
                                 );
                                 setUserInfo({ ...userInfo, sentFriendRequest: true })
                             }}>Invite User</button>

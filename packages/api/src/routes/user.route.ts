@@ -82,9 +82,7 @@ module.exports = function (app: express.Application) {
         try {
             if (req.isAuthenticated()) {
                 const user = await userGetInfoController({ selfId: req.user.id })
-                res.status(200).json({
-                    user
-                })
+                res.status(200).json(user)
             } else {
                 res.status(401).json({
                     message: "User not authenticated"
