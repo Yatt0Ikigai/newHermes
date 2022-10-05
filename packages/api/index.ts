@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(cors({
   origin: [true, "http://localhost:3000"],
   credentials: true,
-  methods: ['POST', "GET"]
+  methods: ['POST', "GET", "DELETE"]
 }));
 app.use(session({
   secret: process.env.SECRET as string,

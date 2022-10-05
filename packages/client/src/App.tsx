@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage";
+import ProfilePage from "./pages/UserPage";
 
 import "./index.scss";
 
@@ -14,6 +15,7 @@ const App = () => (
   <BrowserRouter>
   <Routes>
     <Route path="/" element={<LandingPage />} />
+    <Route path="/user/:userId" element={<ProfilePage />} />
   </Routes>
 </BrowserRouter>
 );

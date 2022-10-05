@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import authStore from "../loginStore";
+import userStore from '../userStore';
 
 //comontents
 import AddFriendsModal from "../components/AddFriendModal";
@@ -22,9 +23,26 @@ export default function LoginPage() {
   const [userLastName, setUserLastName] = useState("")
   const [signIn, setSignIn] = useState(true);
   const [chats, setChats] = useState<chat[]>([]);
-  const store = authStore();
+  const storeAuth = authStore();
+  const storeUser = userStore();
 
-  if (store.isLogged) {
+  useEffect(() => {
+    storeAuth.authIsLogged();
+  },[])
+
+  useEffect(() => {
+    if(storeAuth.userStatus.logged) storeUser.getUserInfo();
+  },[storeAuth.userStatus.logged])
+
+  if(storeAuth.userStatus.loading){
+    return(
+      <div>
+        LOADING....
+      </div>
+    )
+  }
+
+  if (storeAuth.userStatus.logged && !storeUser.status.loading ) {
     return (
       <div className='h-screen flex flex-col'>
         <AddFriendsModal/>
@@ -39,6 +57,7 @@ export default function LoginPage() {
       </div>
     )
   }
+
   if (signIn) {
     return (
       <div className="hero min-h-screen bg-base-200">
@@ -74,7 +93,7 @@ export default function LoginPage() {
               <div className="form-control mt-6">
                 <button className="btn btn-primary" onClick={(e) => {
                   e.preventDefault();
-                  if (userEmail && userPassword) store.authLogIn(userEmail, userPassword);
+                  if (userEmail && userPassword) storeAuth.authLogIn(userEmail, userPassword);
                 }}>Login</button>
               </div>
             </div>
@@ -88,7 +107,7 @@ export default function LoginPage() {
       <form className='flex flex-col' onSubmit={(e) => {
         e.preventDefault();
         if (userEmail && userPassword && (userPassword == userConfirmPassword) && userFirstName && userLastName) {
-          store.authRegister(userFirstName, userLastName, userEmail, userPassword);
+          storeAuth.authRegister(userFirstName, userLastName, userEmail, userPassword);
         } else alert("fill again")
       }}>
         <div className="hero min-h-screen bg-base-200">
@@ -148,7 +167,7 @@ export default function LoginPage() {
                   <button className="btn btn-primary" onClick={(e) => {
                     e.preventDefault();
                     if (userEmail && userFirstName && userLastName && (userPassword === userConfirmPassword) && userPassword)
-                      store.authRegister(userFirstName, userLastName, userEmail, userPassword);
+                    storeAuth.authRegister(userFirstName, userLastName, userEmail, userPassword);
                     else alert("Make sure u filled all forms correct");
                   }}>Register</button>
                 </div>

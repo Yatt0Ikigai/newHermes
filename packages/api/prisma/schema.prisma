@@ -43,3 +43,4 @@ model Messages {
   inboxId   String?
   createdAt DateTime @default(now())
 }
+

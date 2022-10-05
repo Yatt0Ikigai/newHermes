@@ -1,115 +1,106 @@
 import create from "zustand";
-import axios from "axios";
+import produce from "immer";
+
+import { getRequest, postRequest, deleteRequest } from "./utils/axios.util";
 
 const userStore = create<IUserStore>()((set) => ({
-    users: [],
-    requestUsers: [],
-    userGetRequestList: async() => {
-        axios({
-            method: "get",
-            withCredentials: true,
-            url: "http://localhost:8080/userGetRequestList",
-        }).then((res) => {
-            set({ requestUsers: res.data });
-        }).catch(err => {
-            console.log(err);
+    status: { loading: true, error: null },
+    firstName: "",
+    lastName: "",
+    id: "",
+    friendList: [],
+    requestList: [],
+    pendingInviteList: [],
+
+    getUserInfo: async () => {
+        const res = await getRequest("user/info");
+        if (res.status === 200) set({
+            status: { loading: false, error: null },
+            firstName: res.data.firstName,
+            lastName: res.data.lastName,
+            id: res.data.id,
+            friendList: res.data.friendList,
+            requestList: res.data.requestList,
+            pendingInviteList: res.data.pendingFriendRequest,
         });
     },
-    userFindUser: async (name) => {
-        axios({
-            method: "post",
-            data: {
-                username: name,
-            },
-            withCredentials: true,
-            url: "http://localhost:8080/findUserByName",
-        }).then((res) => {
-            set({ users: res.data });
-        }).catch(err => {
-            console.log(err);
+
+    acceptFriendRequest: async (id, firstName, lastName) => {
+        const res = await postRequest(`user/friend/request`, {
+            userId: id,
         });
+        if (res.status === 200) {
+            set((state) => ({
+                ...state,
+                friendList: [...state.friendList, { firstName: firstName, lastName: lastName, id: id }],
+                requestList: state.requestList.filter((user) => user.id !== id),
+            }))
+        } else alert("sth went wrong")
     },
-    userSendFriendRequest: async (id) => {
-        axios({
-            method: "post",
-            url: "http://localhost:8080/userSendFriendRequest",
-            withCredentials: true,
-            data: {
-                userId: id,
-            }
-        }).then((res) => {
-            alert(res.data)
-        })
+
+    cancelFriendRequest: async (id) => {
+        const res = await deleteRequest(`user/friend/request/${id}`)
+        if (res.status === 200) {
+            set((state) => ({
+                ...state,
+                pendingInviteList: state.pendingInviteList.filter((user) => user.id !== id)
+            }))
+        } else alert("sth went wrong")
     },
-    userAcceptFriendRequest: async (id) => {
-        axios({
-            method: "post",
-            url: "http://localhost:8080/userAcceptFriendRequest",
-            withCredentials: true,
-            data: {
-                userId: id,
-            }
-        }).then((res) => {
-            alert(res.data)
-        })
+
+    declineFriendRequest: async (id) => {
+        const res = await deleteRequest(`user/request/${id}`)
+        if (res.status === 200) {
+            set((state) => ({
+                ...state,
+                requestList: state.requestList.filter((user) => user.id !== id),
+            }))
+        } else alert("sth went wrong")
     },
-    userDeclineFriendRequest: async (id) => {
-        axios({
-            method: "post",
-            url: "http://localhost:8080/userDeclineFriendRequest",
-            withCredentials: true,
-            data: {
-                userId: id,
-            }
-        }).then((res) => {
-            alert(res.data)
-        })
+
+    sendFriendRequest: async (id, firstName, lastName) => {
+        const res = await postRequest('user/friend/request', {
+            userId: id
+        });
+        if (res.status === 200) {
+            set((state) => ({
+                ...state,
+                state: [...state.pendingInviteList, { id, firstName, lastName }],
+            }))
+        } else alert("sth went wrong")
+
     },
-    userUnfriendUser: async (id) => {
-        axios({
-            method: "post",
-            url: "http://localhost:8080/userUnfriendUser",
-            withCredentials: true,
-            data: {
-                userId: id,
-            }
-        }).then((res) => {
-            alert(res.data)
-        })
-    },
-    userCancelFriendRequest: async (id) => {
-        axios({
-            method: "post",
-            url: "http://localhost:8080/userCancelFriendRequest",
-            withCredentials: true,
-            data: {
-                userId: id,
-            }
-        }).then((res) => {
-            alert(res.data)
-        })
+
+    unfriendUser: async (id) => {
+        const res = await deleteRequest(`user/friend/${id}`);
+        if (res.status === 200) {
+            set((state) => ({
+                friendList: state.friendList.filter((user) => user.id !== id)
+            }))
+        } else alert("sth went wrong")
     },
 }))
 
-export interface IUser {
+
+interface IUser {
     firstName: string,
     lastName: string,
     id: string,
-    isFriend: boolean,
-    userSentRequest: boolean,
-    friendRequest: boolean,
 }
-
 export interface IUserStore {
-    users: IUser[],
-    requestUsers: {firstName: string, lastName:string, id:string}[],
-    userFindUser: (name: String) => Promise<any>;
-    userSendFriendRequest: (id: String) => Promise<any>,
-    userAcceptFriendRequest: (id: String) => Promise<any>,
-    userDeclineFriendRequest: (id: String) => Promise<any>,
-    userCancelFriendRequest: (id: String) => Promise<any>,
-    userUnfriendUser: (id: String) => Promise<any>,
-    userGetRequestList: () => Promise<any>,
+    status: { loading: boolean, error: string | null },
+    firstName: string,
+    lastName: string,
+    id: string,
+    friendList: IUser[],
+    requestList: IUser[],
+    pendingInviteList: IUser[],
+    sendFriendRequest: (id: string, firstName: string, lastName: string) => Promise<any>,
+    acceptFriendRequest: (id: string, firstName: string, lastName: string) => Promise<any>,
+    declineFriendRequest: (id: string, firstName: string, lastName: string) => Promise<any>,
+    cancelFriendRequest: (id: string, firstName: string, lastName: string) => Promise<any>,
+    unfriendUser: (id: string) => Promise<any>,
+    getUserInfo: () => Promise<any>,
 }
 
 export default userStore;
