@@ -18,16 +18,18 @@ const userStore = create<IUserStore>()(devtools((set) => ({
             ...state,
             status: { loading: true, error: null },
         }))
-        const res = await getRequest("user/info");
-        if (res.status === 200) set({
-            status: { loading: false, error: null },
-            firstName: res.data.firstName,
-            lastName: res.data.lastName,
-            id: res.data.id,
-            friendList: res.data.friendList,
-            friendRequestList: res.data.friendRequestList,
-            pendingInviteList: res.data.pendingFriendRequest,
-        });
+        const res = await getRequest("users/self");
+        if (res.status === 200) {
+            set({
+                status: { loading: false, error: null },
+                firstName: res.data.firstName,
+                lastName: res.data.lastName,
+                id: res.data.id,
+                friendList: (await getRequest(`friends/list/${res.data.id}`)).data,
+                friendRequestList: (await getRequest(`friends/requests`)).data,
+                pendingInviteList: res.data.pendingFriendRequest,
+            });
+        }
         else set((state) => ({
             ...state,
             status: {
@@ -37,61 +39,58 @@ const userStore = create<IUserStore>()(devtools((set) => ({
         }))
     },
 
-    acceptFriendRequest: async (id) => {
-        const res = await postRequest(`user/request`, {
-            userId: id,
-        });
+    acceptFriendRequest: async ({firstName,lastName,id}) => {
+        const res = await postRequest(`friends`, { userId: id });
         if (res.status === 200) {
             set((state) => ({
                 ...state,
-                friendList: [...state.friendList, id],
-                friendRequestList: state.friendRequestList.filter((user) => user !== id),
+                 friendRequestList: state.friendRequestList.filter((user) => user.id !== id),
+                 friendList: [...state.friendList,{firstName,lastName,id}],
             }))
         } else alert("sth went wrong")
     },
 
     cancelFriendRequest: async (id) => {
-        const res = await deleteRequest(`user/friend/request/${id}`)
+        const res = await deleteRequest(`friends/requests/self/${id}`);
         if (res.status === 200) {
             set((state) => ({
                 ...state,
-                pendingInviteList: state.pendingInviteList.filter((user) => user !== id)
+                pendingInviteList: state.pendingInviteList.filter((user) => user.id !== id)
             }))
         } else alert("sth went wrong")
     },
 
     declineFriendRequest: async (id) => {
-        const res = await deleteRequest(`user/request/${id}`)
+        const res = await deleteRequest(`friends/requests/others/${id}`)
         if (res.status === 200) {
             set((state) => ({
                 ...state,
-                friendRequestList: state.friendRequestList.filter((user) => user !== id),
+                 friendRequestList: state.friendRequestList.filter((user) => user.id !== id),
             }))
         } else alert("sth went wrong")
     },
 
-    sendFriendRequest: async (id) => {
-        const res = await postRequest('user/friend/request', {
-            userId: id
-        });
+    sendFriendRequest: async ({firstName,lastName,id}) => {
+        const res = await postRequest('friends/requests', { userId: id });
         if (res.status === 200) {
             set((state) => ({
                 ...state,
-                pendingInviteList: [...state.pendingInviteList, id],
+                pendingInviteList: [...state.pendingInviteList, {firstName,lastName,id}],
             }))
         } else alert("sth went wrong")
 
     },
 
     unfriendUser: async (id) => {
-        const res = await deleteRequest(`user/friend/${id}`);
+        const res = await deleteRequest(`friends/${id}`);
         if (res.status === 200) {
             set((state) => ({
                 ...state,
-                friendList: state.friendList.filter((user) => user !== id)
+                friendList: state.friendList.filter((user) => user.id !== id)
             }))
         } else alert("sth went wrong")
     },
+
 })))
 
 
@@ -105,14 +104,14 @@ export interface IUserStore {
     firstName: string,
     lastName: string,
     id: string,
-    friendList: string[],
-    friendRequestList: string[],
-    pendingInviteList: string[],
-    sendFriendRequest: (id: string) => Promise<any>,
-    acceptFriendRequest: (id: string) => Promise<any>,
-    declineFriendRequest: (id: string) => Promise<any>,
-    cancelFriendRequest: (id: string) => Promise<any>,
-    unfriendUser: (id: string) => Promise<any>,
+    friendList: IUser[],
+    friendRequestList: IUser[],
+    pendingInviteList: IUser[],
+    sendFriendRequest: (user:IUser) => Promise<any>,
+    acceptFriendRequest: (user:IUser) => Promise<any>,
+    declineFriendRequest: (id:string) => Promise<any>,
+    cancelFriendRequest: (id:string) => Promise<any>,
+    unfriendUser: (id:string) => Promise<any>,
     getUserInfo: () => Promise<any>,
 }
 

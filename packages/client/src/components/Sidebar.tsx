@@ -1,5 +1,7 @@
-import React, { useEffect,useState } from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import { HiViewList } from "react-icons/hi";
+import { useFetch } from "react-async";
 
 import userStore from '../userStore';
 
@@ -29,14 +31,12 @@ export default function Sidebar() {
             <input type="text" placeholder="Search" className="input input-bordered m-4 w-[calc(100%-2rem)]" />
             <section>
                 {
-                    storeUser.friendList.map((user) => {
+                    storeUser.friendList.map(({firstName, lastName, id}) => {
                         return (
-                            <div key={user}
-                                className={`flex ${selectedChat === user ? "bg-orange-100" : ""}`}
-                                onClick={() => {
-                                    setSelectedChat(user);
-                                }}>
-                                {user}
+                            <div key={id} onClick={() => {
+                                setSelectedChat(id);
+                            }} className={`${id === selectedChat ? "bg-yellow-100":""}`}>
+                                {firstName} {lastName}
                             </div>
                         )
                     })

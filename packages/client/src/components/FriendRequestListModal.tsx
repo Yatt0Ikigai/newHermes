@@ -20,17 +20,21 @@ export default function FriendRequestListModal() {
                             storeUser.friendRequestList.length !== 0 ?
                                 storeUser.friendRequestList.map((user) => {
                                     return (
-                                        <div key={user} className={`flex`}>
-                                            {user}
+                                        <div key={user.id} className={`flex`}>
+                                            {user.firstName} {user.lastName}
                                             <div>
                                                 <button className="btn btn-success" onClick={(e) => {
                                                     storeUser.acceptFriendRequest(
-                                                        user
+                                                        {
+                                                            firstName: user.firstName,
+                                                            lastName: user.lastName,
+                                                            id: user.id
+                                                        }
                                                     );
                                                 }}>Accept</button>
                                                 <button className="btn btn-error" onClick={(e) => {
                                                     storeUser.declineFriendRequest(
-                                                        user,
+                                                        user.id,
                                                     );
                                                 }}>Decline</button>
                                             </div>

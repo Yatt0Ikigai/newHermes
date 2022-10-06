@@ -23,7 +23,7 @@ export default function UserPage() {
 
     useEffect(() => {
         const loadingCall = async () => {
-            return await getRequest(`user/${userId}/publicInfo`);
+            return await getRequest(`users/${userId}/publicInfo`);
         }
         loadingCall().then(async (res: any) => {
             setUserInfo({
@@ -72,7 +72,11 @@ export default function UserPage() {
                             <div>
                                 <button className="btn btn-success" onClick={(e) => {
                                     if (userId) userStore.acceptFriendRequest(
-                                        userId,
+                                        {
+                                            firstName: userInfo.firstName,
+                                            lastName: userInfo.lastName,
+                                            id: userId
+                                        }
                                     );
                                     setUserInfo({ ...userInfo, friend: true, friendRequest: false })
                                 }}>Accept</button>
@@ -91,13 +95,17 @@ export default function UserPage() {
                                     userId
                                 );
                                 setUserInfo({ ...userInfo, sentFriendRequest: false })
-                            }}>Decline</button>
+                            }}>Cancel</button>
                         }
                         {
                             !userInfo.sentFriendRequest && !userInfo.friendRequest && !userInfo.friend &&
                             <button className="btn btn-info" onClick={(e) => {
                                 if (userId) userStore.sendFriendRequest(
-                                    userId
+                                    {
+                                        firstName: userInfo.firstName,
+                                        lastName: userInfo.lastName,
+                                        id: userId
+                                    }
                                 );
                                 setUserInfo({ ...userInfo, sentFriendRequest: true })
                             }}>Invite User</button>

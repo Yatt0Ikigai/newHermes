@@ -12,6 +12,10 @@ export function getRequest(URL:string) {
   export function patchRequest(URL:string, payload:any) {
     return Axios.patch(`${server}/${URL}`, payload,{withCredentials:true}).then(response => response);
   }
+
+  export function putRequest(URL:string, payload:any) {
+    return Axios.put(`${server}/${URL}`, payload,{withCredentials:true}).then(response => response);
+  }
   
   export function deleteRequest(URL) {
     return Axios.delete(`${server}/${URL}`,{withCredentials:true}).then(response => response);

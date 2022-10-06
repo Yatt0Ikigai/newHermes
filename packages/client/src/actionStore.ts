@@ -6,7 +6,7 @@ const actionStore = create<IActionStore>()(
     (set) => ({
         searchedUsers: [],
         searchForUser: async(name) => {
-            const res = await postRequest("findUserByName", {username: name})
+            const res = await postRequest("users", {username: name})
             if(res.status === 200) set({searchedUsers: res.data})
         },
     })
