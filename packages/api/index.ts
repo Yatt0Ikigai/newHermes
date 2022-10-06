@@ -37,6 +37,7 @@ require("./src/middleware/passport")(passport);
 //Routes
 require("./src/routes/auth.route")(app);
 require("./src/routes/user.route")(app);
+require("./src/routes/friends.route")(app);
 //Routes
 
 app.get("/", (req, res) => {

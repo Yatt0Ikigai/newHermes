@@ -1,233 +1,32 @@
 import { prisma } from "../utils/prisma";
-import { updateUser } from "../utils/userUitls";
+import { findUser, findManyUsers, updateUser } from "../utils/userUitls";
 import { error } from "console";
 
-export const findUserController = async ({ username, userID }: { username: string, userID: string }) => {
-    try {
+export const findUserByString = async ({ username, userID }: { username: string, userID: string }) => {
         const [firstName, lastName] = username.split(" ");
         const result = await prisma.users.findMany({
             where: {
-                firstName: {
-                    contains: firstName,
-                },
-                lastName: {
-                    contains: lastName,
-                },
-                NOT: {
-                    id: userID
-                }
+                firstName: { contains: firstName, },
+                lastName: { contains: lastName, },
+                NOT: { id: userID }
             },
             select: {
                 firstName: true,
                 lastName: true,
                 id: true,
             },
-            take: 10,
+            take: 15,
         })
 
-        const user = await prisma.users.findFirst({
-            where: {
-                id: userID
-            }
-        })
-
-        result.forEach((element: any) => {
-            element["isFriend"] = user.friendList.includes(element.id);
-        });
-
+        const user = await findUser({ id: userID })
+        result.forEach((element: any) => { element["isFriend"] = user.friendList.includes(element.id); });
         return result;
-    } catch (e) {
-        console.log(e);
-    }
 }
 
-export const sendFriendRequestController = async ({ friendId, selfId }: { friendId: string, selfId: string }) => {
-    if (selfId === friendId) throw new Error("Cant send request to yourself");
-    const user = await prisma.users.findFirst({
-        where: {
-            id: friendId
-        }
-    })
-    if (user.friendRequestList.includes(selfId)) throw new Error("Request already sent");
-    updateUser({ id: friendId }, {
-        friendRequestList: {
-            push: selfId,
-        }
-    })
-    updateUser({ id: selfId }, {
-        pendingFriendRequest: {
-            push: friendId,
-        }
-    })
-    return true;
-}
-
-export const userAcceptFriendRequestController = async ({ userId, selfId }: { userId: string, selfId: string }) => {
-    if (selfId === userId) throw new Error("Cant accept yourself to friendlist");
-    console.log("START")
-    console.log(userId,selfId)
-    const user = await prisma.users.findFirst({
-        where: {
-            id: userId
-        }
-    })
-
-    const self = await prisma.users.findFirst({
-        where: {
-            id: selfId
-        }
-    })
-
-    if (!user) throw new Error("User doesnt exist");
-    if (!user.pendingFriendRequest.includes(selfId)) throw new Error("Cant accept nonexistent request");
-
-    const newUserPendingFriendRequest = user.pendingFriendRequest.filter((id: string) => { return id != selfId })
-    const newSelfFriendRequest = self.friendRequestList.filter((id: string) => { return id != userId })
-    console.log("HALF DONE")
-
-
-    await updateUser({ id: userId }, {
-        pendingFriendRequest: newUserPendingFriendRequest,
-        friendList: {
-            push: selfId
-        }
-    })
-
-    await updateUser({ id: selfId }, {
-        friendRequestList: newSelfFriendRequest,
-        friendList: {
-            push: userId
-        }
-    })
-    console.log("DONE")
-    return true;
-}
-
-
-
-export const userDeclineFriendRequestController = async ({ userId, selfId }: { userId: string, selfId: string }) => {
-    if (selfId === userId) throw new Error("Cant decline yourself");
-    const user = await prisma.users.findFirst({
-        where: {
-            id: userId
-        }
-    })
-
-    const self = await prisma.users.findFirst({
-        where: {
-            id: selfId
-        }
-    })
-    if (!user) throw new Error("User doesnt exist");
-    if (!user.pendingFriendRequest.includes(selfId)) throw new Error("Cant decline nonexistent request");
-
-    const newUserPendingFriendRequest = user.pendingFriendRequest.filter((id: string) => { return id != selfId })
-    const newSelfFriendRequest = self.friendRequestList.filter((id: string) => { return id != userId })
-
-    await updateUser({ id: userId }, {
-        pendingFriendRequest: newUserPendingFriendRequest,
-    })
-
-    await updateUser({ id: selfId }, {
-        friendRequestList: newSelfFriendRequest,
-    })
-
-    return true;
-}
-
-export const userUnfirendUserController = async ({ userId, selfId }: { userId: string, selfId: string }) => {
-    if (selfId === userId) throw new Error("Cant decline yourself");
-    const user = await prisma.users.findFirst({
-        where: {
-            id: userId
-        }
-    })
-
-    const self = await prisma.users.findFirst({
-        where: {
-            id: selfId
-        }
-    })
-
-    if (!user) throw new Error("User doesnt exist");
-    if (!user.friendList.includes(selfId)) throw new Error("Cant decline nonexistent request");
-
-    const newUserFriendList = user.friendList.filter((id: string) => { return id != selfId })
-    const newSelfFriendList = self.friendList.filter((id: string) => { return id != userId })
-
-    await updateUser({ id: userId }, {
-        friendList: newUserFriendList,
-    })
-
-    await updateUser({ id: selfId }, {
-        friendList: newSelfFriendList,
-    })
-
-    return true;
-}
-
-export const userCancelFriendRequestController = async ({ userId, selfId }: { userId: string, selfId: string }) => {
-    if (selfId === userId) throw new Error("Cant Cancel yourself");
-    const user = await prisma.users.findFirst({
-        where: {
-            id: userId
-        }
-    })
-
-    const self = await prisma.users.findFirst({
-        where: {
-            id: selfId
-        }
-    })
-    if (!user) throw new Error("User doesnt exist");
-    if (!user.friendRequestList.includes(selfId)) throw new Error("Cant cancel nonexistent request");
-
-    const newUserFriendRequestList = user.friendRequestList.filter((id: string) => { return id != selfId })
-    const newSelfPendingFriendRequest = self.pendingFriendRequest.filter((id: string) => { return id != userId })
-
-    await updateUser({ id: userId }, {
-        friendRequestList: newUserFriendRequestList,
-    })
-
-    await updateUser({ id: selfId }, {
-        pendingFriendRequest: newSelfPendingFriendRequest,
-    })
-
-    return true;
-}
-
-export const userGetRequestListController = async ({ selfId }: { selfId: string }) => {
-    const user = await prisma.users.findUnique({
-        where: {
-            id: selfId
-        },
-        select: {
-            friendRequestList: true,
-        },
-    })
-    let res: {}[] = []
-    for (let i = 0; i < 10 && i < user.friendRequestList.length; ++i) {
-        const reqUser = await prisma.users.findUnique({
-            where: {
-                id: user.friendRequestList[i],
-            },
-            select: {
-                firstName: true,
-                lastName: true,
-                id: true,
-            }
-        })
-        res.push(reqUser);
-    }
-    return res;
-}
-
-export const userGetInfoController = async ({ selfId }: { selfId: string }) => {
-    const user = await prisma.users.findUnique({
-        where: {
-            id: selfId
-        },
-        select: {
+export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
+    const user = await findUser(
+        { id: selfId },
+        {
             id: true,
             firstName: true,
             lastName: true,
@@ -235,18 +34,14 @@ export const userGetInfoController = async ({ selfId }: { selfId: string }) => {
             friendRequestList: true,
             pendingFriendRequest: true,
             chatIds: true,
-        },
-    })
+
+        });
 
     return user;
 }
 
-export const userPublicInfoController = async ({ userId, selfId }: { userId: string, selfId: string }) => {
-    const user = await prisma.users.findUnique({
-        where: {
-            id: userId
-        }
-    })
+export const getPublicInfo = async ({ userId, selfId }: { userId: string, selfId: string }) => {
+    const user = await findUser({ id: userId })
 
     const res = {
         id: user.id,
@@ -257,5 +52,17 @@ export const userPublicInfoController = async ({ userId, selfId }: { userId: str
         sentFriendRequest: user.friendRequestList.includes(selfId),
         admin: (userId === selfId)
     }
+    return res;
+}
+
+export const getUserNameById = async ({ userId }: { userId: string }) => {
+    const res = await findUser(
+        { id: userId, },
+        {
+            firstName: true,
+            lastName: true,
+            id: true,
+        })
+
     return res;
 }
