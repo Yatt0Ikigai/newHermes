@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Navigate } from "react-router-dom";
 import { getRequest, postRequest } from "../utils/axios.util";
 
-import lStore from "../loginStore";
-import uStore from '../userStore';
+import lStore from "../stores/loginStore";
+import uStore from '../stores/userStore';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function UserPage() {
@@ -37,10 +37,6 @@ export default function UserPage() {
             setLoading(false);
         })
     }, [])
-
-    useEffect(() => {
-        console.log(userInfo.friend, userInfo.friendRequest, userInfo.sentFriendRequest)
-    }, [userInfo])
 
     if (loading) return <LoadingSpinner />
     return (

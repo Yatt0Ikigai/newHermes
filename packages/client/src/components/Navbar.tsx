@@ -1,5 +1,5 @@
 import React from 'react'
-import loginStore from '../loginStore';
+import loginStore from '../stores/loginStore';
 
 export default function Navbar() {
     const store = loginStore();

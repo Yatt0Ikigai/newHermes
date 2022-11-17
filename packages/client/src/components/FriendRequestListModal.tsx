@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import userStore from "../userStore";
+import userStore from "../stores/userStore";
 
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
-import authStore from '../loginStore';
+import authStore from '../stores/loginStore';
 
 
 export default function FriendRequestListModal() {

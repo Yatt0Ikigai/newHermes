@@ -11,36 +11,28 @@ datasource db {
 }
 
 model Users {
-  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
   firstName            String
   lastName             String
-  birthday             DateTime  @default(now())
-  email                String    @unique
+  email                String   @unique
   password             String
   friendList           String[]
   friendRequestList    String[]
   pendingFriendRequest String[]
-  chats                Inboxes[] @relation(fields: [chatIds], references: [id])
-  chatIds              String[]  @db.ObjectId
+  chatIds              String[] @db.ObjectId
 }
 
 model Inboxes {
-  id              String     @id @default(auto()) @map("_id") @db.ObjectId
-  inboxUid        String
-  lastMessage     String     @default("")
-  lastSentUserId  String     @default("")
-  participants    Users[]    @relation(fields: [participantsIds], references: [id])
-  participantsIds String[]   @db.ObjectId
-  messages        Messages[]
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  lastMessage     String   @default("")
+  lastMessageSender String @default("")
+  participantsIds String[] @db.ObjectId
 }
 
 model Messages {
   id        String   @id @default(uuid()) @map("_id")
-  name      String   @default("")
-  content   String
-  senderId  String?  @db.ObjectId
-  inbox     Inboxes? @relation(fields: [inboxId], references: [id])
-  inboxId   String?
+  senderId  String   @db.ObjectId
+  message   String
+  inboxId   String
   createdAt DateTime @default(now())
 }
-

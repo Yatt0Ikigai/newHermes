@@ -1,7 +1,7 @@
 import create from "zustand";
 import { persist, devtools } from "zustand/middleware";
 import axios from "axios";
-import { getRequest, postRequest } from "./utils/axios.util";
+import { getRequest, postRequest } from "../utils/axios.util";
 const authStore = create<IauthStore>()(
     devtools(
         (set) => ({

@@ -35,7 +35,6 @@ module.exports = function(passport:any){
     prisma.users.findFirst({
       where: {
         id:userInfo.id,
-        email: userInfo.email,
         password: userInfo.password,
       }
     }).then((user: any) => {

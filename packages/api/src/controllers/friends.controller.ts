@@ -70,7 +70,6 @@ export const declineFriendRequest = async ({ userId, selfId }: { userId: string,
 }
 
 export const sendFriendRequest = async ({ friendId, selfId }: { friendId: string, selfId: string }) => {
-    console.log(friendId, selfId)
     const user = await findUser({ id: friendId })
     if (user.friendRequestList.includes(selfId)) throw new Error("Request already sent");
 

@@ -46,7 +46,6 @@ module.exports = function (app: express.Application) {
         //SEND FRIEND REQUEST
         try {
             if (req.user === undefined) new Error("User not logged in");
-            console.log("DA FUQ")
             const result = await sendFriendRequest({ friendId: req.body.userId, selfId: req.user.id });
             res.status(200).send(result);
         } catch {

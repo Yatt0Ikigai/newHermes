@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import actionStore from "../actionStore";
+import actionStore from "../stores/actionStore";
 
 import {AiOutlineCloseCircle, AiOutlineCheck, AiOutlineClose} from "react-icons/ai";
 import {GrAdd} from "react-icons/gr";
@@ -17,7 +17,7 @@ export default function AddFriendsModal() {
                     <h3 className="font-bold text-lg text-middle">Search for new friends</h3>
                     <p className="py-4"></p>
                     <input type="text" placeholder="Type here" className="input input-bordered input-info w-full max-w-xs m-2" onChange={((e) => {
-                        storeAction.searchForUser(e.currentTarget.value);
+                        storeAction.searchForUsers(e.currentTarget.value);
                     })}/>
                     <div className={"flex items-center flex-col w-full"}>
                         {storeAction.searchedUsers.map((user) => {

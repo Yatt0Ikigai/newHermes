@@ -4,7 +4,6 @@ import bcrypt from "bcrypt"
 
 export const createUserHandler = async ({email, password, firstName, lastName}: {email:string, password:string, firstName: string, lastName:string}) => {
     try {
-        console.log("User tried to register " + email + " " + password);
         const user = await findUser({ email })
         if (user === null) {
             const newUser = await createUser({

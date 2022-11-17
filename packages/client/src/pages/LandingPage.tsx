@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import authStore from "../loginStore";
-import userStore from '../userStore';
+import authStore from "../stores/loginStore";
+import userStore from '../stores/userStore';
 
 //comontents
 import AddFriendsModal from "../components/AddFriendModal";
@@ -11,6 +11,9 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import FriendRequestListModal from "../components/FriendRequestListModal";
 import LoadingSpinner from "../components/LoadingSpinner";
+import Chats from "../components/Chat";
+import StartChat from "../components/StartChat";
+import chatStore from '../stores/chatStore';
 interface chat {
   participants: String[]
   lastMessage: String
@@ -31,6 +34,7 @@ export default function LoginPage() {
     storeAuth.authIsLogged();
   }, [])
 
+
   useEffect(() => {
     if (storeAuth.userStatus.logged) storeUser.getUserInfo();
   }, [storeAuth.userStatus.logged])
@@ -48,11 +52,12 @@ export default function LoginPage() {
       <div className='h-screen flex flex-col'>
         <AddFriendsModal />
         <FriendRequestListModal />
+        <StartChat />
         <Navbar />
-        <div className='grow main relative'>
-          <Sidebar/>
-          <div className='main-content h-full'>
-            
+        <div className='h-full main relative overflow-hidden'>
+          <Sidebar />
+          <div className='main-content h-full overflow-hidden'>
+            <Chats />
           </div>
         </div>
       </div>

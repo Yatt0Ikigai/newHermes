@@ -18,7 +18,9 @@ module.exports = function (app: express.Application) {
         if (req.user) {
           res.status(200).json({
             message: "User logged in",
-        })}
+        })
+        return;
+      }
         else res.status(290).json({
           message: "Wrong email or password",
         })
@@ -56,10 +58,9 @@ module.exports = function (app: express.Application) {
 
   app.get('/is-logged', async (req: any, res, done) => {
     try {
-      console.log(req.user)
       if (req.user) {
         const user = await findUser({ id: req.user.id }, { firstName: true, lastName: true });
-        res.status(200).json({
+        if( user ) res.status(200).json({
           message: "User logged",
           user: {
             id: req.user.id,
