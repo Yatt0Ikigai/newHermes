@@ -13,15 +13,20 @@ import "./index.scss";
 import userStore from "./stores/userStore";
 import chatStore from "./stores/chatStore";
 
+import {
+   IMessage
+} from "./interfaces/chatStore.interface";
+
 const App = () => {
   const storeUser = userStore();
   const storeChat = chatStore();
 
   useEffect(() => {
     if (storeUser.socket)
-      storeUser.socket.on("messageReceived", (mess: {id: string, message:string, senderId: string, chatId:string}) => {
-        storeUser.newMess({author: mess.senderId, chatId: mess.chatId, message: mess.message});
-        if(storeChat.selectedChat === mess.chatId) storeChat.newMess({ id: mess.id, message: mess.message, senderId: mess.senderId });
+      storeUser.socket.on("messageReceived", (mess: IMessage) => {
+        const chat = storeUser.findChat(mess.chatId);
+        storeChat.receivedMessage(mess);
+        storeChat.openChat(chat);
       })
     return () => {
       storeUser.socket?.off('messageReceived');

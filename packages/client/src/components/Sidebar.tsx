@@ -6,6 +6,9 @@ import userStore from '../stores/userStore';
 import actionStore from '../stores/actionStore';
 import chatStore from "../stores/chatStore";
 
+import Avatar from './Avatar';
+import { findChat } from '../../../api/src/utils/chatUtils';
+
 export default function Sidebar() {
     const storeUser = userStore();
     const storeAction = actionStore();
@@ -14,50 +17,31 @@ export default function Sidebar() {
     const [filterChat, setFilterChat] = useState<string>("");
 
     return (
-        <div className='main-friendlist h-full'>
-            <section className='flex justify-around items-center'>
-                <p>Chats</p>
-                <label htmlFor="my-modal-20" className="btn btn-circle modal-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 13L 18 13M 12 7l 0 11" /></svg>
-                </label>
-                <div className="dropdown dropdown-end">
-                    <label tabIndex={0} className="btn m-1 rounded-full">...</label>
-                    <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                        <li>
-                            <label htmlFor="my-modal-6">
-                                Add friends
-                            </label>
-                        </li>
-                        <li>
-                            <label htmlFor="my-modal-10">
-                                Requests
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-            </section>
-            <input type="text" placeholder="Search" className="input input-bordered m-4 w-[calc(100%-2rem)]" value={filterChat} onChange={((e) => {
-                setFilterChat(e.currentTarget.value)
-            })} />
-            <section>
+        <div className='main-friendlist h-full flex flex-col'>
+            <section className='flex-1 p-4'>
                 {
-                    storeUser.chatsList.map((chat) => {
+                    storeUser.friendList.map((user) => {
                         return (
                             <div
-                                key={"chat-" + chat.id} className={`${storeChat.selectedChat === chat.id ? "bg-slate-100" : ""}`}
+                                key={"sidebar-" + user.id}
                                 onClick={() => {
-                                    storeChat.selectChat(chat.id);
-                                    storeChat.getMessages(chat.id);
-                                }}>
-                                <p>{chat.participants.find((user) => {
-                                    return user.id != storeUser.id;
-                                })?.firstName }</p>
-                                <p>{ chat.lastMessage ? chat.lastMessage.author + ": " + chat.lastMessage.message : "Noone sent message Yet"}</p>
+                                    const chat = storeUser.findChatByUser(user);
+                                    console.log(chat);
+                                    if(chat) storeChat.openChat(chat)
+                                }}
+                                className="my-1">
+                                <div className='flex'>
+                                    <Avatar avatar='https://qph.cf2.quoracdn.net/main-qimg-2b21b9dd05c757fe30231fac65b504dd' online={false}/>
+                                    <p className='ml-2'>{user.firstName + " " + user.lastName}</p>
+                                </div>
                             </div>
                         )
                     })
                 }
             </section>
+            <input type="text" placeholder="Search" className="input input-bordered m-4 w-[calc(100%-2rem)]" value={filterChat} onChange={((e) => {
+                setFilterChat(e.currentTarget.value)
+            })} />
         </div>
     )
 }

@@ -11,7 +11,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import FriendRequestListModal from "../components/FriendRequestListModal";
 import LoadingSpinner from "../components/LoadingSpinner";
-import Chats from "../components/Chat";
+import Chats from "../components/ChatContainer";
 import StartChat from "../components/StartChat";
 import chatStore from '../stores/chatStore';
 interface chat {
@@ -49,16 +49,14 @@ export default function LoginPage() {
 
   if (storeAuth.userStatus.logged && !storeUser.status.loading) {
     return (
-      <div className='h-screen flex flex-col'>
+      <div className='h-screen flex flex-col relative'>
         <AddFriendsModal />
         <FriendRequestListModal />
         <StartChat />
         <Navbar />
+        <Chats/>
         <div className='h-full main relative overflow-hidden'>
           <Sidebar />
-          <div className='main-content h-full overflow-hidden'>
-            <Chats />
-          </div>
         </div>
       </div>
     )

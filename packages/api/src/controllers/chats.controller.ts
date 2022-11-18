@@ -3,7 +3,6 @@ import { findChat, updateChat, cChat } from "../utils/chatUtils";
 import { updateUser} from "../utils/userUitls";
 
 export const postMessage = async ({ chatId, userId, message }: { chatId: string, userId: string, message: string }) => {
-    const t = Date.now();
     const chat = await findChat({ id: chatId });
     if (!chat.participantsIds.includes(userId)) throw "ERROR";
     const mes = await createMessage({
@@ -12,7 +11,6 @@ export const postMessage = async ({ chatId, userId, message }: { chatId: string,
         message: message
     });
     await updateChat({ id: chatId }, { lastMessage: mes.id })
-    console.log(Date.now() - t);
     return mes;
 }
 

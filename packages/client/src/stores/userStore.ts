@@ -1,9 +1,13 @@
 import create from "zustand";
 import io, { Socket } from "socket.io-client";
 
-
 import { getRequest, postRequest, deleteRequest } from "../utils/axios.util";
 import { devtools } from "zustand/middleware";
+
+import {
+    IChat,
+    IUser,
+} from "../interfaces/userStore.interface";
 
 const userStore = create<IUserStore>()(devtools((set, get) => ({
     status: { loading: false, error: null },
@@ -118,40 +122,19 @@ const userStore = create<IUserStore>()(devtools((set, get) => ({
         return res.data.id;
     },
 
-    newMess: ({ chatId, author, message }) => {
-        const chat = get().chatsList.find((c) => c.id === chatId);
-        if (!chat) return;
-        const auth =  chat.participants.find((person) => person.id === author);
-        if (!auth) return;
-        const filteredChats = get().chatsList.filter((c) => c.id !== chatId);
-        set((state) => ({
-            ...state,
-            chatsList:
-                [{
-                    id: chatId, participants: chat.participants, lastMessage: {
-                        author: auth.firstName + " " + auth.lastName,
-                        message,
-                    }
-                }, ...filteredChats]
-        }))
+    findChat: (chatId) => {
+        return get().chatsList.find(el => el.id === chatId) as IChat;
+    },
+
+    findChatByUser: (user) => {
+        const res = get().chatsList.find(el => {
+            return el.participants.find(x => x.id === user.id)
+        }) as IChat;
+        return res
     }
 })))
 
 
-interface IUser {
-    firstName: string,
-    lastName: string,
-    id: string,
-}
-
-interface IChat {
-    lastMessage: {
-        author: string,
-        message: string,
-    },
-    participants: IUser[],
-    id: string,
-}
 export interface IUserStore {
     status: { loading: boolean, error: string | null },
     firstName: string,
@@ -169,7 +152,8 @@ export interface IUserStore {
     unfriendUser: (id: string) => Promise<any>,
     getUserInfo: () => Promise<any>,
     startChat: (userId: string) => Promise<string | undefined>,
-    newMess: ({ chatId, author, message }: { chatId: string, author: string, message: string }) => void,
+    findChat: (chatId: string) => IChat;
+    findChatByUser: (user: IUser) => IChat; 
 }
 
 export default userStore;
