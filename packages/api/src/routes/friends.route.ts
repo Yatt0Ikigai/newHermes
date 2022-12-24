@@ -10,7 +10,9 @@ import {
     unfriendUser
 } from "../controllers/friends.controller";
 
-module.exports = function (app: express.Application) {
+import { findUser } from "../utils/userUitls";
+
+module.exports = function (app: express.Application, socket: any) {
     /*                                                         GET                                                                        */
     app.get("/friends/list/:userId", async (req: any, res, next) => {
         //GET USER FRIEND LIST
@@ -47,6 +49,12 @@ module.exports = function (app: express.Application) {
         try {
             if (req.user === undefined) new Error("User not logged in");
             const result = await sendFriendRequest({ friendId: req.body.userId, selfId: req.user.id });
+            const user = await findUser({id: req.user.id}, {firstName:true, lastName:true, id:true});
+            socket.to(req.body.userId).emit("gotFriendRequest", {
+                id : user.id,
+                firstName: user.firstName,
+                lastName: user.lastName
+            })
             res.status(200).send(result);
         } catch {
             (err: any) => {
@@ -60,6 +68,10 @@ module.exports = function (app: express.Application) {
         try {
             if (req.user === undefined) return new Error("User not logged in");
             const result = await acceptFriendRequest({ userId: req.body.userId, selfId: req.user.id })
+            const user = findUser({id:req.user.id},{id:true,firstName:true,lastName:true})
+            socket.to(req.params.id).emit("acceptFriendship", {
+                friend: user,
+            })
             res.status(200).send(result);
         } catch {
             (err: any) => {
@@ -74,7 +86,10 @@ module.exports = function (app: express.Application) {
         //CANCEL USER (FROM SELF TO OTHER) REQUEST
         try {
             if (req.user === undefined) new Error("User not logged in");
-            const result = await cancelFriendRequest({ userId: req.params.id, selfId: req.user.id })
+            const result = await cancelFriendRequest({ userId: req.params.id, selfId: req.user.id });
+            socket.to(req.params.id).emit("cancelFriendRequest", {
+                friendId: req.user.id,
+            })
             res.status(200).send(result)
         } catch {
             (err: any) => {
@@ -99,8 +114,11 @@ module.exports = function (app: express.Application) {
     app.delete('/friends/:id', async (req: any, res, next) => {
         //REMOVE FRIENDSHIP
         try {
-            if (req.user === undefined) new Error("User not logged in");           
+            if (req.user === undefined) new Error("User not logged in");
             const result = await unfriendUser({ userId: req.params.id, selfId: req.user.id });
+            socket.to(req.params.id).emit("removeFriendship", {
+                friendId: req.user.id,
+            })
             res.status(200).json(result);
         } catch {
             (err: any) => {

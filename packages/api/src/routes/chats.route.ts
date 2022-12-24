@@ -31,7 +31,7 @@ module.exports = function (app: express.Application, socket:any) {
     app.post('/chats', async (req: any, res, next) => { 
         try {
             if (req.user === undefined) new Error("User not logged in");
-            const chat = await createChat({participants: req.body.participants})
+            const chat = await createChat({participantsIds: req.body.participants})
             res.status(200).json({
              chat
             })

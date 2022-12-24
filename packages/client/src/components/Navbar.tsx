@@ -1,51 +1,29 @@
-import React from 'react'
-import loginStore from '../stores/loginStore';
+import React, { MouseEventHandler, useState } from 'react'
 
 export default function Navbar() {
-    const store = loginStore();
+    const [clicked, setClicked] = useState<number | null>(null);
+
+    const onClickHandler = (key) => {
+        if (clicked == key) setClicked(null);
+        else setClicked(key);
+    }
 
     return (
-        <div className="navbar bg-base-100 border-b">
-            <div className="navbar-start">
-                <div className="dropdown">
-                    <label tabIndex={0} className="btn btn-ghost lg:hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
-                    </label>
-                    <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                        <li>
-                            <label htmlFor="my-modal-6">
-                                Add friends
-                            </label>
-                        </li>
-                        <li>
-                            <label htmlFor="my-modal-10">
-                                Requests
-                            </label>
-                        </li>
-                        <li><a>Item 3</a></li>
-                    </ul>
-                </div>
-                <a className="btn btn-ghost normal-case text-xl" href='/'>Hermes Post</a>
-            </div>
-            <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal p-0">
-                    <li><a>Item 1</a></li>
-                    <li tabIndex={0}>
-                        <a>
-                            Parent
-                            <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
-                        </a>
-                        <ul className="p-2">
-                            <li><a>Submenu 1</a></li>
-                            <li><a>Submenu 2</a></li>
-                        </ul>
-                    </li>
-                    <li><a>Item 3</a></li>
-                </ul>
-            </div>
-            <div className="navbar-end">
-                <button className="btn btn-active btn-ghost" onClick={() => { store.authLogOut() }}>Log Out</button>
-            </div>
-        </div>
+        <nav className="h-12 my-4">
+            <ul className='flex justify-between text-xl'>
+                <li onClick={e => onClickHandler(1)} className={`font-bold text-xl border-b-2 transition-all ${clicked === 1 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
+                    <button>Posts</button>
+                </li>
+                <li onClick={e => onClickHandler(2)} className={`font-bold text-xl border-b-2 transition-all ${clicked === 2 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
+                    <button>Photos</button>
+                </li>
+                <li onClick={e => onClickHandler(3)} className={`font-bold text-xl border-b-2 transition-all ${clicked === 3 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
+                    <button>Videos</button>
+                </li>
+                <li onClick={e => onClickHandler(4)} className={`font-bold text-xl border-b-2 transition-all ${clicked === 4 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
+                    <button>Recommendations</button>
+                </li>
+            </ul>
+        </nav>
     )
 }

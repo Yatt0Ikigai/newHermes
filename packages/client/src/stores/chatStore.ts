@@ -61,6 +61,14 @@ const chatStore = create<IChatStore>()(
                 openedChats: [newChat, ...get().openedChats]
             }))
             get().loadMessages(newChat.chatId);
+        },
+
+        closeChat: (chatId) => {
+            const chats = get().openedChats.filter(el => el.chatId !== chatId);
+            set((state) => ({
+                ...state,
+                openedChats: chats
+            }))
         }
     })
 )
@@ -71,7 +79,9 @@ export interface IChatStore {
     loadMessages: (chatId: string) => Promise<any>,
     sendMessage: (mess: ISendMess) => Promise<any>,
     openChat: (chat: IChatUserStore) => void;
+    closeChat: (chatId:string) => void;
 }
+
 
 
 export default chatStore;

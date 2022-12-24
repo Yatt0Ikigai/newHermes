@@ -6,8 +6,8 @@ export interface IUser {
 
 export interface IChat {
     lastMessage: {
-        author: string,
-        message: string,
+        author: string | null,
+        message: string | null,
     },
     participants: IUser[],
     id: string,

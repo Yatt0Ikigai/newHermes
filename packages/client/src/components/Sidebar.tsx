@@ -1,47 +1,83 @@
-import React, { useEffect, useState } from 'react'
-import { HiViewList } from "react-icons/hi";
-import { useFetch } from "react-async";
+import React, { useEffect } from 'react'
 
 import userStore from '../stores/userStore';
 import actionStore from '../stores/actionStore';
 import chatStore from "../stores/chatStore";
 
-import Avatar from './Avatar';
-import { findChat } from '../../../api/src/utils/chatUtils';
+import { Link, useLocation } from 'react-router-dom';
+
+import { HiOutlineNewspaper } from 'react-icons/hi';
+import { BiMessageDetail } from 'react-icons/bi';
+import { BsFillPersonFill } from 'react-icons/bs';
+import { FaUserFriends } from 'react-icons/fa';
+import { AiOutlineCalendar } from 'react-icons/ai';
+
+
 
 export default function Sidebar() {
     const storeUser = userStore();
     const storeAction = actionStore();
     const storeChat = chatStore();
-
-    const [filterChat, setFilterChat] = useState<string>("");
+    const location = useLocation();
 
     return (
-        <div className='main-friendlist h-full flex flex-col'>
-            <section className='flex-1 p-4'>
-                {
-                    storeUser.friendList.map((user) => {
-                        return (
-                            <div
-                                key={"sidebar-" + user.id}
-                                onClick={() => {
-                                    const chat = storeUser.findChatByUser(user);
-                                    console.log(chat);
-                                    if(chat) storeChat.openChat(chat)
-                                }}
-                                className="my-1">
-                                <div className='flex'>
-                                    <Avatar avatar='https://qph.cf2.quoracdn.net/main-qimg-2b21b9dd05c757fe30231fac65b504dd' online={false}/>
-                                    <p className='ml-2'>{user.firstName + " " + user.lastName}</p>
-                                </div>
-                            </div>
-                        )
-                    })
-                }
+        <div className='col-span-2 bg-gray-200 h-screen text-gray-600 p-5 box-border'>
+            <section className='flex justify-center items-center p-4 font-bold text-xl'>
+                <Link to="/">HermesPost</Link>
             </section>
-            <input type="text" placeholder="Search" className="input input-bordered m-4 w-[calc(100%-2rem)]" value={filterChat} onChange={((e) => {
-                setFilterChat(e.currentTarget.value)
-            })} />
+            <section>
+                <span className='text-black font-bold text-lg '>Menu</span>
+                <ul className='grid grid-rows-6 gap-1'>
+                    <li className='sidebar-row'>
+                        <HiOutlineNewspaper  className='flex justify-center items-center'/>
+                        <span className='col-span-3'>
+                            News
+                        </span>
+                        <span>
+                            {/*Notification*/}
+                        </span>
+                    </li>
+                    <li className={`sidebar-row ${location.pathname === "/chats" ? "text-black" : ""}`}>
+                        <BiMessageDetail />
+                        <span className='col-span-3'>
+                            <Link to={"/chats"}> Messages</Link>
+                        </span>
+                        <span>
+                            {/*Notification*/}
+                        </span>
+                    </li>
+                    <li className='sidebar-row'>
+                        <BsFillPersonFill />
+                        <span className='col-span-3'>
+                            Friends
+                        </span>
+                        <span>
+                            {/*Notification*/}
+                        </span>
+                    </li>
+                    <li className='sidebar-row'>
+                        <FaUserFriends />
+                        <span className='col-span-3'>
+                            Communities
+                        </span>
+                        <span>
+                            {/*Notification*/}
+                        </span>
+                    </li>
+                    <li className='sidebar-row'>
+                        <AiOutlineCalendar />
+                        <span className='col-span-3'>
+                            Events
+                        </span>
+                        <span>
+                            {/*Notification*/}
+                        </span>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <span className='text-black font-bold text-lg '>Shortcuts</span>
+            </section>
         </div>
     )
 }

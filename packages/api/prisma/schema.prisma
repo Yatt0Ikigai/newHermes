@@ -20,13 +20,14 @@ model Users {
   friendRequestList    String[]
   pendingFriendRequest String[]
   chatIds              String[] @db.ObjectId
+  isOnline             Boolean
 }
 
 model Inboxes {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  lastMessage     String   @default("")
-  lastMessageSender String @default("")
-  participantsIds String[] @db.ObjectId
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  lastMessage       String   @default("")
+  lastMessageSender String   @default("")
+  participantsIds   String[] @db.ObjectId
 }
 
 model Messages {

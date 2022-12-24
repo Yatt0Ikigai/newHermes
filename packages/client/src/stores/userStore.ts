@@ -109,17 +109,18 @@ const userStore = create<IUserStore>()(devtools((set, get) => ({
         } else alert("sth went wrong")
     },
 
-    startChat: async (userId) => {
+    startChat: async (friendId) => {
         const isChat = get().chatsList.find((chat: any) => {
-            return chat.participants.includes(userId) === true;
+            return chat.participants.includes(friendId) === true;
         })
         if (isChat) return isChat.id;
-        const res = await postRequest('chats', { participants: [userId, get().id] });
+        const res = await postRequest('chats', { participants: [friendId, get().id] });
         set((state) => ({
             ...state,
-            chatsList: [...state.chatsList, res.data.id],
+            chatsList: [...state.chatsList, res.data.chat],
         }))
-        return res.data.id;
+        console.log(res.data.chat)
+        return res.data;
     },
 
     findChat: (chatId) => {
@@ -131,6 +132,38 @@ const userStore = create<IUserStore>()(devtools((set, get) => ({
             return el.participants.find(x => x.id === user.id)
         }) as IChat;
         return res
+    },
+
+    addFriendRequest: (user) => {
+        const friendRequestList = get().friendRequestList;
+        set((state) => ({
+            ...state,
+            friendRequestList: [...friendRequestList, user]
+        }))
+    },
+
+    removeFriendRequest: (user) => {
+        const friendRequestList = get().friendRequestList.filter((el) => el.id != user);
+        set((state) => ({
+            ...state,
+            friendRequestList
+        }))
+    },
+
+    removeFriend: (user) => {
+        const friendList = get().friendList.filter((el) => el.id != user);
+        set((state) => ({
+            ...state,
+            friendList
+        }))
+    },
+
+    addFriend: (user) => {
+        const friendList = get().friendList;
+        set((state) => ({
+            ...state,
+            friendList: [user, ...friendList],
+        }))
     }
 })))
 
@@ -151,9 +184,15 @@ export interface IUserStore {
     cancelFriendRequest: (id: string) => Promise<any>,
     unfriendUser: (id: string) => Promise<any>,
     getUserInfo: () => Promise<any>,
-    startChat: (userId: string) => Promise<string | undefined>,
+    startChat: (friendId: string) => Promise<IChat>,
     findChat: (chatId: string) => IChat;
-    findChatByUser: (user: IUser) => IChat; 
+    findChatByUser: (user: IUser) => IChat;
+
+    //SOCKETS
+    addFriendRequest: (user: IUser) => void;
+    removeFriendRequest: (user: string) => void;
+    removeFriend: (user: string) => void;
+    addFriend: (user: IUser) => void;
 }
 
 export default userStore;

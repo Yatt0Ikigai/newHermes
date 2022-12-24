@@ -1,0 +1,24 @@
+.sidebar{
+    @apply bg-primary p-4 w-4/5 h-[30rem] util-standard-round text-white relative;
+  }
+  
+  .sidebar-li{
+    @apply hover:text-secondary transition-all duration-200 !important;
+  }
+
+
+  .sidebar-row{
+    @apply grid grid-cols-5 py-2 hover:text-black;
+  }
+
+  .sidebar-icon{
+    @apply w-8 h-8 text-inherit;
+  }
+
+  .sidebar-icon-box{
+    @apply flex justify-center items-center text-inherit;
+  }
+
+  .sidebar-text{
+    @apply col-span-3 font-bold text-inherit;
+  }

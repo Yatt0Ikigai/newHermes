@@ -32,8 +32,7 @@ io.on("connect", (socket: Socket) => {
 
   socket.on("setup", (userData) => {
     socket.join(userData.id);
-    console.log("Yey conected")
-    socket.emit("connected")
+    socket.emit(`Connected to ${userData.id}`)
   })
 
   socket.on('disconnect', () => {
@@ -66,7 +65,7 @@ require("./src/middleware/passport")(passport);
 //Routes
 require("./src/routes/auth.route")(app);
 require("./src/routes/user.route")(app);
-require("./src/routes/friends.route")(app);
+require("./src/routes/friends.route")(app,io);
 require("./src/routes/chats.route")(app,io);
 //Routes
 

@@ -1,3 +1,7 @@
+@import "./scss/components/sidebar.scss";
+
+@import url("https://use.typekit.net/cui8cmw.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,8 +11,13 @@ body {
   box-sizing: border-box;
 }
 
+* {
+  @apply font-montserrat box-content;
+}
+/*Layouts*/
+
 .main{
-  @apply grid grid-cols-4 gap-10;
+  @apply grid gap-5 grid-cols-5;
 }
 
 .main-friendlist{
@@ -17,4 +26,49 @@ body {
 
 .main-content{
   @apply col-span-3 bg-white;
+}
+
+/*Components*/
+
+.cont{
+  @apply bg-gray-200 w-full box-border util-padding-box util-standard-round 
+}
+
+
+.icon--navbar{
+  @apply relative w-10 h-10 rounded-full p-2 mx-1  text-secondary;
+}
+
+.icon--sidebar{
+  @apply relative w-8 h-8 my-1 p-1;
+}
+
+.avatar-img{
+  @apply w-10 h-10 rounded-full;
+}
+
+.reaction--menu{
+  @apply hidden;
+}
+
+
+/*Utils*/
+
+.util-child-center{
+  @apply [&>*]:flex [&>*]:items-center;
+}
+.util-center-child-row{
+  @apply flex items-center;
+}
+
+.util-padding-box{
+  @apply p-3
+}
+
+
+.util-standard-round{
+  @apply rounded-md;
+}
+.util-standard-shadow{
+  @apply shadow-lg;
 }

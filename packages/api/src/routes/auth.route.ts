@@ -13,14 +13,15 @@ module.exports = function (app: express.Application) {
         })
         return;
       }
-      req.logIn(user, async(err) => {
+      req.logIn(user, async (err) => {
         if (err) next(err);
         if (req.user) {
           res.status(200).json({
             message: "User logged in",
-        })
-        return;
-      }
+          })
+          console.log("Success")
+          return;
+        }
         else res.status(290).json({
           message: "Wrong email or password",
         })
@@ -36,13 +37,16 @@ module.exports = function (app: express.Application) {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
     })
-    if (user) res.status(201).json({
-      message:"User created",
-      //Authenticate 
-    }); 
+    if (user) {
+      req.logIn(user, async (err) => {
+        res.status(201).json({
+          message: "User created",
+        });
+      })
+    }
     else res.status(400).json({
-      message:"Cant create user"
-    })
+        message: "Cant create user"
+      })
   })
 
 
@@ -60,7 +64,7 @@ module.exports = function (app: express.Application) {
     try {
       if (req.user) {
         const user = await findUser({ id: req.user.id }, { firstName: true, lastName: true });
-        if( user ) res.status(200).json({
+        if (user) res.status(200).json({
           message: "User logged",
           user: {
             id: req.user.id,

@@ -24,8 +24,9 @@ const authStore = create<IauthStore>()(
                         username: email.toLowerCase(),
                         password: password,
                     })
-                if (res.status === 200) set({ userStatus: { logged: true, loading: false, error: null } });
+                if (res.status === 200) {set({ userStatus: { logged: true, loading: false, error: null } })}
                 else set({ userStatus: { logged: false, loading: false, error: res.data } });
+                return res.status;
             },
 
             authLogOut: async () => {
@@ -44,14 +45,15 @@ const authStore = create<IauthStore>()(
                     });
                 if (res.status === 200) set({ userStatus: { logged: true, loading: false, error: null } });
                 set({ userStatus: { logged: false, loading: false, error: null } })
+                return res.status;
             },
         })))
 
 export interface IauthStore {
     userStatus: { logged: boolean, loading: boolean, error: string | null },
     authIsLogged: () => Promise<void>,
-    authLogIn: (email: string, password: string) => Promise<void>,
+    authLogIn: (email: string, password: string) => Promise<number>,
     authLogOut: () => Promise<void>,
-    authRegister: (firstName: string, lastName: string, email: string, password: string) => Promise<void>,
+    authRegister: (firstName: string, lastName: string, email: string, password: string) => Promise<number>,
 }
 export default authStore;
