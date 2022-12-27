@@ -9,20 +9,25 @@ import { IChat as IChatUserStore } from "../interfaces/userStore.interface";
 
 const chatStore = create<IChatStore>()(
     (set, get) => ({
-        selectedChat: "",
-        openedChats: [],
-
+        openedChat: null,
+        messages: [],
         loadMessages: async (chatId) => {
+            console.log(get().messages)
+            set((state) => ({
+                openedChat: {
+                    id: chatId,
+                    loading: true,
+                }
+            }));
             const res = await getRequest(`chats/${chatId}`)
             if (res.status === 200) {
-                var chats = get().openedChats;
-                var chat = chats.find((ch) => ch.chatId === chatId) as IChat
-                chat.messages = res.data;
-                chat.loading = false;
-                chats = chats.map((ch) => ch.chatId === chatId ? chat : ch);
                 set((state) => ({
                     ...state,
-                    openedChats: chats
+                    messages: res.data,
+                    openedChat: {
+                        id: chatId,
+                        loading: false,
+                    }
                 }));
             } else alert("sth went wrong")
         },
@@ -32,54 +37,29 @@ const chatStore = create<IChatStore>()(
         },
 
         receivedMessage: (mess) => {
-            var chats = get().openedChats;
-            var specificChat = get().openedChats.find(ch => ch.chatId === mess.chatId);
-            if (specificChat) {
-                specificChat.messages = [mess, ...specificChat.messages];
-                chats = chats.map((ch) => ch.chatId === mess.chatId ? specificChat as IChat : ch)
+            const chat = get().openedChat;
+            if (chat && mess.chatId === chat.id) {
+                const messages = get().messages;
                 set((state) => ({
                     ...state,
-                    openedChats: chats,
+                    messages: [mess,...messages]
                 }))
-            } else {
-
             }
         },
 
-        openChat: (chat) => {
-            var isOpened = get().openedChats.find((ch) => ch.chatId === chat.id)
-            if (isOpened) return;
-            const newChat = {
-                chatId: chat.id,
-                loading: true,
-                messages: [],
-                name: "",
-                participants: chat.participants,
-            } as IChat;
-            set((state) => ({
-                ...state,
-                openedChats: [newChat, ...get().openedChats]
-            }))
-            get().loadMessages(newChat.chatId);
-        },
-
         closeChat: (chatId) => {
-            const chats = get().openedChats.filter(el => el.chatId !== chatId);
-            set((state) => ({
-                ...state,
-                openedChats: chats
-            }))
+
         }
     })
 )
 
 export interface IChatStore {
-    openedChats: IChat[],
+    openedChat: { id: string, loading: boolean } | null,
+    messages: IMessage[],
     receivedMessage: (message: IMessage) => void,
     loadMessages: (chatId: string) => Promise<any>,
     sendMessage: (mess: ISendMess) => Promise<any>,
-    openChat: (chat: IChatUserStore) => void;
-    closeChat: (chatId:string) => void;
+    closeChat: (chatId: string) => void;
 }
 
 

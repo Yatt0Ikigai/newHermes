@@ -72,3 +72,10 @@ body {
 .util-standard-shadow{
   @apply shadow-lg;
 }
+
+.util-pad{
+  @apply p-3
+}
+.util-round{
+  @apply rounded-md;
+}
