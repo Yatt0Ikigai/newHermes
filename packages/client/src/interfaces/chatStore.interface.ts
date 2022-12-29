@@ -1,20 +1,17 @@
 export interface IChat {
-    messages: IMessage[],
-    participants: IChatParticipant[]
-    name: string | null,
-    chatId: string,
-    loading: boolean,
-}
-
-export interface IChatParticipant {
-    firstName: string,
-    lastName: string,
+    name: string,
     id: string,
+    lastMessage: IMessage | null,
+    participants: {
+        firstName: string,
+        lastName: string,
+        id: string
+    }[]
 }
 
 export interface ISendMess {
-    senderId: string, 
-    chatId: string, 
+    senderId: string,
+    chatId: string,
     message: string
 }
 
@@ -23,4 +20,5 @@ export interface IMessage {
     senderId: string,
     chatId: string,
     message: string,
+    timeStamp: Date,
 }

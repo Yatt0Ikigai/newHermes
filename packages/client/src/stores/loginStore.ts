@@ -8,8 +8,8 @@ const authStore = create<IauthStore>()(
             userStatus: { logged: false, loading: false, error: null },
             authIsLogged: async () => {
                 set((state) => ({
-                   ...state,
-                   userStatus: { logged: false, loading: true, error: null}, 
+                    ...state,
+                    userStatus: { logged: false, loading: true, error: null },
                 }))
                 const res = await getRequest("is-logged");
                 if (res.status === 200) set({ userStatus: { logged: true, loading: false, error: null } });
@@ -24,7 +24,7 @@ const authStore = create<IauthStore>()(
                         username: email.toLowerCase(),
                         password: password,
                     })
-                if (res.status === 200) {set({ userStatus: { logged: true, loading: false, error: null } })}
+                if (res.status === 200) { set({ userStatus: { logged: true, loading: false, error: null } }) }
                 else set({ userStatus: { logged: false, loading: false, error: res.data } });
                 return res.status;
             },

@@ -19,7 +19,6 @@ module.exports = function (app: express.Application) {
           res.status(200).json({
             message: "User logged in",
           })
-          console.log("Success")
           return;
         }
         else res.status(290).json({

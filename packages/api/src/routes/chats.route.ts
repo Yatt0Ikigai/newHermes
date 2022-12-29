@@ -1,9 +1,21 @@
 import express from "express";
 import { findChat } from "../utils/chatUtils";
-import { postMessage, createChat, getMessages } from "../controllers/chats.controller";
+import { postMessage, createChat, getMessages, getSelfInfo } from "../controllers/chats.controller";
 import { Server } from "http";
 
 module.exports = function (app: express.Application, socket:any) {
+    app.get('/chats/init', async (req: any, res, next) => {
+        try {
+            if (req.user === undefined) new Error("User not logged in");
+            const user = await getSelfInfo({ selfId: req.user.id })
+            res.status(200).json(user);
+        } catch {
+            (e: any) => {
+
+            }
+        }
+    })
+
     app.post('/chats/:id/message', async (req: any, res, next) => {
         try {
             if (req.user === undefined) throw "Not Authenticated";
@@ -56,13 +68,5 @@ module.exports = function (app: express.Application, socket:any) {
         }
     })
 
-    app.get('/chats', async (req: any, res, next) => {
-        try {
-            if (!req.user.authenticated()) throw "Not Authenticated";
-        } catch {
-            (e: any) => {
 
-            }
-        }
-    })
 }

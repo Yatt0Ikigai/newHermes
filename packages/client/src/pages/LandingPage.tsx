@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import authStore from "../stores/loginStore";
-import userStore from '../stores/userStore';
+
 
 //comontents
 import Navbar from "../components/Navbar";
@@ -12,6 +11,11 @@ import Post from '../components/Post';
 import Sidebar from '../components/Sidebar';
 import PostModal from '../components/PostModal';
 import StoriesMini from '../components/StoriesMini';
+
+
+import storeChat from '../stores/chatStore';
+import storeAuth from "../stores/loginStore";
+import storeUser from '../stores/userStore';
 interface chat {
   participants: String[]
   lastMessage: String
@@ -19,17 +23,19 @@ interface chat {
 }
 export default function LoginPage() {
   const navigate = useNavigate();
-  const storeAuth = authStore();
-  const storeUser = userStore();
+  const authStore = storeAuth();
+  const userStore = storeUser();
+  const chatStore = storeChat();
 
 
   useEffect(() => {
-    storeUser.getUserInfo();
+    chatStore.init();
+    userStore.init();
   }, [])
 
   //if (!storeAuth.userStatus.logged && !storeUser.status.loading) navigate('/login');
 
-  if (storeAuth.userStatus.loading || storeUser.status.loading) {
+  if (authStore.userStatus.loading || userStore.status.loading) {
     return (
       <div className="w-screen h-screen flex justify-center items-center bg-white">
         <LoadingSpinner />

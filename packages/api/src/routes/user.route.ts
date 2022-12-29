@@ -10,7 +10,7 @@ import { Prisma } from "@prisma/client";
 
 module.exports = function (app: express.Application) {
     /*                                                         GET                                                                        */
-    app.get('/users/self', async (req: any, res, next) => {
+    app.get('/users/init', async (req: any, res, next) => {
         //GET LOGGED USER DATA
         try {
             if (req.user === undefined) new Error("User not logged in");

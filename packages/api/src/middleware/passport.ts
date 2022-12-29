@@ -32,7 +32,6 @@ module.exports = function(passport:any){
   })
 
   passport.deserializeUser((userInfo: any, done: any) => {
-    console.log(userInfo);
     prisma.users.findFirst({
       where: {
         id:userInfo.id,

@@ -47,3 +47,50 @@ export const createChat = async ({ participantsIds }: { participantsIds: string[
         id: chat.id
     };
 }
+
+export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
+    const user = await findUser({ id: selfId }, { chatIds: true });
+
+    const chats = await Promise.all(
+        user.chatIds.map(async (id: string) => {
+            const chat = await findChat({ id });
+            const participants = await Promise.all(
+                chat.participantsIds.map(async (id: string) => {
+                    return await findUser({ id }, {
+                        firstName: true,
+                        lastName: true,
+                        id: true
+                    });
+                })
+            )
+            if(chat.lastMessage){
+                const lMessage = await gMessages({ id: chat.lastMessage });
+                const lastSender = await findUser({ id: lMessage[0].senderId }, { firstName: true, lastName: true, id: true });
+                return {
+                    lastMessage: {
+                        senderId: lastSender.id,
+                        author: lastSender.firstName + " " + lastSender.lastName,
+                        message: lMessage[0].message,
+                        timeStamp: lMessage[0].createdAt
+                    },
+                    participants,
+                    id
+                }
+            }
+            else{
+                return {
+                    lastMessage: null,
+                    participants,
+                    id
+                }
+            }
+        })
+    )
+    
+    chats.sort((a,b) => {
+        if( !a.lastMessage ) return 1;
+        if( !b.lastMessage ) return -1;
+        return a.lastMessage.timeStamp < b.lastMessage.timeStamp ? 1 : -1;
+    })
+    return chats;
+}

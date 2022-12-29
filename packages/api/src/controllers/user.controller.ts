@@ -35,7 +35,6 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
             friendList: true,
             friendRequestList: true,
             pendingFriendRequest: true,
-            chatIds: true,
         }) as any;
 
     if (!user) throw "User not found";
@@ -70,40 +69,7 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
         })
     )
 
-    const chats = await Promise.all(
-        user.chatIds.map(async (id: string) => {
-            const chat = await findChat({ id });
-            const participants = await Promise.all(
-                chat.participantsIds.map(async (id: string) => {
-                    return await findUser({ id }, {
-                        firstName: true,
-                        lastName: true,
-                        id: true
-                    });
-                })
-            )
-            if(chat.lastMessage){
-                const lMessage = await gMessages({ id: chat.lastMessage });
-                const lastSender = await findUser({ id: lMessage[0].senderId }, { firstName: true, lastName: true, id: true });
-                return {
-                    lastMessage: {
-                        author: lastSender.firstName + " " + lastSender.lastName,
-                        message: lMessage[0].message,
-                        timeStamp: lMessage[0].createdAt
-                    },
-                    participants,
-                    id
-                }
-            }
-            else{
-                return {
-                    lastMessage: null,
-                    participants,
-                    id
-                }
-            }
-        })
-    )
+    
 
     const res = {
         id: user.id,
@@ -112,7 +78,6 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
         friendList,
         friendRequestList,
         pendingFriendRequest,
-        chats,
     }
 
     return res;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BsCardImage, BsEmojiSmile, BsMic, BsThreeDots } from 'react-icons/bs';
 import { CgProfile } from 'react-icons/cg';
 import { GrAttachment } from "react-icons/gr";
@@ -9,6 +9,8 @@ import storeUser from '../stores/userStore';
 export default function ChatContainer() {
     const chatStore = storeChat();
     const userStore = storeUser();
+
+    const [input, setInput] = useState("");
 
     return (
         <div className='col-span-7 util-pad flex flex-col max-h-screen box-border'>
@@ -35,7 +37,18 @@ export default function ChatContainer() {
             </section>
             <section className='flex bg-gray-300 util-round'>
                 <GrAttachment className='m-2 w-6 h-6' />
-                <input type="text" placeholder='Write Your message' className='bg-transparent p-2 border-t-2 text-black placeholder:text-black focus:outline-none grow' />
+                <form action="" onSubmit={(e) => {
+                    e.preventDefault();
+                    if(chatStore.openedChat) chatStore.sendMessage({
+                        chatId: chatStore.openedChat.id,
+                        message: input,
+                        senderId: userStore.id
+                    });
+                    setInput("");
+                }} className="grow">
+                    <input type="text" placeholder='Write Your message' className='bg-transparent p-2 border-t-2 text-black placeholder:text-black focus:outline-none w-full'
+                        value={input} onChange={(e) => setInput(e.currentTarget.value)} />
+                </form>
                 <BsCardImage className='m-2 w-6 h-6' />
                 <BsEmojiSmile className='m-2 w-6 h-6' />
                 <BsMic className='m-2 w-6 h-6' />

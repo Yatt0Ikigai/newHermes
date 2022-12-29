@@ -10,8 +10,10 @@ import LandingPage from "./pages/LandingPage";
 import ProfilePage from "./pages/UserPage";
 
 import "./index.scss";
-import userStore from "./stores/userStore";
-import chatStore from "./stores/chatStore";
+
+import storeUser from "./stores/userStore";
+import storeChat from "./stores/chatStore";
+import storeFriend from "./stores/friendStore";
 
 import {
   IMessage
@@ -24,43 +26,43 @@ import RegisterPage from "./pages/RegisterPage";
 import ChatPage from "./pages/ChatPage";
 
 const App = () => {
-  const storeUser = userStore();
-  const storeChat = chatStore();
+  const userStore = storeUser();
+  const chatStore = storeChat();
+  const friendStore = storeFriend();
 
   const audioPlayer = new Audio(notificationSound);
 
   useEffect(() => {
-    if (storeUser.socket) {
-      storeUser.socket.on("messageReceived", (mess: IMessage) => {
-        const chat = storeUser.findChat(mess.chatId);
-        storeChat.receivedMessage(mess);
-        storeChat.openChat(chat);
+    const socket = userStore.socket;
+    if (socket) {
+      socket.on("messageReceived", (mess: IMessage) => {
+        chatStore.receiveMessage(mess);
 
-        if (mess.senderId !== storeUser.id) audioPlayer.play();
+        if (mess.senderId !== userStore.id) audioPlayer.play();
       });
 
-      storeUser.socket.on("cancelFriendRequest", (user: any) => {
-        storeUser.removeFriendRequest(user.friendId)
+      socket.on("cancelFriendRequest", (user: any) => {
+        friendStore.removeFriendRequest(user.friendId)
       });
 
-      storeUser.socket.on("gotFriendRequest", (user: IUser) => {
-        storeUser.addFriendRequest(user)
+      socket.on("gotFriendRequest", (user: IUser) => {
+        friendStore.addFriendRequest(user)
       });
 
-      storeUser.socket.on("acceptFriendship", (user: IUser) => {
-        storeUser.addFriend(user)
+      socket.on("acceptFriendship", (user: IUser) => {
+        friendStore.addFriend(user)
 
       });
 
-      storeUser.socket.on("removeFriendship", (user: string) => {
-        storeUser.removeFriend(user)
+      socket.on("removeFriendship", (user: string) => {
+        friendStore.removeFriend(user)
       });
 
     }
     return () => {
-      storeUser.socket?.off('messageReceived');
-      storeUser.socket?.off('gotFriendRequest');
-      storeUser.socket?.off('cancelFriendRequest');
+      userStore.socket?.off('messageReceived');
+      userStore.socket?.off('gotFriendRequest');
+      userStore.socket?.off('cancelFriendRequest');
     };
   })
 

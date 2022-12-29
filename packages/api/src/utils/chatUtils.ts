@@ -3,7 +3,8 @@ import { Prisma, Inboxes } from "@prisma/client"
 
 export const findChat = async (
     where: Partial<Prisma.InboxesWhereInput>,
-    select?: Prisma.InboxesSelect) => {
+    select?: Prisma.InboxesSelect
+    ) => {
     return select ? await prisma.inboxes.findFirst({ where, select }) as Inboxes : await prisma.inboxes.findFirst({ where }) as Inboxes;
 }
 
