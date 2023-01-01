@@ -9,7 +9,7 @@ export default function Navbar() {
     }
 
     return (
-        <nav className="h-12 my-4">
+        <nav className="hidden h-12 my-4 sm:block">
             <ul className='flex justify-between text-xl'>
                 <li onClick={e => onClickHandler(1)} className={`font-bold text-xl border-b-2 transition-all ${clicked === 1 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
                     <button>Posts</button>

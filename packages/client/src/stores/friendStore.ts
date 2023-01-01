@@ -11,8 +11,19 @@ const friendStore = create<IFriendStore>()((set, get) => ({
     friendList: [],
     friendRequestList: [],
     pendingInviteList: [],
-    chatsList: [],
 
+    init: async () => {
+        const res = await getRequest('friends/init');
+        if (res.status === 200) {
+            set((state) => ({
+                ...state,
+                friendList: res.data.friendList,
+                friendRequestList: res.data.friendRequestList,
+                pendingInviteList: res.data.pendingInviteList,
+
+            }))
+        } else alert("sth went wrong")
+    },
     acceptFriendRequest: async ({ firstName, lastName, id }) => {
         const res = await postRequest(`friends`, { userId: id });
         if (res.status === 200) {
@@ -101,8 +112,8 @@ export interface IFriendStore {
     friendList: IUser[],
     friendRequestList: IUser[],
     pendingInviteList: IUser[],
-    chatsList: IChat[],
 
+    init: () => Promise<any>,
     sendFriendRequest: (user: IUser) => Promise<any>,
     acceptFriendRequest: (user: IUser) => Promise<any>,
     declineFriendRequest: (id: string) => Promise<any>,

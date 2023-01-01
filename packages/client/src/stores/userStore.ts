@@ -15,7 +15,6 @@ const userStore = create<IUserStore>()(devtools((set, get) => ({
     lastName: "",
     id: "",
     socket: null,
-
     init: async () => {
         set((state) => ({
             ...state,

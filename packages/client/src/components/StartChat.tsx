@@ -12,7 +12,7 @@ export default function StartChat() {
             <input type="checkbox" id="my-modal-20" className="modal-toggle" />
             <div className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">Start new chat</h3>
+                    <h3 className="text-lg font-bold">Start new chat</h3>
                     <div>
                         {
                             storeUser.friendList.map(({ firstName, lastName, id }) => {

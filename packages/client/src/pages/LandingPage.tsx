@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 //comontents
-import Navbar from "../components/Navbar";
+import Navbar from "../components/NavbarLanding";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 import WritePost from '../components/WritePost';
@@ -37,7 +37,7 @@ export default function LoginPage() {
 
   if (authStore.userStatus.loading || userStore.status.loading) {
     return (
-      <div className="w-screen h-screen flex justify-center items-center bg-white">
+      <div className="flex items-center justify-center w-screen h-screen bg-white">
         <LoadingSpinner />
       </div>
     )
@@ -45,10 +45,10 @@ export default function LoginPage() {
 
 
   return (
-    <>
-      <div className='grid grid-cols-12 gap-10 bg-white text-gray-600'>
+    <div className='h-screen'>
+      <div className='grid h-full grid-cols-12 gap-5 px-10 py-5 text-gray-600 bg-white md:px-0 sm:py-0'>
         <Sidebar />
-        <div className='col-span-8'>
+        <div className='col-span-12 md:col-span-10 xl:col-span-8'>
           <Navbar />
           <WritePost />
           <Post comments={[]} content={{ attachment: null, text: "Hello iys my first post :)" }} createdAt={"12"} creatorID={"1"} likes={20} />
@@ -56,7 +56,7 @@ export default function LoginPage() {
         <StoriesMini/>
       </div >
       <PostModal />
-    </>
+    </div>
 
   )
 }

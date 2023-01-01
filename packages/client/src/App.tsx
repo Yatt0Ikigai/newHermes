@@ -24,6 +24,7 @@ import { IUser } from "./interfaces/userStore.interface";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ChatPage from "./pages/ChatPage";
+import FriendsPage from "./pages/FriendsPage";
 
 const App = () => {
   const userStore = storeUser();
@@ -74,6 +75,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/user/:userId" element={<ProfilePage />} />
         <Route path="/chats" element={<ChatPage/>} />
+        <Route path="/friends" element={<FriendsPage/>} />
       </Routes>
     </BrowserRouter>
   )

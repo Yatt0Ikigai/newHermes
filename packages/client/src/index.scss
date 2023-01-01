@@ -1,5 +1,3 @@
-@import "./scss/components/sidebar.scss";
-
 @import url("https://use.typekit.net/cui8cmw.css");
 
 @tailwind base;
@@ -79,3 +77,4 @@ body {
 .util-round{
   @apply rounded-md;
 }
+

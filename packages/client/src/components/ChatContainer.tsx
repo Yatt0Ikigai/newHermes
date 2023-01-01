@@ -13,18 +13,18 @@ export default function ChatContainer() {
     const [input, setInput] = useState("");
 
     return (
-        <div className='col-span-7 util-pad flex flex-col max-h-screen box-border'>
+        <div className='box-border flex flex-col max-h-screen col-span-7 util-pad'>
             <section className='flex items-center pb-2 border-b-2'>
                 <CgProfile className={"avatar-img"} />
                 <span>Elon Musk</span>
-                <div className="dropdown dropdown-end self-center ml-auto">
-                    <label tabIndex={0}> <BsThreeDots className='icons p-2' /></label>
-                    <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-gray-300 rounded-box w-52">
+                <div className="self-center ml-auto dropdown dropdown-end">
+                    <label tabIndex={0}> <BsThreeDots className='p-2 icons' /></label>
+                    <ul tabIndex={0} className="p-2 bg-gray-300 shadow dropdown-content menu rounded-box w-52">
                         <li><a>Delete user</a></li>
                     </ul>
                 </div>
             </section>
-            <section className='grow flex flex-col-reverse text-black overflow-auto'>
+            <section className='flex flex-col-reverse overflow-auto text-black grow'>
                 {
                     chatStore.messages.map((mess) => {
                         return (
@@ -36,7 +36,7 @@ export default function ChatContainer() {
                 }
             </section>
             <section className='flex bg-gray-300 util-round'>
-                <GrAttachment className='m-2 w-6 h-6' />
+                <GrAttachment className='w-6 h-6 m-2' />
                 <form action="" onSubmit={(e) => {
                     e.preventDefault();
                     if(chatStore.openedChat) chatStore.sendMessage({
@@ -46,12 +46,12 @@ export default function ChatContainer() {
                     });
                     setInput("");
                 }} className="grow">
-                    <input type="text" placeholder='Write Your message' className='bg-transparent p-2 border-t-2 text-black placeholder:text-black focus:outline-none w-full'
+                    <input type="text" placeholder='Write Your message' className='w-full p-2 text-black bg-transparent border-t-2 placeholder:text-black focus:outline-none'
                         value={input} onChange={(e) => setInput(e.currentTarget.value)} />
                 </form>
-                <BsCardImage className='m-2 w-6 h-6' />
-                <BsEmojiSmile className='m-2 w-6 h-6' />
-                <BsMic className='m-2 w-6 h-6' />
+                <BsCardImage className='w-6 h-6 m-2' />
+                <BsEmojiSmile className='w-6 h-6 m-2' />
+                <BsMic className='w-6 h-6 m-2' />
             </section>
         </div >
     )

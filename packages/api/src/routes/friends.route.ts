@@ -7,14 +7,30 @@ import {
     declineFriendRequest,
     sendFriendRequest,
     acceptFriendRequest,
-    unfriendUser
+    unfriendUser,
+    getSelfInfo
 } from "../controllers/friends.controller";
 
 import { findUser } from "../utils/userUitls";
 
 module.exports = function (app: express.Application, socket: any) {
     /*                                                         GET                                                                        */
+    
+    app.get('/friends/init', async (req: any, res, next) => {
+        //GET LOGGED USER DATA
+        try {
+            if (req.user === undefined) new Error("User not logged in");
+            const info = await getSelfInfo({ userId: req.user.id })
+            res.status(200).json(info)
+        } catch {
+            (err: any) => {
+                res.status(500).json(err);
+            }
+        }
+    })
+
     app.get("/friends/list/:userId", async (req: any, res, next) => {
+
         //GET USER FRIEND LIST
         try {
             if (req.user === undefined) new Error("User not logged in");

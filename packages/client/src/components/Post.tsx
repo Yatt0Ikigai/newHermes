@@ -11,16 +11,16 @@ export default function Post(post: IPost) {
   const commentRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className='bg-gray-200 w-full box-border util-padding-box util-standard-round my-4 shadow-lg h-max'>
-      <section className='flex justify-start items-center'>
+    <div className='box-border w-full my-4 bg-gray-200 shadow-lg util-padding-box util-standard-round h-max'>
+      <section className='flex items-center justify-start'>
         <CgProfile className={"avatar-img"} />
         <div className='flex flex-col ml-2 grow'>
-          <span className='text-md font-bold'>Jan Kowalski</span>
+          <span className='font-bold text-md'>Jan Kowalski</span>
           <span className='text-sm font-light'>5 mins ago</span>
         </div>
         <div className="dropdown dropdown-end">
-          <label tabIndex={0}> <BsThreeDots className='icons p-2 bg-gray-300 rounded-full' /></label>
-          <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-gray-300 rounded-box w-52">
+          <label tabIndex={0}> <BsThreeDots className='p-2 bg-gray-300 rounded-full icons' /></label>
+          <ul tabIndex={0} className="p-2 bg-gray-300 shadow dropdown-content menu rounded-box w-52">
             <li><a>Report Post</a></li>
           </ul>
         </div>
@@ -28,7 +28,7 @@ export default function Post(post: IPost) {
       <section className='p-4'>
         {post.content.text}
       </section>
-      <section className='flex justify-around util-child-center border-gray-500 py-2 border-t'>
+      <section className='flex justify-around py-2 border-t border-gray-500 util-child-center'>
         <span>{
             liked ? <AiFillLike/> : <AiOutlineLike className='icons' />
           } </span>
@@ -39,10 +39,10 @@ export default function Post(post: IPost) {
         <span><RiShareForwardLine className='icons' /></span>
       </section>
       <section className={`border-gray-400 pt-2 border-t ${showComments ? "visible" : "hidden"}`}>
-        <div className='input bg-gray-200 flex flex-col px-0'>
+        <div className='flex flex-col px-0 bg-gray-200 input'>
           <div className='flex'>
             <CgProfile className={"avatar-img"} />
-            <input type="text" placeholder="Type here" className="input input-ghost bg-opacity-0 w-full max-w-x focus:bg-transparent focus:border-0 focus:outline-0" ref={commentRef} />
+            <input type="text" placeholder="Type here" className="w-full bg-opacity-0 input input-ghost max-w-x focus:bg-transparent focus:border-0 focus:outline-0" ref={commentRef} />
           </div>
         </div>
         <div className='flex'>
@@ -52,14 +52,14 @@ export default function Post(post: IPost) {
               <span>Bartosz Myśliń</span>
               <span>A czy Obniżka może być w górę?</span>
             </div>
-            <div className='font-black text-xs'>
+            <div className='text-xs font-black'>
               <button className='pr-2'>Like it</button>
               <span>1 day</span>
             </div>
           </div>
-          <div className="dropdown dropdown-end self-center">
-            <label tabIndex={0}> <BsThreeDots className='icons p-2' /></label>
-            <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-gray-300 rounded-box w-52">
+          <div className="self-center dropdown dropdown-end">
+            <label tabIndex={0}> <BsThreeDots className='p-2 icons' /></label>
+            <ul tabIndex={0} className="p-2 bg-gray-300 shadow dropdown-content menu rounded-box w-52">
               <li><a>Report Post</a></li>
             </ul>
           </div>

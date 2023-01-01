@@ -6,11 +6,11 @@ import { GoLocation } from 'react-icons/go'
 export default function PostModal() {
     return (
         <div>
-            <input type="checkbox" id="my-modal" className="modal-toggle shadow-lg" />
-            <div className="modal text-black">
-                <div className="modal-box bg-gray-200 p-3 util-standard-round">
-                    <section className='relative w-full flex items-center'>
-                        <h3 className="font-bold text-lg grow flex items-center justify-center">Create Post</h3>
+            <input type="checkbox" id="my-modal" className="shadow-lg modal-toggle" />
+            <div className="text-black modal">
+                <div className="p-3 bg-gray-200 modal-box util-standard-round">
+                    <section className='relative flex items-center w-full'>
+                        <h3 className="flex items-center justify-center text-lg font-bold grow">Create Post</h3>
                         <div className="">
                             <label htmlFor="my-modal">
                                 <AiOutlineClose className='w-8 h-8' />
@@ -19,15 +19,15 @@ export default function PostModal() {
                     </section>
                     <section className='py-2'>
                         <textarea placeholder='What are you thinking about?'
-                            className='bg-inherit resize-none focus:outline-none w-full'></textarea>
+                            className='w-full resize-none bg-inherit focus:outline-none'></textarea>
                     </section>
-                    <section className='border border-gray-700 util-standard-round p-2 flex items-center'>
+                    <section className='flex items-center p-2 border border-gray-700 util-standard-round'>
                         <span className='grow'>Add to post</span>
                         <button className='p-2'><BsCardImage /></button>
                         <button className='p-2'><BsEmojiSmile /></button>
                         <button className='p-2'><GoLocation /></button>
                     </section>
-                    <button className='btn w-full box-border my-2'>Publish</button>
+                    <button className='box-border w-full my-2 btn'>Publish</button>
                 </div>
             </div>
         </div>

@@ -10,22 +10,22 @@ export default function FriendList() {
     return (
         <div className='sidebar justify-self-end'>
             <div>
-                <section className='flex justify-between items-center border-b-1 border-solid border-b-white'>
-                    <Link to="/" className='font-bold text-white text-sm'>Friend Requests</Link>
-                    <span className='font-black text-secondary text-lg'>{storeUser.friendRequestList.length}</span>
+                <section className='flex items-center justify-between border-solid border-b-1 border-b-white'>
+                    <Link to="/" className='text-sm font-bold text-white'>Friend Requests</Link>
+                    <span className='text-lg font-black text-secondary'>{storeUser.friendRequestList.length}</span>
                 </section>
                 <section>
                     {
                         storeUser.friendRequestList.length != 0 ?
                             <div className='grid grid-cols-4 grid-rows-2'>
                                 <CgProfile className={"avatar-img "} />
-                                <section className='text-base font-bold col-span-3 flex justify-between items-center'>
+                                <section className='flex items-center justify-between col-span-3 text-base font-bold'>
                                     <span>Jan Kowalski</span>
-                                    <span className="font-large text-sm">4h</span>
+                                    <span className="text-sm font-large">4h</span>
                                 </section>
-                                <section className='col-start-2 col-span-3 flex justify-between'>
-                                    <button className="btn bg-secondary text-white min-h-min p-3 h-8">Accept</button>
-                                    <button className="btn bg-tertiary text-white min-h-min p-3 h-8">Decline</button>
+                                <section className='flex justify-between col-span-3 col-start-2'>
+                                    <button className="h-8 p-3 text-white btn bg-secondary min-h-min">Accept</button>
+                                    <button className="h-8 p-3 text-white btn bg-tertiary min-h-min">Decline</button>
                                 </section>
                             </div>
                             : ""
@@ -36,7 +36,7 @@ export default function FriendList() {
             <section className='my-2'>
                 <span>BirthDays</span>
                 <div className='flex'>
-                    <GiPresent className='sidebar-icon mr-2' />
+                    <GiPresent className='mr-2 sidebar-icon' />
                     Today Noone have birthday ;c
                 </div>
             </section>
@@ -46,8 +46,8 @@ export default function FriendList() {
                 <Prof />
                 <Prof />
             </section>
-            <section className='w-full text-center mt-8'>
-                <Link to='/' className="btn normal-case font-bold rounded-full bg-tertiary text-secondary px-8 absolute bottom-0 left-0 translate-x-1/2 -translate-y-1/2">
+            <section className='w-full mt-8 text-center'>
+                <Link to='/' className="absolute bottom-0 left-0 px-8 font-bold normal-case translate-x-1/2 -translate-y-1/2 rounded-full btn bg-tertiary text-secondary">
                     See more
                 </Link>
             </section>
@@ -57,7 +57,7 @@ export default function FriendList() {
 
 const Prof = () => {
     return (
-        <section className='sidebar-row my-2'>
+        <section className='my-2 sidebar-row'>
             <CgProfile className={"avatar-img"} />
             <span className='sidebar-text'>Jan Kowalski</span>
         </section>

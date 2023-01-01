@@ -19,7 +19,7 @@ export default function ChatSide() {
     const chatStore = StoreChat();
 
     return (
-        <div className='col-span-3 util-pad flex flex-col'>
+        <div className='flex flex-col col-span-3 util-pad'>
             <div className='flex'>
                 <input type="text" placeholder='Search' className='grow' />
                 <AiOutlinePlus />
@@ -60,16 +60,16 @@ const Chat = ({ friendName, lastMessage, click, clicked, isMessYours }: { friend
     },[lastMessage])
     return (
         <div className={`grid grid-cols-5 py-4 justify-center ${clicked ? "bg-gray-400" : ""}`} onClick={click}>
-            <span className='flex justify-center items-center'>
+            <span className='flex items-center justify-center'>
                 <CgProfile className={"avatar-img"} />
             </span>
-            <section className='col-span-3 flex flex-col justify-center'>
+            <section className='flex flex-col justify-center col-span-3'>
                 <span className='text-sm font-semibold'>{friendName}</span>
                 <span className='text-xs font-normal'>{isMessYours ? "You: " : ""} {lastMessage ? lastMessage.message : "Noone Sent yet"}</span>
             </section>
-            <section className='flex flex-col justify-center items-center'>
+            <section className='flex flex-col items-center justify-center'>
                 <span className='text-xs font-extralight'>{lastMessage ? longAgo : ""}</span>
-                <span className='text-xs p-2 rounded-full bg-blue-400 w-4 text-center visible'>11</span>
+                <span className='visible w-4 p-2 text-xs text-center bg-blue-400 rounded-full'>11</span>
             </section>
         </div>
     )
