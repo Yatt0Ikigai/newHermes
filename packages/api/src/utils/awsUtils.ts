@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 
 
 import crypto from "crypto";
+import { blob } from "stream/consumers";
 
 dotenv.config();
 
@@ -22,15 +23,15 @@ export const S3 = new S3Client({
     region: awsRegion,
 });
 
-export const uploadImg = async (file: Blob, name?:string) => {
+export const uploadImg = async (file: Express.Multer.File, name?:string) => {
     let avatar = name;
     if( !name ) avatar = crypto.randomBytes(32).toString('hex');
-
+    
     const params = {
+        Body: file.buffer,
         Bucket: awsBucket,
         Key: avatar,
-        Body: file,
-        ContentType: file.type
+        ContentType: file.mimetype
     };
 
 

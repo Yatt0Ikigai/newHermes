@@ -68,10 +68,7 @@ module.exports = function (app: express.Application) {
         }
     })
 
-    app.post('/uploadAvatar', upload.single('image'), async function (req: any, res, next) {
-        console.log(req.body?.text)
-        console.log(req.file);
-
+    app.post('/uploadAvatar', upload.single('image'), async function (req:any, res, next) {
         const link = await uploadImg(req.file);
         /*
         const smallAvatar = await Jimp.read(req.file);
@@ -86,7 +83,6 @@ module.exports = function (app: express.Application) {
         }, {
             avatar: link
         })
-
         res.status(200).send(link)
     })
 

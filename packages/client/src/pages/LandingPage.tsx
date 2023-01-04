@@ -48,7 +48,7 @@ export default function LoginPage() {
     <div className='h-screen'>
       <div className='box'>
         <Sidebar />
-        <div className='content lg:col-span-9'>
+        <div className='content lg:col-span-9 xl:col-span-8'>
           <Navbar />
           <WritePost />
           <Post comments={[]} content={{ attachment: null, text: "Hello iys my first post :)" }} createdAt={"12"} creatorID={"63751e85e542323a25132b1b"} likes={20} />

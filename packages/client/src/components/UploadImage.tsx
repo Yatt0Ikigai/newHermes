@@ -11,8 +11,7 @@ export default function UploadImage() {
             if (!image) return;
             const formData = new FormData();
             formData.append("image", image);
-            formData.append("text", desc);
-            await axios.post("http://localhost:8080/uploadImg", formData, {
+            await axios.post("http://localhost:8080/uploadAvatar", formData, {
                 withCredentials:true,
             });
         }}
