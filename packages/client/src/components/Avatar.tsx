@@ -1,13 +1,27 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import storeAction from '../stores/actionStore'
+import { getRequest } from '../utils/axios.util';
 
-export default function Avatar({avatar, online}: {avatar:string, online:boolean}) {
+export default function Avatar({ id }: { id: string }) {
+    const [link, setLink] = useState("");
+    const actionStore = storeAction();
+
+    useEffect(() => {
+        const source = axios.CancelToken.source();
+        const getLink = async () => {
+            const res = await getRequest(`users/${id}/avatar`, source.token)
+            setLink(res.data);
+            console.log(link)
+        }
+        getLink();
+        return () => {
+            source.cancel('Operation Canceled')
+        }
+    }, [])
     return (
-        <div>
-            <div className={`avatar ${online ? "online" : "offline"}`}>
-                <div className="w-8 rounded-full">
-                    <img src={avatar} />
-                </div>
-            </div>
+        <div className={`avatar`}>
+            <img src={link} />
         </div>
     )
 }

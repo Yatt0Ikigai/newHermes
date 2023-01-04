@@ -12,8 +12,8 @@ export default function AddFriendsModal() {
     return (
         <div>
             <input type="checkbox" id="my-modal-6" className="modal-toggle" />
-            <div className="modal modal-bottom sm:modal-middle">
-                <div className="flex flex-col items-center modal-box">
+            <div className="modal modal-middle">
+                <div className="flex flex-col items-center bg-gray-300 modal-box">
                     <h3 className="text-lg font-bold text-middle">Search for new friends</h3>
                     <p className="py-4"></p>
                     <input type="text" placeholder="Type here" className="w-full max-w-xs m-2 input input-bordered input-info" onChange={((e) => {

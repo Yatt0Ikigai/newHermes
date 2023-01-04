@@ -4,6 +4,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import { CgProfile } from 'react-icons/cg';
 import { GoComment } from 'react-icons/go';
 import { RiShareForwardLine } from 'react-icons/ri';
+import Avatar from './Avatar';
 
 export default function Post(post: IPost) {
   const [liked, setLiked] = useState(false);
@@ -13,7 +14,9 @@ export default function Post(post: IPost) {
   return (
     <div className='box-border w-full my-4 bg-gray-200 shadow-lg util-padding-box util-standard-round h-max'>
       <section className='flex items-center justify-start'>
-        <CgProfile className={"avatar-img"} />
+        <div className='w-16 h-16'>
+          <Avatar id={post.creatorID} />
+        </div>
         <div className='flex flex-col ml-2 grow'>
           <span className='font-bold text-md'>Jan Kowalski</span>
           <span className='text-sm font-light'>5 mins ago</span>
@@ -30,8 +33,8 @@ export default function Post(post: IPost) {
       </section>
       <section className='flex justify-around py-2 border-t border-gray-500 util-child-center'>
         <span>{
-            liked ? <AiFillLike/> : <AiOutlineLike className='icons' />
-          } </span>
+          liked ? <AiFillLike /> : <AiOutlineLike className='icons' />
+        } </span>
         <button onClick={e => {
           setShowComments(true)
           commentRef.current?.focus();

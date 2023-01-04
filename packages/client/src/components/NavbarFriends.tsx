@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import { AiOutlinePlus } from 'react-icons/ai';
+import AddFriendsModal from './AddFriendModal';
 
 
 export default function Navbar() {
@@ -13,23 +14,25 @@ export default function Navbar() {
 
     return (
         <nav className="h-12 my-4">
-            <ul className='flex justify-between text-xl'>
-                <li onClick={e => onClickHandler(1)} className={`font-bold text-xl border-b-2 transition-all ${clicked === 1 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
+            <ul className='carousel carousel-center rounded-box'>
+                <li className={`carousel-item px-6 font-bold text-xl border-b-2 transition-all`}>
+                    <label htmlFor="my-modal-6"><AiOutlinePlus /></label>
+                </li>
+                <li onClick={e => onClickHandler(1)} className={`carousel-item px-6 font-bold text-xl border-b-2 transition-all ${clicked === 1 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
                     <button>All friends</button>
                 </li>
-                <li onClick={e => onClickHandler(2)} className={`font-bold text-xl border-b-2 transition-all ${clicked === 2 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
+                <li onClick={e => onClickHandler(2)} className={`carousel-item px-6 font-bold text-xl border-b-2 transition-all ${clicked === 2 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
                     <button>Work</button>
                 </li>
-                <li onClick={e => onClickHandler(3)} className={`font-bold text-xl border-b-2 transition-all ${clicked === 3 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
+                <li onClick={e => onClickHandler(3)} className={`carousel-item px-6 font-bold text-xl border-b-2 transition-all ${clicked === 3 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
                     <button>Highschool</button>
                 </li>
-                <li onClick={e => onClickHandler(4)} className={`font-bold text-xl border-b-2 transition-all ${clicked === 4 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
+                <li onClick={e => onClickHandler(4)} className={`carousel-item px-6 font-bold text-xl border-b-2 transition-all ${clicked === 4 ? "text-black border-b-black hover:text-gray-600" : "hover:text-black"}`}>
                     <button>Hometown</button>
                 </li>
-                <li>
-                    <AiOutlinePlus/>
-                </li>
             </ul>
+
+            <AddFriendsModal/>
         </nav>
     )
 }

@@ -10,6 +10,7 @@ import { IMessage } from "../interfaces/chatStore.interface";
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { BsThreeDots } from 'react-icons/bs';
 
 dayjs.extend(relativeTime);
 
@@ -19,12 +20,15 @@ export default function ChatSide() {
     const chatStore = StoreChat();
 
     return (
-        <div className='flex flex-col col-span-3 util-pad'>
-            <div className='flex'>
+        <div className='flex flex-col col-span-2 lg:col-span-3 util-pad'>
+            <div className='hidden lg:flex'>
                 <input type="text" placeholder='Search' className='grow' />
                 <AiOutlinePlus />
             </div>
             <div className='flex-grow overflow-auto'>
+                <label htmlFor="my-modal-4" className='flex items-center justify-center py-4 lg:hidden'>
+                    <BsThreeDots className='w-6 h-6 rounded-full sm:w-7 sm:h-7 lg:w-8 lg:h-8' />
+                </label>
                 {
                     chatStore.chatsList.map((chat) => {
                         const friend = chat.participants.find((u) => u.id != userStore.id);
@@ -41,6 +45,16 @@ export default function ChatSide() {
                     })
                 }
             </div>
+
+
+
+            <input type="checkbox" id="my-modal-4" className="modal-toggle" />
+            <label htmlFor="my-modal-4" className="cursor-pointer modal">
+                <label className="relative modal-box" htmlFor="">
+                    <h3 className="text-lg font-bold">Congratulations random Internet user!</h3>
+                    <p className="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
+                </label>
+            </label>
         </div>
     )
 }
@@ -50,27 +64,29 @@ const Chat = ({ friendName, lastMessage, click, clicked, isMessYours }: { friend
     const [longAgo, setLongAgo] = useState(dayjs(lastMessage ? lastMessage.timeStamp : 0).fromNow());
     useEffect(() => {
         const interval = setInterval(() => {
-            if(lastMessage) setLongAgo(dayjs(lastMessage.timeStamp).fromNow());
-        },  10000);
+            if (lastMessage) setLongAgo(dayjs(lastMessage.timeStamp).fromNow());
+        }, 10000);
         return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {
-        if(lastMessage) setLongAgo(dayjs(lastMessage.timeStamp).fromNow());
-    },[lastMessage])
+        if (lastMessage) setLongAgo(dayjs(lastMessage.timeStamp).fromNow());
+    }, [lastMessage]);
+
     return (
-        <div className={`grid grid-cols-5 py-4 justify-center ${clicked ? "bg-gray-400" : ""}`} onClick={click}>
+        <div className={`grid lg:grid-cols-5 py-2 justify-center ${clicked ? "bg-gray-400" : ""}`} onClick={click}>
             <span className='flex items-center justify-center'>
-                <CgProfile className={"avatar-img"} />
+                <CgProfile className={"w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 rounded-full"} />
             </span>
-            <section className='flex flex-col justify-center col-span-3'>
+            <section className='flex-col justify-center hidden col-span-3 lg:flex'>
                 <span className='text-sm font-semibold'>{friendName}</span>
                 <span className='text-xs font-normal'>{isMessYours ? "You: " : ""} {lastMessage ? lastMessage.message : "Noone Sent yet"}</span>
             </section>
-            <section className='flex flex-col items-center justify-center'>
+            <section className='flex-col items-center justify-center hidden lg:flex'>
                 <span className='text-xs font-extralight'>{lastMessage ? longAgo : ""}</span>
                 <span className='visible w-4 p-2 text-xs text-center bg-blue-400 rounded-full'>11</span>
             </section>
+
         </div>
     )
 }

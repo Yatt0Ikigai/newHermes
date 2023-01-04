@@ -13,8 +13,6 @@ const port = 8080;
 
 dotenv.config();
 
-import { createUserHandler } from "./src/controllers/auth.controller";
-
 let serv = new HTTPServer(app);
 serv.listen(9000);
 const io = new Server(serv, {
@@ -77,4 +75,6 @@ app.listen(port, () => {
   console.log(`api listening at http://localhost:${port}`);
 })
 
-app.get('getPersInfo')
+
+
+

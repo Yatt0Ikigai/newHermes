@@ -1,8 +1,7 @@
 import { prisma } from "../utils/prisma";
 import { findUser, findManyUsers, updateUser } from "../utils/userUitls";
-import { error } from "console";
-import { findChat } from "../utils/chatUtils";
-import { gMessages, gMessage } from "../utils/messageUtils";
+import { readImg } from "../utils/awsUtils";
+
 
 export const findUserByString = async ({ username, userID }: { username: string, userID: string }) => {
     const [firstName, lastName] = username.split(" ");
@@ -44,7 +43,7 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
             return await findUser({ id }, {
                 firstName: true,
                 lastName: true,
-                id: true
+                id: true,
             });
         })
     )
@@ -54,7 +53,7 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
             return await findUser({ id }, {
                 firstName: true,
                 lastName: true,
-                id: true
+                id: true,
             });
         })
     )
@@ -64,12 +63,12 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
             return await findUser({ id }, {
                 firstName: true,
                 lastName: true,
-                id: true
+                id: true,
             });
         })
     )
 
-    
+
 
     const res = {
         id: user.id,
@@ -84,8 +83,8 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
 }
 
 export const getPublicInfo = async ({ userId, selfId }: { userId: string, selfId: string }) => {
-    const user = await findUser({ id: userId })
-
+    const user = await findUser({ id: userId });
+    
     const res = {
         id: user.id,
         firstName: user.firstName,
@@ -99,13 +98,9 @@ export const getPublicInfo = async ({ userId, selfId }: { userId: string, selfId
 }
 
 export const getUserNameById = async ({ userId }: { userId: string }) => {
-    const res = await findUser(
-        { id: userId, },
-        {
-            firstName: true,
-            lastName: true,
-            id: true,
-        })
-
-    return res;
+    return await findUser({ id: userId }, {
+        firstName: true,
+        lastName: true,
+        id: true,
+    });
 }

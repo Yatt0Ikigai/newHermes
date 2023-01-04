@@ -20,9 +20,9 @@ export default function FriendsPage() {
 
     return (
         <>
-            <div className='grid grid-cols-12 gap-10 text-gray-600 bg-white'>
+            <div className='box'>
                 <Sidebar />
-                <div className='col-span-10'>
+                <div className='content'>
                     <Navbar />
                     <FriendsContainer/>
                 </div>

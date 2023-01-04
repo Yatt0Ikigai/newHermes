@@ -20,7 +20,8 @@ model Users {
   friendRequestList    String[]
   pendingFriendRequest String[]
   chatIds              String[] @db.ObjectId
-  isOnline             Boolean
+  isOnline             Boolean?
+  avatar               String?
 }
 
 model Inboxes {

@@ -1,4 +1,3 @@
-import { prisma } from "../utils/prisma";
 import {
     findUserByString,
     getSelfInfo,
@@ -6,7 +5,14 @@ import {
     getUserNameById,
 } from "../controllers/user.controller";
 import express from "express";
-import { Prisma } from "@prisma/client";
+import multer from "multer";
+import jimp from "jimp";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+import { readImg, uploadImg } from "../utils/awsUtils";
+import { findUser, updateUser } from "../utils/userUitls";
 
 module.exports = function (app: express.Application) {
     /*                                                         GET                                                                        */
@@ -61,4 +67,36 @@ module.exports = function (app: express.Application) {
             }
         }
     })
+
+    app.post('/uploadAvatar', upload.single('image'), async function (req: any, res, next) {
+        console.log(req.body?.text)
+        console.log(req.file);
+
+        const link = await uploadImg(req.file);
+        /*
+        const smallAvatar = await Jimp.read(req.file);
+        smallAvatar.resize(320, 320), Jimp.RESIZE_BEZIER, function (err) {
+            if (err) throw err;
+        };
+
+        await uploadImg(smallAvatar, link + "-small");
+        */  
+        await updateUser({
+            id: req.user.id
+        }, {
+            avatar: link
+        })
+
+        res.status(200).send(link)
+    })
+
+    app.get('/users/:userId/avatar', async(req:any,res,next) => {
+        const user = await findUser({
+            id: req.params.userId
+        }, { avatar: true })
+        const link = await readImg(user.avatar); 
+        res.status(200).send(link);
+    })
+
+
 }

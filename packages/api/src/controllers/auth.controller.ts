@@ -11,6 +11,8 @@ export const createUserHandler = async ({email, password, firstName, lastName}: 
                 password: await bcrypt.hash(password, 10),
                 firstName: firstName,
                 lastName: lastName,
+                avatar: "",
+                isOnline: false,
             });
             return newUser;
         } else throw new Error("User already exists");

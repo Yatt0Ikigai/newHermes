@@ -46,12 +46,12 @@ export default function LoginPage() {
 
   return (
     <div className='h-screen'>
-      <div className='grid h-full grid-cols-12 gap-5 px-10 py-5 text-gray-600 bg-white md:px-0 sm:py-0'>
+      <div className='box'>
         <Sidebar />
-        <div className='col-span-12 md:col-span-10 xl:col-span-8'>
+        <div className='content lg:col-span-9'>
           <Navbar />
           <WritePost />
-          <Post comments={[]} content={{ attachment: null, text: "Hello iys my first post :)" }} createdAt={"12"} creatorID={"1"} likes={20} />
+          <Post comments={[]} content={{ attachment: null, text: "Hello iys my first post :)" }} createdAt={"12"} creatorID={"63751e85e542323a25132b1b"} likes={20} />
         </div>
         <StoriesMini/>
       </div >

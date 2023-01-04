@@ -21,7 +21,7 @@ export default function ChatPage() {
     
     return (
         <>
-            <div className='grid grid-cols-12 gap-0 bg-white text-gray-600'>
+            <div className='box'>
                 <Sidebar />
                 <ChatContainer/>
                 <ChatSide/>

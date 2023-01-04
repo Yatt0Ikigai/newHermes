@@ -1,8 +1,8 @@
-import Axios from "axios";
+import Axios, { CancelToken } from "axios";
 
 const server = "http://localhost:8080";
-export function getRequest(URL:string) {
-    return Axios.get(`${server}/${URL}`,{withCredentials:true}).then(response => response);
+export function getRequest(URL:string, cancelToken?: CancelToken){
+    return Axios.get(`${server}/${URL}`,{withCredentials:true, cancelToken}).then(response => response);
   }
   
   export function postRequest(URL:string, payload:any) {

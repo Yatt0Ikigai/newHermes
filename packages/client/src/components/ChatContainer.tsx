@@ -13,7 +13,7 @@ export default function ChatContainer() {
     const [input, setInput] = useState("");
 
     return (
-        <div className='box-border flex flex-col max-h-screen col-span-7 util-pad'>
+        <div className='box-border flex flex-col max-h-screen col-span-10 md:col-span-9 lg:col-span-8 xl:col-span-7 util-pad'>
             <section className='flex items-center pb-2 border-b-2'>
                 <CgProfile className={"avatar-img"} />
                 <span>Elon Musk</span>
@@ -36,10 +36,10 @@ export default function ChatContainer() {
                 }
             </section>
             <section className='flex bg-gray-300 util-round'>
-                <GrAttachment className='w-6 h-6 m-2' />
+                <GrAttachment className='w-4 h-4 m-1 sm:w-6 sm:h-6 sm:m-2' />
                 <form action="" onSubmit={(e) => {
                     e.preventDefault();
-                    if(chatStore.openedChat) chatStore.sendMessage({
+                    if (chatStore.openedChat) chatStore.sendMessage({
                         chatId: chatStore.openedChat.id,
                         message: input,
                         senderId: userStore.id
@@ -49,9 +49,9 @@ export default function ChatContainer() {
                     <input type="text" placeholder='Write Your message' className='w-full p-2 text-black bg-transparent border-t-2 placeholder:text-black focus:outline-none'
                         value={input} onChange={(e) => setInput(e.currentTarget.value)} />
                 </form>
-                <BsCardImage className='w-6 h-6 m-2' />
-                <BsEmojiSmile className='w-6 h-6 m-2' />
-                <BsMic className='w-6 h-6 m-2' />
+                <BsCardImage className='w-4 h-4 m-1 sm:w-6 sm:h-6 sm:m-2' />
+                <BsEmojiSmile className='w-4 h-4 m-1 sm:w-6 sm:h-6 sm:m-2' />
+                <BsMic className='w-4 h-4 m-1 sm:w-6 sm:h-6 sm:m-2' />
             </section>
         </div >
     )

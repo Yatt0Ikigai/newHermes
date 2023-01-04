@@ -25,6 +25,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ChatPage from "./pages/ChatPage";
 import FriendsPage from "./pages/FriendsPage";
+import SettingsPage from "./pages/SettingsPage";
 
 const App = () => {
   const userStore = storeUser();
@@ -73,9 +74,10 @@ const App = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/user/:userId" element={<ProfilePage />} />
+        <Route path="/profile/:userId" element={<ProfilePage />} />
         <Route path="/chats" element={<ChatPage/>} />
         <Route path="/friends" element={<FriendsPage/>} />
+        <Route path="/settings" element={<SettingsPage/>} />
       </Routes>
     </BrowserRouter>
   )

@@ -13,7 +13,17 @@ body {
   @apply font-montserrat box-content;
 }
 /*Layouts*/
-
+@layer{
+  .box{
+    @apply grid h-screen grid-cols-12 gap-5 px-2 text-gray-600 bg-white md:px-0;
+  }
+  .content{
+    @apply col-span-12 md:col-span-10 xl:col-span-8;
+  }
+  .avatar-img{
+    @apply w-10 h-10 rounded-full;
+  }
+}
 .main{
   @apply grid gap-5 grid-cols-5;
 }
@@ -41,9 +51,7 @@ body {
   @apply relative w-8 h-8 my-1 p-1;
 }
 
-.avatar-img{
-  @apply w-10 h-10 rounded-full;
-}
+
 
 .reaction--menu{
   @apply hidden;

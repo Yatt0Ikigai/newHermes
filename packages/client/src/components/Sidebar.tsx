@@ -8,7 +8,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { HiOutlineNewspaper } from 'react-icons/hi';
 import { BiMessageDetail } from 'react-icons/bi';
-import { BsFillPersonFill } from 'react-icons/bs';
+import { BsFillGearFill, BsFillPersonFill } from 'react-icons/bs';
 import { FaUserFriends, FaBars } from 'react-icons/fa';
 import { AiOutlineCalendar } from 'react-icons/ai';
 import { IconType } from 'react-icons/lib';
@@ -74,12 +74,19 @@ export default function Sidebar() {
                         />
                     </ul>
                     <span className='hidden w-full text-lg font-bold text-black xl:block '>Shortcuts</span>
+
                     <button className='absolute top-0 right-0 p-4 md:hidden' onClick={(e) => {
                         setVis(false);
                     }}>
-                        <GrClose/>
+                        <GrClose />
                     </button>
                 </section>
+                <Link to={'/settings'} className='flex items-end'>
+                    <span className='md:hidden xl:block'>
+                        Settings
+                    </span>
+                    <BsFillGearFill />
+                </Link>
             </div>
             <div className='absolute top-0 right-0 z-40 md:hidden'>
                 <button className='flex items-center justify-center m-4 bg-gray-200 rounded-full' onClick={(e) => {

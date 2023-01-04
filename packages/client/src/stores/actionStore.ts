@@ -13,6 +13,10 @@ const actionStore = create<IActionStore>()(
             const res = await getRequest(`users/${id}`);
             if (res.status === 200) return res.data;
             return "SOMETHING WENT WRONG"
+        },
+        getAvatar: async(id) => {
+            const res = await getRequest(`users/${id}/avatar`)
+            if (res.status === 200) return res.data;
         }
     })
 )
@@ -21,6 +25,7 @@ export interface IActionStore {
     searchedUsers: { firstName: string, lastName: string, id: string, isFriend: boolean }[]
     searchForUsers: (name: string) => Promise<void>,
     getUserNameById: (id: string) => Promise<string>
+    getAvatar: (id:string) => Promise<string>
 }
 
 
