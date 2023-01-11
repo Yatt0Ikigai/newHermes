@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
-import userStore from '../stores/userStore';
-import actionStore from '../stores/actionStore';
-import chatStore from "../stores/chatStore";
+import storeUser from '../stores/userStore';
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { HiOutlineNewspaper } from 'react-icons/hi';
 import { BiMessageDetail } from 'react-icons/bi';
@@ -14,14 +12,12 @@ import { AiOutlineCalendar } from 'react-icons/ai';
 import { IconType } from 'react-icons/lib';
 import { GiBootStomp } from "react-icons/gi";
 import { GrClose } from "react-icons/gr";
+import Avatar from './Avatar';
 
 export default function Sidebar() {
-    const storeUser = userStore();
-    const storeAction = actionStore();
-    const storeChat = chatStore();
-    const location = useLocation();
-
+    const userStore = storeUser();
     const [vis, setVis] = useState(false);
+    
     return (
         <>
             <div className={`box-border w-screen flex flex-col items-center 
@@ -87,14 +83,23 @@ export default function Sidebar() {
                     </span>
                     <BsFillGearFill />
                 </Link>
+                <section className='flex items-center mt-auto mb-4 bg-gray-400 rounded-lg xl:py-2 xl:px-4 justify-self-end'>
+                    <div className='relative w-12 h-12 rounded-full'>
+                        <Avatar id={userStore.id} />
+                    </div>
+                    <span className='hidden xl:block'>{userStore.firstName} {userStore.lastName}</span>
+                </section>
+
             </div>
             <div className='absolute top-0 right-0 z-40 md:hidden'>
                 <button className='flex items-center justify-center m-4 bg-gray-200 rounded-full' onClick={(e) => {
                     setVis(true);
                 }}>
                     <FaBars />
+                
                 </button>
             </div>
+
         </>
 
     )

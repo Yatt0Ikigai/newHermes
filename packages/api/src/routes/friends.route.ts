@@ -24,6 +24,7 @@ module.exports = function (app: express.Application, socket: any) {
             res.status(200).json(info)
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
@@ -38,6 +39,7 @@ module.exports = function (app: express.Application, socket: any) {
             res.status(200).json(result)
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
@@ -52,6 +54,7 @@ module.exports = function (app: express.Application, socket: any) {
             res.status(200).json(result)
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
@@ -74,6 +77,7 @@ module.exports = function (app: express.Application, socket: any) {
             res.status(200).send(result);
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
@@ -91,6 +95,7 @@ module.exports = function (app: express.Application, socket: any) {
             res.status(200).send(result);
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
@@ -109,6 +114,7 @@ module.exports = function (app: express.Application, socket: any) {
             res.status(200).send(result)
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
@@ -122,6 +128,7 @@ module.exports = function (app: express.Application, socket: any) {
             res.status(200).send(result)
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
@@ -138,6 +145,7 @@ module.exports = function (app: express.Application, socket: any) {
             res.status(200).json(result);
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }

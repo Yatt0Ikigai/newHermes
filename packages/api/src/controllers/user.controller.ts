@@ -68,8 +68,6 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
         })
     )
 
-
-
     const res = {
         id: user.id,
         firstName: user.firstName,

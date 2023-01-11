@@ -20,10 +20,12 @@ module.exports = function (app: express.Application) {
         //GET LOGGED USER DATA
         try {
             if (req.user === undefined) new Error("User not logged in");
-            const user = await getSelfInfo({ selfId: req.user.id })
+            const user = await getSelfInfo({ selfId: req.user.id });
+            console.log(user.id);
             res.status(200).json(user)
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
@@ -36,6 +38,7 @@ module.exports = function (app: express.Application) {
             res.status(200).json(user)
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
@@ -48,6 +51,7 @@ module.exports = function (app: express.Application) {
             res.status(200).json(result);
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
@@ -63,35 +67,43 @@ module.exports = function (app: express.Application) {
             res.status(200).json(data)
         } catch {
             (err: any) => {
+                console.log(err);
                 res.status(500).json(err);
             }
         }
     })
 
-    app.post('/uploadAvatar', upload.single('image'), async function (req:any, res, next) {
-        const link = await uploadImg(req.file);
-        /*
-        const smallAvatar = await Jimp.read(req.file);
-        smallAvatar.resize(320, 320), Jimp.RESIZE_BEZIER, function (err) {
-            if (err) throw err;
-        };
-
-        await uploadImg(smallAvatar, link + "-small");
-        */  
-        await updateUser({
-            id: req.user.id
-        }, {
-            avatar: link
-        })
-        res.status(200).send(link)
+    app.post('/uploadAvatar', upload.single('image'), async function (req: any, res, next) {
+        try {
+            const link = await uploadImg(req.file);
+            await updateUser({
+                id: req.user.id
+            }, {
+                avatar: link
+            })
+            res.status(200).send(link)
+        }
+        catch {
+            (err: any) => {
+                console.log(err);
+                res.status(500).json(err);
+            }
+        }
     })
 
-    app.get('/users/:userId/avatar', async(req:any,res,next) => {
-        const user = await findUser({
-            id: req.params.userId
-        }, { avatar: true })
-        const link = await readImg(user.avatar); 
-        res.status(200).send(link);
+    app.get('/users/:userId/avatar', async (req: any, res, next) => {
+        try {
+            const user = await findUser({
+                id: req.params.userId
+            }, { avatar: true })
+            const link = await readImg(user.avatar);
+            res.status(200).send(link);
+        } catch {
+            (err: any) => {
+                console.log(err);
+                res.status(500).json(err);
+            }
+        }
     })
 
 

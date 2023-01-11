@@ -22,7 +22,7 @@ export default function AddFriendsModal() {
                     <div className={"flex items-center flex-col w-full"}>
                         {storeAction.searchedUsers.map((user) => {
                             return (
-                                <Link to={`/user/${user.id}`} className="flex justify-between w-full p-2 text-xl rounded btn-outline" key={user.id}>
+                                <Link to={`/profile/${user.id}`} className="flex justify-between w-full p-2 text-xl rounded btn-outline" key={user.id}>
                                     {user.firstName} {user.lastName} {user.isFriend ? 'friend' : ""}
                                 </Link>
                             )

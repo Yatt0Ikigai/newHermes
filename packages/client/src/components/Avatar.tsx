@@ -10,15 +10,16 @@ export default function Avatar({ id }: { id: string }) {
     useEffect(() => {
         const source = axios.CancelToken.source();
         const getLink = async () => {
+            if(!id) return;
             const res = await getRequest(`users/${id}/avatar`, source.token)
             setLink(res.data);
-            console.log(link)
-        }
+}
         getLink();
         return () => {
             source.cancel('Operation Canceled')
         }
-    }, [])
+    }, []);
+    
     return (
         <div className={`avatar`}>
             <img src={link} />

@@ -10,8 +10,9 @@ module.exports = function (app: express.Application, socket:any) {
             const user = await getSelfInfo({ selfId: req.user.id })
             res.status(200).json(user);
         } catch {
-            (e: any) => {
-
+            (err: any) => {
+                console.log(err);
+                res.status(500).json(err);
             }
         }
     })
@@ -34,8 +35,9 @@ module.exports = function (app: express.Application, socket:any) {
             }
             else res.status(500)
         } catch {
-            (e: any) => {
-
+            (err: any) => {
+                console.log(err);
+                res.status(500).json(err);
             }
         }
     })
@@ -48,8 +50,9 @@ module.exports = function (app: express.Application, socket:any) {
              chat
             })
         } catch {
-            (e: any) => {
-
+            (err: any) => {
+                console.log(err);
+                res.status(500).json(err);
             }
         }
     })
@@ -62,8 +65,9 @@ module.exports = function (app: express.Application, socket:any) {
              messages
             )
         } catch {
-            (e: any) => {
-
+            (err: any) => {
+                console.log(err);
+                res.status(500).json(err);
             }
         }
     })

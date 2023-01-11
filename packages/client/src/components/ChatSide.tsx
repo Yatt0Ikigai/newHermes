@@ -11,6 +11,7 @@ import { IMessage } from "../interfaces/chatStore.interface";
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { BsThreeDots } from 'react-icons/bs';
+import Avatar from './Avatar';
 
 dayjs.extend(relativeTime);
 
@@ -34,6 +35,7 @@ export default function ChatSide() {
                         const friend = chat.participants.find((u) => u.id != userStore.id);
                         if (friend) return (
                             <Chat
+                                id={friend.id}
                                 friendName={friend.firstName + ' ' + friend.lastName}
                                 lastMessage={chat.lastMessage}
                                 isMessYours={chat.lastMessage?.senderId === userStore.id}
@@ -60,7 +62,7 @@ export default function ChatSide() {
 }
 
 
-const Chat = ({ friendName, lastMessage, click, clicked, isMessYours }: { friendName: string, lastMessage: IMessage | null, click: () => void, clicked: boolean, isMessYours: boolean }) => {
+const Chat = ({ id, friendName, lastMessage, click, clicked, isMessYours }: { id: string, friendName: string, lastMessage: IMessage | null, click: () => void, clicked: boolean, isMessYours: boolean }) => {
     const [longAgo, setLongAgo] = useState(dayjs(lastMessage ? lastMessage.timeStamp : 0).fromNow());
     useEffect(() => {
         const interval = setInterval(() => {
@@ -76,15 +78,16 @@ const Chat = ({ friendName, lastMessage, click, clicked, isMessYours }: { friend
     return (
         <div className={`grid lg:grid-cols-5 py-2 justify-center ${clicked ? "bg-gray-400" : ""}`} onClick={click}>
             <span className='flex items-center justify-center'>
-                <CgProfile className={"w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 rounded-full"} />
+                <div className={"w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 rounded-full overflow-hidden"} >
+                    <Avatar id={id} />
+                </div>
             </span>
             <section className='flex-col justify-center hidden col-span-3 lg:flex'>
                 <span className='text-sm font-semibold'>{friendName}</span>
                 <span className='text-xs font-normal'>{isMessYours ? "You: " : ""} {lastMessage ? lastMessage.message : "Noone Sent yet"}</span>
             </section>
             <section className='flex-col items-center justify-center hidden lg:flex'>
-                <span className='text-xs font-extralight'>{lastMessage ? longAgo : ""}</span>
-                <span className='visible w-4 p-2 text-xs text-center bg-blue-400 rounded-full'>11</span>
+                <span className='text-xxs'>{lastMessage ? longAgo : ""}</span>
             </section>
 
         </div>

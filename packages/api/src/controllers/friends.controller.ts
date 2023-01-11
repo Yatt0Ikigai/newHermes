@@ -1,8 +1,8 @@
 import { findUser, updateUser } from "../utils/userUitls";
 
-export const getSelfInfo = async({ userId } : {userId:string}) => {
+export const getSelfInfo = async ({ userId }: { userId: string }) => {
     const user = await findUser({ id: userId }, {
-        friendList:true,
+        friendList: true,
         friendRequestList: true,
         pendingFriendRequest: true,
     })
@@ -51,23 +51,19 @@ export const getSelfInfo = async({ userId } : {userId:string}) => {
 }
 
 export const getFriendList = async ({ userId }: { userId: string }) => {
-    try {
-        const user = await findUser({ id: userId })
-        const friends = await Promise.all(
-            user.friendList.map((id: string) => {
-                return findUser(
-                    { id },
-                    {
-                        firstName: true,
-                        lastName: true,
-                        id: true,
-                    })
-            })
-        )
-        return friends;
-    } catch (err) {
-        throw err;
-    }
+    const user = await findUser({ id: userId })
+    const friends = await Promise.all(
+        user.friendList.map((id: string) => {
+            return findUser(
+                { id },
+                {
+                    firstName: true,
+                    lastName: true,
+                    id: true,
+                })
+        })
+    )
+    return friends;
 }
 
 export const getFriendRequests = async ({ selfId }: { selfId: string }) => {

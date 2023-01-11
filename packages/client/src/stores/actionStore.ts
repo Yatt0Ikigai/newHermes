@@ -26,6 +26,7 @@ export interface IActionStore {
     searchForUsers: (name: string) => Promise<void>,
     getUserNameById: (id: string) => Promise<string>
     getAvatar: (id:string) => Promise<string>
+    
 }
 
 

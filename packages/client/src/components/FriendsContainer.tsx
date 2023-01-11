@@ -17,12 +17,11 @@ export default function FriendsContainer() {
         <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
             {
                 friendStore.friendList.map((friend) => {
-                    console.log(friend);
                     return (
-                        <div className='flex items-center h-full bg-gray-300 rounded-md' onClick={(e) => {
+                        <div className='flex items-center h-full overflow-hidden bg-gray-300 rounded-md' onClick={(e) => {
                             navigate(`/profile/${friend.id}`)
                         }}>
-                            <div className='w-20 h-20 overflow-hidden'>
+                            <div className='w-20 h-20 '>
                                 <Avatar id={friend.id}/>
                             </div>
                             <div className='grow'>

@@ -5,16 +5,9 @@ import { getRequest, postRequest } from "../utils/axios.util";
 const authStore = create<IauthStore>()(
     devtools(
         (set) => ({
-            userStatus: { logged: false, loading: false, error: null },
             authIsLogged: async () => {
-                set((state) => ({
-                    ...state,
-                    userStatus: { logged: false, loading: true, error: null },
-                }))
-                const res = await getRequest("is-logged");
-                if (res.status === 200) set({ userStatus: { logged: true, loading: false, error: null } });
-                else if (res.status === 290) set({ userStatus: { logged: false, loading: false, error: null } });
-                else set({ userStatus: { logged: false, loading: false, error: res.data } });
+                const isLogged = await getRequest("is-logged");
+                return isLogged.data;
             },
 
             authLogIn: async (email, password) => {
@@ -23,15 +16,13 @@ const authStore = create<IauthStore>()(
                     {
                         username: email.toLowerCase(),
                         password: password,
-                    })
-                if (res.status === 200) { set({ userStatus: { logged: true, loading: false, error: null } }) }
-                else set({ userStatus: { logged: false, loading: false, error: res.data } });
-                return res.status;
+                    });
+                return res.status === 200;
             },
 
             authLogOut: async () => {
                 const res = await getRequest("logout");
-                if (res.status === 200) set({ userStatus: { logged: false, loading: false, error: null } });
+                return res.status === 200;
             },
 
             authRegister: async (firstName, lastName, email, password) => {
@@ -43,17 +34,14 @@ const authStore = create<IauthStore>()(
                         firstName: firstName,
                         lastName: lastName,
                     });
-                if (res.status === 200) set({ userStatus: { logged: true, loading: false, error: null } });
-                set({ userStatus: { logged: false, loading: false, error: null } })
-                return res.status;
+                return res.status === 200;
             },
         })))
 
 export interface IauthStore {
-    userStatus: { logged: boolean, loading: boolean, error: string | null },
-    authIsLogged: () => Promise<void>,
-    authLogIn: (email: string, password: string) => Promise<number>,
-    authLogOut: () => Promise<void>,
-    authRegister: (firstName: string, lastName: string, email: string, password: string) => Promise<number>,
+    authIsLogged: () => Promise<boolean>,
+    authLogIn: (email: string, password: string) => Promise<boolean>,
+    authLogOut: () => Promise<boolean>,
+    authRegister: (firstName: string, lastName: string, email: string, password: string) => Promise<boolean>,
 }
 export default authStore;

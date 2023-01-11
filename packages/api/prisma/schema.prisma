@@ -38,3 +38,17 @@ model Messages {
   inboxId   String
   createdAt DateTime @default(now())
 }
+
+model Post {
+  id String @id @default(uuid()) @map("_id")
+  authorId String @db.ObjectId
+  content Content
+  comments  String[]
+  likes     String[]
+  createdAt DateTime @default(now())
+}
+
+type Content {
+  attachments String[]
+  text        String?
+}

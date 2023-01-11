@@ -4,7 +4,6 @@ import { prisma } from "../utils/prisma";
 import { validPassword } from "../utils/passwordUtil";
 
 
-
 module.exports = function(passport:any){
   passport.use(new passportLocal.Strategy(
     async function verify(username, password, done) {

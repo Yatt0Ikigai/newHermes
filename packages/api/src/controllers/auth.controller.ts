@@ -3,7 +3,6 @@ import { Prisma, Users } from "@prisma/client";
 import bcrypt from "bcrypt"
 
 export const createUserHandler = async ({email, password, firstName, lastName}: {email:string, password:string, firstName: string, lastName:string}) => {
-    try {
         const user = await findUser({ email })
         if (user === null) {
             const newUser = await createUser({
@@ -16,9 +15,6 @@ export const createUserHandler = async ({email, password, firstName, lastName}: 
             });
             return newUser;
         } else throw new Error("User already exists");
-    } catch (e) {
-        console.log(e);
-    }
 }
 
 export const createUser = async (input: Prisma.UsersCreateInput) => {

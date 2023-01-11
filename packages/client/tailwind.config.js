@@ -11,6 +11,9 @@ module.exports = {
       },
     },
     extend: {
+      fontSize:{
+        xxs: '0.5rem',
+      },
       colors: {
         'primaryBlue': '#4E69A3',
         'secondaryBlue': '#5085E8',
