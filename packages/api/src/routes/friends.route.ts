@@ -6,7 +6,6 @@ import {
     getFriendRequests,
     declineFriendRequest,
     sendFriendRequest,
-    acceptFriendRequest,
     unfriendUser,
     getSelfInfo
 } from "../controllers/friends.controller";
@@ -83,23 +82,6 @@ module.exports = function (app: express.Application, socket: any) {
         }
     })
 
-    app.post('/friends', async (req: any, res, next) => {
-        //ACCEPT FRIEND REQUEST
-        try {
-            if (req.user === undefined) return new Error("User not logged in");
-            const result = await acceptFriendRequest({ userId: req.body.userId, selfId: req.user.id })
-            const user = findUser({id:req.user.id},{id:true,firstName:true,lastName:true})
-            socket.to(req.params.id).emit("acceptFriendship", {
-                friend: user,
-            })
-            res.status(200).send(result);
-        } catch {
-            (err: any) => {
-                console.log(err);
-                res.status(500).json(err);
-            }
-        }
-    })
     /*                                                         DELETE                                                                        */
 
 
@@ -141,7 +123,7 @@ module.exports = function (app: express.Application, socket: any) {
             const result = await unfriendUser({ userId: req.params.id, selfId: req.user.id });
             socket.to(req.params.id).emit("removeFriendship", {
                 friendId: req.user.id,
-            })
+            });
             res.status(200).json(result);
         } catch {
             (err: any) => {

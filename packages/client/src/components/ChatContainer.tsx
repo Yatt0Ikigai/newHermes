@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsCardImage, BsEmojiSmile, BsMic, BsThreeDots } from 'react-icons/bs';
 import { CgProfile } from 'react-icons/cg';
 import { GrAttachment } from "react-icons/gr";
 
+
+import { trpc } from "../utils/trpc";
 import storeChat from '../stores/chatStore';
 import storeUser from '../stores/userStore';
 
@@ -10,6 +12,13 @@ export default function ChatContainer() {
     const chatStore = storeChat();
     const userStore = storeUser();
 
+    const sendMessage = trpc.messages.sendMessage.useMutation();
+    const { data: messages, refetch: refetchMessages } = trpc.messages.getMessages.useQuery({ chatID: (chatStore.openedChat ? chatStore.openedChat : "") })
+    
+    useEffect(() => {
+        refetchMessages();
+    }, [chatStore.openedChat])
+    
     const [input, setInput] = useState("");
 
     return (
@@ -26,7 +35,7 @@ export default function ChatContainer() {
             </section>
             <section className='flex flex-col-reverse overflow-auto text-black grow'>
                 {
-                    chatStore.messages.map((mess) => {
+                    messages?.data.messages.map((mess) => {
                         return (
                             <span className={`m-2 util-pad util-round w-max max-w-full ${mess.senderId === userStore.id ? "self-end bg-blue-400" : "bg-gray-200"}`}>
                                 {mess.message}
@@ -39,11 +48,11 @@ export default function ChatContainer() {
                 <GrAttachment className='w-4 h-4 m-1 sm:w-6 sm:h-6 sm:m-2' />
                 <form action="" onSubmit={(e) => {
                     e.preventDefault();
-                    if (chatStore.openedChat) chatStore.sendMessage({
-                        chatId: chatStore.openedChat.id,
-                        message: input,
-                        senderId: userStore.id
-                    });
+                    if (!chatStore.openedChat) return;
+                    sendMessage.mutate({
+                        chatID: chatStore.openedChat,
+                        message: input
+                    })
                     setInput("");
                 }} className="grow">
                     <input type="text" placeholder='Write Your message' className='w-full p-2 text-black bg-transparent border-t-2 placeholder:text-black focus:outline-none'

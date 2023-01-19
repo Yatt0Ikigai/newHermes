@@ -1,21 +1,65 @@
 import React, { useRef, useState } from 'react';
 import axios from 'axios';
+import { trpc } from '../utils/trpc';
+import { toast, ToastContainer } from "react-toastify";
 
 export default function UploadImage() {
     const [image, setImage] = useState<File>();
     const [desc, setDesc] = useState("");
 
+    const updateAv = trpc.users.changeAvatarLink.useMutation();
+    
+    const getLink = trpc.users.getUploadLink.useMutation({
+        onSuccess: async (data) => {
+            toast.promise(
+                async () => {
+                    const formData = new FormData();
+                    const img = {
+                        ...data.data.link.fields,
+                        'Content-Type': image?.type,
+                        file: image
+                    }
+                    for (const name in img) formData.append(name, img[name])
+                    await fetch(data.data.link.url, {
+                        method: 'POST',
+                        body: formData,
+                    });
+                    updateAv.mutate({ key: data.data.link.fields.key })
+                },
+                {
+                    pending: {
+                        render() {
+                            return "Uploading avatar"
+                        },
+                        icon: false,
+                    },
+                    success: {
+                        render() {
+                            return `Succesfully uploaded avatar!`
+                        },
+                        // other options
+                        icon: "🟢",
+                    },
+                    error: {
+                        render() {
+                            return 'Something failed'
+                        },
+                        icon: '❌'
+                    }
+                }
+            )
+        }
+    });
+
+
+
     return (
         <form onSubmit={async (e) => {
             e.preventDefault();
             if (!image) return;
-            const formData = new FormData();
-            formData.append("image", image);
-            await axios.post("http://localhost:8080/uploadAvatar", formData, {
-                withCredentials:true,
-            });
+            getLink.mutate()
         }}
-        encType="multipart/form-data">
+            encType="multipart/form-data">
             <input type="file" onChange={
                 (e) => {
                     if (e.target.files) {
@@ -24,7 +68,7 @@ export default function UploadImage() {
                     }
                 }
             } name="image" />
-            <input type="text" value={desc} onChange={(e) => setDesc(e.currentTarget.value)}/>
+            <input type="text" value={desc} onChange={(e) => setDesc(e.currentTarget.value)} />
             <button type="submit">
                 Submit
             </button>

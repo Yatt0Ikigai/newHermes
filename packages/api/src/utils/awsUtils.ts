@@ -2,6 +2,8 @@
 import multer from "multer";
 import { S3Client, PutObjectCommand, GetObjectCommand, } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+
 import dotenv from 'dotenv';
 
 
@@ -15,6 +17,7 @@ export const awsSecret = process.env.AWS_SECRET as string;
 export const awsBucket = process.env.BUCKET_NAME as string;
 export const awsRegion = process.env.BUCKET_REGION as string;
 
+const generateKey = () => { return crypto.randomBytes(32).toString('hex'); }
 export const S3 = new S3Client({
     credentials: {
         accessKeyId: awsAccessKeyId,
@@ -23,10 +26,10 @@ export const S3 = new S3Client({
     region: awsRegion,
 });
 
-export const uploadImg = async (file: Express.Multer.File, name?:string) => {
+export const uploadImg = async (file: Express.Multer.File, name?: string) => {
     let avatar = name;
-    if( !name ) avatar = crypto.randomBytes(32).toString('hex');
-    
+    if (!name) avatar = crypto.randomBytes(32).toString('hex');
+
     const params = {
         Body: file.buffer,
         Bucket: awsBucket,
@@ -41,8 +44,8 @@ export const uploadImg = async (file: Express.Multer.File, name?:string) => {
     return avatar;
 }
 
-export const readImg = async(fileName: string | null) => {
-    if( !fileName ) return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png";
+export const readImg = async (fileName: string | null) => {
+    if (!fileName) return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png";
     const getObjectParams = {
         Bucket: awsBucket,
         Key: fileName
@@ -50,4 +53,18 @@ export const readImg = async(fileName: string | null) => {
     const command = new GetObjectCommand(getObjectParams)
     return await getSignedUrl(S3, command, { expiresIn: 3600 });
 }
-    
+
+
+
+export const createUploadLink = async () => {
+    return await createPresignedPost(S3, {
+        Bucket: awsBucket,
+        Key: generateKey(),
+        Expires: 30,
+        Conditions: [
+            ["starts-with", "$Content-Type", "image/"],
+            ["content-length-range", 0, 1000000],
+        ]
+    });
+}
+

@@ -10,7 +10,6 @@ export default function useLoad() {
   const [error, setError] = useState<string | null>(null);
 
   const loginStore = storeLogin();
-  const chatStore = storeChat();
   const userStore = storeUser();
 
   useEffect(() => {
@@ -18,7 +17,6 @@ export default function useLoad() {
       const logged = await loginStore.authIsLogged();
       if (logged) {
         await userStore.init();
-        await chatStore.init();
         setLoading(false);
       } else setError("User not logged");
     }

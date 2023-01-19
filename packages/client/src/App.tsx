@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter,
@@ -26,6 +26,10 @@ import RegisterPage from "./pages/RegisterPage";
 import ChatPage from "./pages/ChatPage";
 import FriendsPage from "./pages/FriendsPage";
 import SettingsPage from "./pages/SettingsPage";
+import { trpc } from "./utils/trpc";
+import { httpBatchLink } from '@trpc/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 
 const App = () => {
   const userStore = storeUser();
@@ -34,12 +38,29 @@ const App = () => {
 
   const audioPlayer = new Audio(notificationSound);
 
+  const [queryClient] = useState(() => new QueryClient());
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: 'http://localhost:8080/trpc',
+          // optional
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: 'include',
+            });
+          },
+        }),
+      ],
+    }),
+  );
+
   useEffect(() => {
     const socket = userStore.socket;
     if (socket) {
       socket.on("messageReceived", (mess: IMessage) => {
         chatStore.receiveMessage(mess);
-
         if (mess.senderId !== userStore.id) audioPlayer.play();
       });
 
@@ -69,17 +90,21 @@ const App = () => {
   })
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile/:userId" element={<ProfilePage />} />
-        <Route path="/chats" element={<ChatPage/>} />
-        <Route path="/friends" element={<FriendsPage/>} />
-        <Route path="/settings" element={<SettingsPage/>} />
-      </Routes>
-    </BrowserRouter>
-  )
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/profile/:userId" element={<ProfilePage />} />
+            <Route path="/chats" element={<ChatPage />} />
+            <Route path="/friends" element={<FriendsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+          </Routes>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </trpc.Provider >
+  );
 };
 ReactDOM.render(<App />, document.getElementById("app"));

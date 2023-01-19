@@ -1,28 +1,24 @@
-import { createMessage, gMessages } from "../utils/messageUtils";
-import { findChat, updateChat, cChat } from "../utils/chatUtils";
-import { updateUser, findUser } from "../utils/userUitls";
+import { findChat, updateChat, cChat } from "../../../utils/chatUtils";
+import { gMessages } from "../../../utils/messageUtils";
+import { updateUser, findUser } from "../../../utils/userUitls";
+import { TRPCError } from "@trpc/server";
+import { io } from "../../../../index";
 
-export const postMessage = async ({ chatId, userId, message }: { chatId: string, userId: string, message: string }) => {
-    const chat = await findChat({ id: chatId });
-    if (!chat.participantsIds.includes(userId)) throw "ERROR";
-    const mes = await createMessage({
-        senderId: userId,
-        inboxId: chatId,
-        message: message
+export const trpcCreateChat = async ({ participantsIDs, userID }: { participantsIDs: string[], userID: string }) => {
+    const flag = await Promise.all(
+        participantsIDs.map(async (id) => {
+            if (id === userID) return true;
+            return (await findUser({ id }, { friendList: true })).friendList.includes(id);
+        })
+    )
+    if (!flag.every((el) => el === true)) throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: `You can't create chat with not friends`
     });
-    await updateChat({ id: chatId }, { lastMessage: mes.id })
-    return mes;
-}
 
-export const getMessages = async ({ chatId, userId, skip }: { chatId: string, userId: string, skip?: number }) => {
-    const chat = await findChat({ id: chatId });
-    if (!chat.participantsIds.includes(userId)) throw "ERROR";
-    return await gMessages({ inboxId: chatId });
-}
+    const chat = await cChat({ participantsIds: participantsIDs });
 
-export const createChat = async ({ participantsIds }: { participantsIds: string[] }) => {
-    const chat = await cChat({ participantsIds: participantsIds });
-    Promise.all(
+    await Promise.all(
         chat.participantsIds.map((userId: string) => {
             updateUser({
                 id: userId,
@@ -33,6 +29,7 @@ export const createChat = async ({ participantsIds }: { participantsIds: string[
             })
         })
     )
+
     const participants = Promise.all(
         chat.participantsIds.map((id: string) => {
             return findUser({ id }, { firstName: true, lastName: true, id: true })
@@ -48,7 +45,9 @@ export const createChat = async ({ participantsIds }: { participantsIds: string[
     };
 }
 
-export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
+
+
+export const trpcfetchSideChats = async ({ selfId }: { selfId: string }) => {
     const user = await findUser({ id: selfId }, { chatIds: true });
 
     const chats = await Promise.all(
@@ -63,7 +62,7 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
                     });
                 })
             )
-            if(chat.lastMessage){
+            if (chat.lastMessage) {
                 const lMessage = await gMessages({ id: chat.lastMessage });
                 const lastSender = await findUser({ id: lMessage[0].senderId }, { firstName: true, lastName: true, id: true });
                 return {
@@ -71,13 +70,15 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
                         senderId: lastSender.id,
                         author: lastSender.firstName + " " + lastSender.lastName,
                         message: lMessage[0].message,
+                        messageId: lMessage[0].id,
+                        chatId: lMessage[0].inboxId,
                         timeStamp: lMessage[0].createdAt
                     },
                     participants,
                     id
                 }
             }
-            else{
+            else {
                 return {
                     lastMessage: null,
                     participants,
@@ -86,11 +87,13 @@ export const getSelfInfo = async ({ selfId }: { selfId: string }) => {
             }
         })
     )
-    
-    chats.sort((a,b) => {
-        if( !a.lastMessage ) return 1;
-        if( !b.lastMessage ) return -1;
+
+    chats.sort((a, b) => {
+        if (!a.lastMessage) return 1;
+        if (!b.lastMessage) return -1;
         return a.lastMessage.timeStamp < b.lastMessage.timeStamp ? 1 : -1;
     })
+
     return chats;
 }
+

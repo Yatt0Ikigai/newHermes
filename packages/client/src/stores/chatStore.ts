@@ -1,5 +1,4 @@
 import create from "zustand";
-import { getMessages } from "../../../api/src/controllers/chats.controller";
 
 import { getRequest, postRequest } from "../utils/axios.util";
 import userStore from "./userStore";
@@ -13,26 +12,13 @@ const chatStore = create<IChatStore>()(
         messages: [],
         chatsList: [],
 
-        loadMessages: async (chatId) => {
+        openChat: (chatID) => {
             set((state) => ({
-                openedChat: {
-                    id: chatId,
-                    loading: true,
-                }
-            }));
-            const res = await getRequest(`chats/${chatId}`);
-            console.log(res.data);
-            if (res.status === 200) {
-                set((state) => ({
-                    ...state,
-                    messages: res.data,
-                    openedChat: {
-                        id: chatId,
-                        loading: false,
-                    }
-                }));
-            } else alert("sth went wrong")
+                ...state,
+                openedChat:chatID
+            }))
         },
+
 
         sendMessage: async (mess) => {
             await postRequest(`chats/${mess.chatId}/message`, { message: mess.message })
@@ -60,7 +46,7 @@ const chatStore = create<IChatStore>()(
                 }))
             }
             //main mess
-            if (openedChat && mess.chatId === openedChat.id) {
+            if (openedChat && mess.chatId === openedChat) {
                 const messages = get().messages;
                 set((state) => ({
                     ...state,
@@ -104,12 +90,12 @@ const chatStore = create<IChatStore>()(
 
 export interface IChatStore {
     chatsList: IChat[],
-    openedChat: { id: string, loading: boolean } | null,
+    openedChat: string | null,
     messages: IMessage[],
     receiveMessage: (message: IMessage) => void,
-    loadMessages: (chatId: string) => Promise<any>,
     sendMessage: (mess: ISendMess) => Promise<any>,
     closeChat: (chatId: string) => void;
+    openChat: (chatID: string) => void;
 
     init: () => Promise<any>,
 }

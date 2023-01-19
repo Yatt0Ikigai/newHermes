@@ -35,6 +35,10 @@ module.exports = function(passport:any){
       where: {
         id:userInfo.id,
         password: userInfo.password,
+      }, select: {
+        id: true,
+        password: true,
+        email: true,
       }
     }).then((user: any) => {
       done(null, userInfo)

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 import { AiOutlinePlus } from "react-icons/ai";
-import { CgProfile } from 'react-icons/cg';
 
 import StoreUser from "../stores/userStore";
 import StoreChat from "../stores/chatStore";
+
+import { trpc } from '../utils/trpc';
 
 import { IMessage } from "../interfaces/chatStore.interface";
 
@@ -20,6 +21,8 @@ export default function ChatSide() {
     const userStore = StoreUser();
     const chatStore = StoreChat();
 
+    const { data } = trpc.chats.fetchChats.useQuery();
+
     return (
         <div className='flex flex-col col-span-2 lg:col-span-3 util-pad'>
             <div className='hidden lg:flex'>
@@ -31,7 +34,7 @@ export default function ChatSide() {
                     <BsThreeDots className='w-6 h-6 rounded-full sm:w-7 sm:h-7 lg:w-8 lg:h-8' />
                 </label>
                 {
-                    chatStore.chatsList.map((chat) => {
+                        data?.data.sideChats.map((chat) => {
                         const friend = chat.participants.find((u) => u.id != userStore.id);
                         if (friend) return (
                             <Chat
@@ -40,9 +43,9 @@ export default function ChatSide() {
                                 lastMessage={chat.lastMessage}
                                 isMessYours={chat.lastMessage?.senderId === userStore.id}
                                 click={() => {
-                                    chatStore.loadMessages(chat.id)
+                                    chatStore.openChat(chat.id)
                                 }}
-                                clicked={chat.id === chatStore.openedChat?.id} />
+                                clicked={chat.id === chatStore.openedChat} />
                         )
                     })
                 }

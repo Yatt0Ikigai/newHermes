@@ -72,39 +72,4 @@ module.exports = function (app: express.Application) {
             }
         }
     })
-
-    app.post('/uploadAvatar', upload.single('image'), async function (req: any, res, next) {
-        try {
-            const link = await uploadImg(req.file);
-            await updateUser({
-                id: req.user.id
-            }, {
-                avatar: link
-            })
-            res.status(200).send(link)
-        }
-        catch {
-            (err: any) => {
-                console.log(err);
-                res.status(500).json(err);
-            }
-        }
-    })
-
-    app.get('/users/:userId/avatar', async (req: any, res, next) => {
-        try {
-            const user = await findUser({
-                id: req.params.userId
-            }, { avatar: true })
-            const link = await readImg(user.avatar);
-            res.status(200).send(link);
-        } catch {
-            (err: any) => {
-                console.log(err);
-                res.status(500).json(err);
-            }
-        }
-    })
-
-
 }

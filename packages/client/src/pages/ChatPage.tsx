@@ -12,10 +12,8 @@ export default function ChatPage() {
     const authStore = storeAuth();
     const userStore = storeUser();
     const chatStore = storeChat();
-  
-  
+    
     useEffect(() => {
-      chatStore.init();
       userStore.init();
     }, [])
     

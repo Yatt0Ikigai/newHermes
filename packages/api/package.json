@@ -7,8 +7,10 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.241.0",
+    "@aws-sdk/s3-presigned-post": "^3.252.0",
     "@aws-sdk/s3-request-presigner": "^3.241.0",
     "@prisma/client": "^4.3.1",
+    "@trpc/server": "^10.9.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/express-session": "^1.17.5",
@@ -32,7 +34,9 @@
     "passport-local": "^1.0.0",
     "prisma": "^4.3.1",
     "sharp": "^0.31.3",
-    "socket.io": "^4.5.3"
+    "socket.io": "^4.5.3",
+    "trpc": "^0.11.3",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",

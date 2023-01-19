@@ -15,7 +15,7 @@ dotenv.config();
 
 let serv = new HTTPServer(app);
 serv.listen(9000);
-const io = new Server(serv, {
+export const io = new Server(serv, {
   cors: {
     origin: "*",
   }
@@ -23,7 +23,7 @@ const io = new Server(serv, {
 
 io.on("connect", (socket: Socket) => {
   console.log("Connected " + socket.id);
-  
+
   socket.on('handshake', () => {
     console.log('Handshake received from ' + socket.id)
   })
@@ -38,9 +38,10 @@ io.on("connect", (socket: Socket) => {
   })
 })
 
+
 //Middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors({
   origin: [true, "http://localhost:3000"],
   credentials: true,
@@ -54,17 +55,28 @@ app.use(session({
     maxAge: 86400000
   }
 }));
+
 app.use(cookieParser(process.env.SECRET as string))
 app.use(passport.initialize());
 app.use(passport.session());
 
+import * as trpcExpress from "@trpc/server/adapters/express";
+import appRouter from "./src/trpc/root";
+import { createContext } from "./src/trpc/root";
+
+app.use(
+  '/trpc',
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext
+  })
+)
 
 require("./src/middleware/passport")(passport);
 //Routes
 require("./src/routes/auth.route")(app);
 require("./src/routes/user.route")(app);
-require("./src/routes/friends.route")(app,io);
-require("./src/routes/chats.route")(app,io);
+require("./src/routes/friends.route")(app, io);
 //Routes
 
 app.get("/", (req, res) => {
@@ -74,7 +86,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`api listening at http://localhost:${port}`);
 })
-
-
-
-
