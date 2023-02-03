@@ -13,10 +13,14 @@ export const updateUser = async (
     return await prisma.users.update({ where, data }) as Users
 }
 
-export const findManyUsers = async (
-    take: number,
+export const findManyUsers = async ({
+    where,
+    select,
+    take
+}: {
     where: Partial<Prisma.UsersWhereInput>,
     select?: Prisma.UsersSelect,
-    ) => {
-    return select ? await prisma.users.findMany({ where, select, take }) as Users : await prisma.users.findMany({ where, take }) as Users;
+    take?: number,
+}) => {
+    return select ? await prisma.users.findMany({ where, select, take }) as Users[] : await prisma.users.findMany({ where, take }) as Users[];
 }

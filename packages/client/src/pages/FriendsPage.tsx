@@ -10,14 +10,6 @@ import FriendsContainer from '../components/FriendsContainer';
 import Navbar from '../components/NavbarFriends';
 
 export default function FriendsPage() {
-    const userStore = storeUser();
-    const friendStore = storeFriend();
-
-    useEffect(() => {
-        friendStore.init();
-        userStore.init();
-    }, [])
-
     return (
         <>
             <div className='box'>

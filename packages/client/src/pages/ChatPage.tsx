@@ -9,14 +9,6 @@ import storeAuth from "../stores/loginStore";
 import storeUser from '../stores/userStore';
 
 export default function ChatPage() {
-    const authStore = storeAuth();
-    const userStore = storeUser();
-    const chatStore = storeChat();
-    
-    useEffect(() => {
-      userStore.init();
-    }, [])
-    
     return (
         <>
             <div className='box'>

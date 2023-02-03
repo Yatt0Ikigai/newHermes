@@ -1,5 +1,6 @@
 {
   "name": "client",
+  "homepage": ".",
   "version": "1.0.0",
   "scripts": {
     "build": "webpack --mode production",
@@ -43,12 +44,14 @@
     "@trpc/client": "^10.9.0",
     "@trpc/react-query": "^10.9.0",
     "@trpc/server": "^10.9.0",
+    "@types/js-cookie": "^3.0.2",
     "@types/react-icons": "^3.0.0",
     "api": "1.0.0",
     "axios": "^0.27.2",
     "daisyui": "^2.28.0",
     "dayjs": "^1.11.7",
     "immer": "^9.0.15",
+    "js-cookie": "^3.0.1",
     "react": "^17.0.2",
     "react-async": "^10.0.1",
     "react-datetime-picker": "^4.0.0",

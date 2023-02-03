@@ -8,18 +8,60 @@ import { trpc } from "../utils/trpc";
 import storeChat from '../stores/chatStore';
 import storeUser from '../stores/userStore';
 
+import { IMessage } from "../interfaces/messages.interface";
+import LoadingSpinner from './LoadingSpinner';
+
+
 export default function ChatContainer() {
+    const [input, setInput] = useState("");
+    const [messages, setMessages] = useState<IMessage[]>([]);
+    const [loading, setLoading] = useState(false);
+
     const chatStore = storeChat();
     const userStore = storeUser();
 
+    const socket = userStore.socket;
+
+    const { data: init } = trpc.users.getSelfInfo.useQuery();
     const sendMessage = trpc.messages.sendMessage.useMutation();
-    const { data: messages, refetch: refetchMessages } = trpc.messages.getMessages.useQuery({ chatID: (chatStore.openedChat ? chatStore.openedChat : "") })
-    
+    const fetchMessages = trpc.messages.fetchMessages.useMutation({
+        onSuccess: (data) => {
+            if (data.status === 'success' && chatStore.openedChat === data.data.chatID) setMessages(data.data.messages);
+            else alert("sth went wrong");
+            setLoading(false);
+        }
+    })
+
     useEffect(() => {
-        refetchMessages();
+        if (socket) {
+            socket.on('newMessage', (message: IMessage) => {
+                if (message.inboxId === chatStore.openedChat)
+                    setMessages([message, ...messages]);
+            })
+        }
+        return () => {
+            socket?.off('newMessage');
+        };
+    }, [socket, chatStore.openedChat, messages])
+
+
+    useEffect(() => {
+        if (chatStore.openedChat) {
+            setLoading(true);
+            fetchMessages.mutate({ chatID: chatStore.openedChat });
+        } else {
+            setLoading(true);
+            setMessages([]);
+        }
     }, [chatStore.openedChat])
-    
-    const [input, setInput] = useState("");
+
+
+
+    if (!chatStore.openedChat) return (
+        <div className='box-border flex flex-col items-center justify-center max-h-screen col-span-10 md:col-span-9 lg:col-span-8 xl:col-span-7 util-pad'>
+            Open any chat
+        </div >
+    )
 
     return (
         <div className='box-border flex flex-col max-h-screen col-span-10 md:col-span-9 lg:col-span-8 xl:col-span-7 util-pad'>
@@ -35,13 +77,21 @@ export default function ChatContainer() {
             </section>
             <section className='flex flex-col-reverse overflow-auto text-black grow'>
                 {
-                    messages?.data.messages.map((mess) => {
-                        return (
-                            <span className={`m-2 util-pad util-round w-max max-w-full ${mess.senderId === userStore.id ? "self-end bg-blue-400" : "bg-gray-200"}`}>
-                                {mess.message}
-                            </span>
-                        )
-                    })
+                    loading ?
+                        <div className={'flex items-center justify-center grow'}>
+                            <LoadingSpinner />
+                        </div> : messages ?
+                            messages.map((mess) => {
+                                return (
+                                    <span className={`m-2 util-pad util-round w-max max-w-full ${mess.senderId === init?.user.id ? "self-end bg-blue-400" : "bg-gray-200"}`}>
+                                        {mess.message}
+                                    </span>
+                                )
+                            }) : (
+                                <span>
+                                    There's no messages yet.
+                                </span>
+                            )
                 }
             </section>
             <section className='flex bg-gray-300 util-round'>

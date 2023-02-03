@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { t, authedProcedure } from "../../utils/[trpc]";
-import { acceptFriendRequest } from "./controller";
+import { acceptFriendRequest, findUserByString } from "./controller";
 
 
 
@@ -19,7 +19,18 @@ const userRoute = t.router({
                     }
                 };
             }),
-        
+    searchUsers:
+    authedProcedure
+    .input(z.object({
+        username: z.string()
+    }))
+    .mutation(async({ctx,input}) => {
+        const res = await findUserByString({ username: input.username, userID: ctx?.user?.id as string});
+        return ({
+            status:'success',
+            data: res
+        })
+    })
 });
 
 

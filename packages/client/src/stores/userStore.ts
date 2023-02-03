@@ -47,6 +47,12 @@ const userStore = create<IUserStore>()(devtools((set, get) => ({
             }
         }))
     },
+    setSocket: (socket) => {
+        set((state) => ({
+            ...state,
+            socket
+        }))
+    }
 })))
 
 
@@ -59,6 +65,7 @@ export interface IUserStore {
     socket: Socket | null,
 
     init: () => Promise<any>,
+    setSocket: (Socket) => void,
 
 }
 

@@ -12,7 +12,7 @@ import {
 
 import { findUser } from "../utils/userUitls";
 
-module.exports = function (app: express.Application, socket: any) {
+module.exports = function (app: express.Application) {
     /*                                                         GET                                                                        */
     
     app.get('/friends/init', async (req: any, res, next) => {
@@ -68,11 +68,11 @@ module.exports = function (app: express.Application, socket: any) {
             if (req.user === undefined) new Error("User not logged in");
             const result = await sendFriendRequest({ friendId: req.body.userId, selfId: req.user.id });
             const user = await findUser({id: req.user.id}, {firstName:true, lastName:true, id:true});
-            socket.to(req.body.userId).emit("gotFriendRequest", {
+       /*      socket.to(req.body.userId).emit("gotFriendRequest", {
                 id : user.id,
                 firstName: user.firstName,
                 lastName: user.lastName
-            })
+            }) */
             res.status(200).send(result);
         } catch {
             (err: any) => {
@@ -90,9 +90,9 @@ module.exports = function (app: express.Application, socket: any) {
         try {
             if (req.user === undefined) new Error("User not logged in");
             const result = await cancelFriendRequest({ userId: req.params.id, selfId: req.user.id });
-            socket.to(req.params.id).emit("cancelFriendRequest", {
+   /*          socket.to(req.params.id).emit("cancelFriendRequest", {
                 friendId: req.user.id,
-            })
+            }) */
             res.status(200).send(result)
         } catch {
             (err: any) => {
@@ -121,9 +121,9 @@ module.exports = function (app: express.Application, socket: any) {
         try {
             if (req.user === undefined) new Error("User not logged in");
             const result = await unfriendUser({ userId: req.params.id, selfId: req.user.id });
-            socket.to(req.params.id).emit("removeFriendship", {
+          /*   socket.to(req.params.id).emit("removeFriendship", {
                 friendId: req.user.id,
-            });
+            }); */
             res.status(200).json(result);
         } catch {
             (err: any) => {

@@ -2,6 +2,9 @@ import { z } from 'zod';
 
 import { trpcCreateChat, trpcfetchSideChats } from "./controller";
 import { t, authedProcedure } from "../../utils/[trpc]";
+import { Context } from '../../root';
+
+
 
 const chatsRoute = t.router({
     createChat:
@@ -12,7 +15,7 @@ const chatsRoute = t.router({
             .mutation(async ({ input, ctx }) => {
                 const chat = await trpcCreateChat({
                     participantsIDs: input.participantsIDs,
-                    userID: ctx.req.user?.id as string
+                    userID: ctx?.user?.id as string
                 })
 
                 return {
@@ -22,16 +25,14 @@ const chatsRoute = t.router({
                     }
                 };
             }),
-
+    
     fetchChats:
         authedProcedure
             .query(async ({ ctx }) => {
-                const sideChats = await trpcfetchSideChats({ selfId: ctx.req.user?.id as string });
+                const sideChats = await trpcfetchSideChats({ selfId: ctx?.user?.id as string });
                 return {
                     status: 'success',
-                    data: {
-                        sideChats
-                    }
+                    data: sideChats
                 }
             })
 });

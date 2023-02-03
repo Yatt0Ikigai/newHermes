@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { findUser, updateUser } from "../../../utils/userUitls";
+import { findUser, updateUser, findManyUsers } from "../../../utils/userUitls";
 
 export const acceptFriendRequest = async ({ friendID, selfID }: { friendID: string, selfID: string }) => {
     const user = await findUser({ id: selfID })
@@ -34,4 +34,26 @@ export const acceptFriendRequest = async ({ friendID, selfID }: { friendID: stri
     })
 
     return true;
+}
+
+
+export const findUserByString = async ({ username, userID }: { username: string, userID: string }) => {
+    const [firstName, lastName] = username.split(" ");
+    const result = await findManyUsers({
+        where: {
+            firstName: { contains: firstName, },
+            lastName: { contains: lastName, },
+            NOT: { id: userID }
+        },
+        select: {
+            firstName: true,
+            lastName: true,
+            id: true,
+        },
+        take: 15,
+    })
+
+    const user = await findUser({ id: userID })
+    result.forEach((element: any) => { element["isFriend"] = user.friendList.includes(element.id); });
+    return result;
 }

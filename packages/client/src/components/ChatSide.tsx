@@ -13,6 +13,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { BsThreeDots } from 'react-icons/bs';
 import Avatar from './Avatar';
+import { IChat } from "../types";
 
 dayjs.extend(relativeTime);
 
@@ -21,7 +22,13 @@ export default function ChatSide() {
     const userStore = StoreUser();
     const chatStore = StoreChat();
 
+    const [chats, setChats] = useState<IChat[]>([]);
+    
     const { data } = trpc.chats.fetchChats.useQuery();
+
+    useEffect(() => {
+        if(data?.status === 'success') setChats(data.data);
+    },[data]) 
 
     return (
         <div className='flex flex-col col-span-2 lg:col-span-3 util-pad'>
@@ -34,7 +41,7 @@ export default function ChatSide() {
                     <BsThreeDots className='w-6 h-6 rounded-full sm:w-7 sm:h-7 lg:w-8 lg:h-8' />
                 </label>
                 {
-                        data?.data.sideChats.map((chat) => {
+                        chats.map((chat) => {
                         const friend = chat.participants.find((u) => u.id != userStore.id);
                         if (friend) return (
                             <Chat
@@ -43,7 +50,8 @@ export default function ChatSide() {
                                 lastMessage={chat.lastMessage}
                                 isMessYours={chat.lastMessage?.senderId === userStore.id}
                                 click={() => {
-                                    chatStore.openChat(chat.id)
+                                    if (chatStore.openedChat === chat.id) chatStore.openChat("");
+                                    else chatStore.openChat(chat.id)
                                 }}
                                 clicked={chat.id === chatStore.openedChat} />
                         )

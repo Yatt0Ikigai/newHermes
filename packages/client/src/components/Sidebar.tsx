@@ -13,11 +13,12 @@ import { IconType } from 'react-icons/lib';
 import { GiBootStomp } from "react-icons/gi";
 import { GrClose } from "react-icons/gr";
 import Avatar from './Avatar';
+import { trpc } from '../utils/trpc';
 
 export default function Sidebar() {
-    const userStore = storeUser();
+    const { data } = trpc.users.getSelfInfo.useQuery();
     const [vis, setVis] = useState(false);
-    
+
     return (
         <>
             <div className={`box-border w-screen flex flex-col items-center 
@@ -30,16 +31,9 @@ export default function Sidebar() {
                     <span className='hidden xl:block'>HermesPost</span>
                     <GiBootStomp />
                 </Link>
-                <section>
+                <section className='text'>
                     <span className='hidden text-lg font-bold text-black xl:block'>Menu</span>
                     <ul>
-                        <SidebarLi
-                            Icon={HiOutlineNewspaper}
-                            text={'News'}
-                            haveNotif={true}
-                            notif={0}
-                            path={'/news'}
-                        />
                         <SidebarLi
                             Icon={BiMessageDetail}
                             text={'Messages'}
@@ -53,20 +47,6 @@ export default function Sidebar() {
                             haveNotif={true}
                             notif={0}
                             path={'/friends'}
-                        />
-                        <SidebarLi
-                            Icon={FaUserFriends}
-                            text={'Communities'}
-                            haveNotif={true}
-                            notif={0}
-                            path={'/communities'}
-                        />
-                        <SidebarLi
-                            Icon={AiOutlineCalendar}
-                            text={'Events'}
-                            haveNotif={true}
-                            notif={0}
-                            path={'/events'}
                         />
                     </ul>
                     <span className='hidden w-full text-lg font-bold text-black xl:block '>Shortcuts</span>
@@ -83,12 +63,16 @@ export default function Sidebar() {
                     </span>
                     <BsFillGearFill />
                 </Link>
-                <section className='flex items-center mt-auto mb-4 bg-gray-400 rounded-lg xl:py-2 xl:px-4 justify-self-end'>
-                    <div className='relative w-12 h-12 rounded-full'>
-                        <Avatar id={userStore.id} />
-                    </div>
-                    <span className='hidden xl:block'>{userStore.firstName} {userStore.lastName}</span>
-                </section>
+                {
+                    data && data.user &&
+                    <section className='flex items-center mt-auto mb-4 bg-gray-400 rounded-lg xl:py-2 xl:px-4 justify-self-end'>
+                        <div className='relative w-12 h-12 rounded-full'>
+
+                            <Avatar id={data.user.id} />
+                        </div>
+                        <span className='hidden xl:block'>{data.user.firstName} {data.user.lastName}</span>
+                    </section>
+                }
 
             </div>
             <div className='absolute top-0 right-0 z-40 md:hidden'>
@@ -96,7 +80,7 @@ export default function Sidebar() {
                     setVis(true);
                 }}>
                     <FaBars />
-                
+
                 </button>
             </div>
 

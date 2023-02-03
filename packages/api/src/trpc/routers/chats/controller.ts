@@ -2,7 +2,6 @@ import { findChat, updateChat, cChat } from "../../../utils/chatUtils";
 import { gMessages } from "../../../utils/messageUtils";
 import { updateUser, findUser } from "../../../utils/userUitls";
 import { TRPCError } from "@trpc/server";
-import { io } from "../../../../index";
 
 export const trpcCreateChat = async ({ participantsIDs, userID }: { participantsIDs: string[], userID: string }) => {
     const flag = await Promise.all(

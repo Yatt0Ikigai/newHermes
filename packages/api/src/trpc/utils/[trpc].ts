@@ -3,9 +3,21 @@ import { initTRPC, TRPCError } from '@trpc/server';
 
 export const t = initTRPC.context<Context>().create()
 
-export const isAuthed = t.middleware(async ({ ctx, next }) => {
-    if (!ctx.req.user) throw new TRPCError({ code: 'UNAUTHORIZED' });
-    return next();
+export const Authed = t.middleware(async ({ ctx, next }) => {
+    if (ctx.user) return next();
+    else {
+        console.log('!authed');
+        ctx.res.cookie('logged_in', 'false');
+        throw new TRPCError({ code: "UNAUTHORIZED" })
+    }
 })
 
-export const authedProcedure = t.procedure.use(isAuthed);
+export const unAuthed = t.middleware(async ({ ctx, next }) => {
+    if (!ctx.user) return next();
+    throw new TRPCError({ code: "BAD_REQUEST" })
+})
+
+export const authedProcedure = t.procedure.use(Authed);
+export const unauthedProcedure = t.procedure.use(unAuthed);
+
+

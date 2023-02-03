@@ -6,9 +6,11 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import storeFriends from "../stores/friendStore";
 import storeAction from "../stores/actionStore";
 import { Link, useNavigate } from 'react-router-dom';
+import { trpc } from '../utils/trpc';
 import Avatar from './Avatar';
 
 export default function FriendsContainer() {
+    const { data: friends } = trpc.friends.fetchFriendList.useQuery();
     const friendStore = storeFriends();
     const actionStore = storeAction();
     const navigate = useNavigate();
@@ -16,7 +18,7 @@ export default function FriendsContainer() {
     return (
         <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
             {
-                friendStore.friendList.map((friend) => {
+                friends?.status === 'success' && friends.data.friendList.map((friend) => {
                     return (
                         <div className='flex items-center h-full overflow-hidden bg-gray-300 rounded-md' onClick={(e) => {
                             navigate(`/profile/${friend.id}`)

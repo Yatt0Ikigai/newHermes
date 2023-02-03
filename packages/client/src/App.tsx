@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter,
@@ -29,16 +29,33 @@ import SettingsPage from "./pages/SettingsPage";
 import { trpc } from "./utils/trpc";
 import { httpBatchLink } from '@trpc/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { io } from "socket.io-client";
 
+const socket = io('http://localhost:9000', {
+  withCredentials: true,
+});
 
 const App = () => {
-  const userStore = storeUser();
-  const chatStore = storeChat();
-  const friendStore = storeFriend();
 
   const audioPlayer = new Audio(notificationSound);
 
   const [queryClient] = useState(() => new QueryClient());
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: 'http://localhost:8080/trpc',
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: 'include',
+            });
+          },
+        }),
+      ],
+    })
+  )
+  /*
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
@@ -55,56 +72,68 @@ const App = () => {
       ],
     }),
   );
+  */
 
-  useEffect(() => {
-    const socket = userStore.socket;
-    if (socket) {
-      socket.on("messageReceived", (mess: IMessage) => {
-        chatStore.receiveMessage(mess);
-        if (mess.senderId !== userStore.id) audioPlayer.play();
-      });
+  /*if (socket) {
+    socket.on("messageReceived", (mess: IMessage) => {
+      chatStore.receiveMessage(mess);
+      if (mess.senderId !== userStore.id) audioPlayer.play();
+    });
+ 
+    socket.on("cancelFriendRequest", (user: any) => {
+      friendStore.removeFriendRequest(user.friendId)
+    });
+ 
+    socket.on("gotFriendRequest", (user: IUser) => {
+      friendStore.addFriendRequest(user)
+    });
+ 
+    socket.on("acceptFriendship", (user: IUser) => {
+      friendStore.addFriend(user)
+ 
+    });
+ 
+    socket.on("removeFriendship", (user: string) => {
+      friendStore.removeFriend(user)
+    });
+  }
+  */
 
-      socket.on("cancelFriendRequest", (user: any) => {
-        friendStore.removeFriendRequest(user.friendId)
-      });
-
-      socket.on("gotFriendRequest", (user: IUser) => {
-        friendStore.addFriendRequest(user)
-      });
-
-      socket.on("acceptFriendship", (user: IUser) => {
-        friendStore.addFriend(user)
-
-      });
-
-      socket.on("removeFriendship", (user: string) => {
-        friendStore.removeFriend(user)
-      });
-
-    }
-    return () => {
-      userStore.socket?.off('messageReceived');
-      userStore.socket?.off('gotFriendRequest');
-      userStore.socket?.off('cancelFriendRequest');
-    };
-  })
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/profile/:userId" element={<ProfilePage />} />
-            <Route path="/chats" element={<ChatPage />} />
-            <Route path="/friends" element={<FriendsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-          </Routes>
-        </BrowserRouter>
+        <SocketWraper/>
       </QueryClientProvider>
     </trpc.Provider >
   );
 };
+
+const SocketWraper = () => {
+  const userStore = storeUser();
+  const { data } = trpc.users.getSelfInfo.useQuery();
+
+  useEffect(() => {
+    userStore.setSocket(socket);
+  },[])
+
+  useEffect(() => {
+    if( data?.status === "success" ) 
+      socket.emit('handshake');
+  }, [data])
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/profile/:userId" element={<ProfilePage />} />
+        <Route path="/chats" element={<ChatPage />} />
+        <Route path="/friends" element={<FriendsPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+      </Routes>
+    </BrowserRouter>
+  )
+}
 ReactDOM.render(<App />, document.getElementById("app"));

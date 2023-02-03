@@ -13,6 +13,7 @@ import PostModal from '../components/PostModal';
 import StoriesMini from '../components/StoriesMini';
 
 import useLoad from "../hooks/useLoad";
+import Cookies from 'js-cookie';
 interface chat {
   participants: String[]
   lastMessage: String
@@ -21,15 +22,9 @@ interface chat {
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const { loading, error } = useLoad();
-
- 
-  if(error) navigate('/login');
-  if (loading) return (
-      <LoadingSpinner/>
-  )
-  //if (authStore.userStatus.logged && authStore.userStatus.loading === false) navigate('/login');
-
+  useEffect(() => {
+    if (Cookies.get('logged_in') === 'false') navigate('/login');
+  }, [Cookies.get('logged_in')]);
 
 
   return (
