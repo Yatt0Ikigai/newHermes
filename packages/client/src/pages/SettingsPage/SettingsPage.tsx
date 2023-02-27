@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import UploadImage from '../components/UploadImage'
+import UploadImage from './components/UploadImage'
 import { ToastContainer } from "react-toastify";
-import { trpc } from '../utils/trpc';
+import { trpc } from '../../utils/trpc';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 

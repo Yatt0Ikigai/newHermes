@@ -29,9 +29,8 @@ export default function Sidebar() {
                   text-gray-600 bg-gray-200 ${vis ? 'translate-x-0' : '-translate-x-full'} `}>
                 <Link to="/" className='flex items-center justify-center p-4 text-xl font-bold'>
                     <span className='hidden xl:block'>HermesPost</span>
-                    <GiBootStomp />
                 </Link>
-                <section className='text'>
+                <section className='my-4 text-center'>
                     <span className='hidden text-lg font-bold text-black xl:block'>Menu</span>
                     <ul>
                         <SidebarLi
@@ -49,20 +48,26 @@ export default function Sidebar() {
                             path={'/friends'}
                         />
                     </ul>
-                    <span className='hidden w-full text-lg font-bold text-black xl:block '>Shortcuts</span>
-
-                    <button className='absolute top-0 right-0 p-4 md:hidden' onClick={(e) => {
-                        setVis(false);
-                    }}>
-                        <GrClose />
-                    </button>
                 </section>
-                <Link to={'/settings'} className='flex items-end'>
-                    <span className='md:hidden xl:block'>
-                        Settings
+                <section className='my-4 text-center'>
+                    <span className='hidden w-full text-lg font-bold text-black xl:block '>
+                        Shortcuts
                     </span>
-                    <BsFillGearFill />
-                </Link>
+
+                    <SidebarLi
+                        Icon={BsFillGearFill}
+                        text={'Settings'}
+                        haveNotif={true}
+                        notif={0}
+                        path={'/Settings'}
+                    />
+                </section>
+
+                <button className='absolute top-0 right-0 p-4 md:hidden' onClick={(e) => {
+                    setVis(false);
+                }}>
+                    <GrClose />
+                </button>
                 {
                     data && data.user &&
                     <section className='flex items-center mt-auto mb-4 bg-gray-400 rounded-lg xl:py-2 xl:px-4 justify-self-end'>
@@ -91,9 +96,9 @@ export default function Sidebar() {
 
 const SidebarLi = ({ Icon, text, path, haveNotif, notif }: { Icon: IconType, text: string, path: string, haveNotif: boolean, notif: number }) => {
     return (
-        <Link to={path} className={`flex items-center justify-center py-2 xl:grid xl:grid-cols-5 hover:text-black ${location.pathname === path ? "text-black" : ""}`}>
+        <Link to={path} className={`flex items-center justify-center py-2 xl:grid xl:grid-cols-4 hover:text-black ${location.pathname === path ? "text-black" : ""}`}>
             <Icon className='w-6 h-6' />
-            <span className='col-span-3 md:hidden xl:block'>
+            <span className='col-span-3 text-left md:hidden xl:block'>
                 {text}
             </span>
             <span>

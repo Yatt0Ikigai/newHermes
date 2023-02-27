@@ -1,4 +1,4 @@
-import { findChat, updateChat, cChat } from "../../../utils/chatUtils";
+import { findChat, updateChat, cChat} from "../../../utils/chatUtils";
 import { gMessages } from "../../../utils/messageUtils";
 import { updateUser, findUser } from "../../../utils/userUitls";
 import { TRPCError } from "@trpc/server";
@@ -66,12 +66,12 @@ export const trpcfetchSideChats = async ({ selfId }: { selfId: string }) => {
                 const lastSender = await findUser({ id: lMessage[0].senderId }, { firstName: true, lastName: true, id: true });
                 return {
                     lastMessage: {
+                        id: lMessage[0].id,
                         senderId: lastSender.id,
-                        author: lastSender.firstName + " " + lastSender.lastName,
+                        inboxId: lMessage[0].inboxId,
                         message: lMessage[0].message,
-                        messageId: lMessage[0].id,
-                        chatId: lMessage[0].inboxId,
-                        timeStamp: lMessage[0].createdAt
+                        createdAt: lMessage[0].createdAt,
+                        author: lastSender.firstName + " " + lastSender.lastName,
                     },
                     participants,
                     id
@@ -90,7 +90,7 @@ export const trpcfetchSideChats = async ({ selfId }: { selfId: string }) => {
     chats.sort((a, b) => {
         if (!a.lastMessage) return 1;
         if (!b.lastMessage) return -1;
-        return a.lastMessage.timeStamp < b.lastMessage.timeStamp ? 1 : -1;
+        return a.lastMessage.createdAt < b.lastMessage.createdAt ? 1 : -1;
     })
 
     return chats;

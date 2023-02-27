@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import storeAuth from '../stores/loginStore';
-import { trpc } from "../utils/trpc";
+import storeAuth from '../../stores/loginStore';
+import { trpc } from "../../utils/trpc";
 import Cookies from "js-cookie";
 
 export default function LoginPage() {

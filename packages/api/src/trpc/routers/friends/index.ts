@@ -10,7 +10,7 @@ const messagesRoute = t.router({
                 return {
                     status: "success",
                     data: {
-                        friendList: await getFriendList({ userId: ctx.req.user?.id as string })
+                        friendList: await getFriendList({ userId: ctx?.user?.id as string })
                     }
                 }
             }),
@@ -19,7 +19,7 @@ const messagesRoute = t.router({
             .query(async ({ ctx }) => {
                 return {
                     status: "success",
-                    data: await getFriendRequests({ userId: ctx.req.user?.id as string })
+                    data: await getFriendRequests({ userId: ctx?.user?.id as string })
                 }
             })
 });

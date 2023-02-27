@@ -21,4 +21,5 @@ export interface IMessage {
     chatId: string,
     message: string,
     timeStamp: string,
+    author: string,
 }

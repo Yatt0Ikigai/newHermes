@@ -17,6 +17,7 @@ export const unAuthed = t.middleware(async ({ ctx, next }) => {
     throw new TRPCError({ code: "BAD_REQUEST" })
 })
 
+export const procedure = t.procedure;
 export const authedProcedure = t.procedure.use(Authed);
 export const unauthedProcedure = t.procedure.use(unAuthed);
 

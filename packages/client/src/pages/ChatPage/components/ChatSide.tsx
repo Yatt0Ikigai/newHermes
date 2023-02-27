@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { AiOutlinePlus } from "react-icons/ai";
 
-import StoreUser from "../stores/userStore";
-import StoreChat from "../stores/chatStore";
+import StoreUser from "../../../stores/userStore";
+import StoreChat from "../../../stores/chatStore";
 
-import { trpc } from '../utils/trpc';
+import { trpc } from '../../../utils/trpc';
 
-import { IMessage } from "../interfaces/chatStore.interface";
+import { IMessage } from "../../../../types";
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { BsThreeDots } from 'react-icons/bs';
-import Avatar from './Avatar';
-import { IChat } from "../types";
+import Avatar from '../../../components/Avatar';
+import { IChat } from "../../../../types";
+import { socket } from '../../../App';
+import getMessage from '../../../hooks/sockets/getMessage';
 
 dayjs.extend(relativeTime);
 
@@ -23,12 +25,49 @@ export default function ChatSide() {
     const chatStore = StoreChat();
 
     const [chats, setChats] = useState<IChat[]>([]);
-    
+
     const { data } = trpc.chats.fetchChats.useQuery();
+    /*
+        useEffect(() => {
+            if (socket) {
+                socket.on('newMessage', (message: IMessage) => {
+                    console.log("Yey")
+                    const filteredChat = chats.find((chat) => chat.id === message.chatId);
+                    const newChats = chats.filter((chat) => message.chatId !== chat.id);
+                    console.log(filteredChat, message.chatId)
+                    if (!filteredChat) return;
+                    setChats([{
+                        lastMessage: message,
+                        participants: filteredChat?.participants,
+                        id: filteredChat?.id,
+    
+                    }, ...newChats])
+    
+                }) 
+            }
+            return () => {
+                socket?.off('newMessage');
+            };
+        }) 
+    */
+    const { message: newMessage } = getMessage();
 
     useEffect(() => {
-        if(data?.status === 'success') setChats(data.data);
-    },[data]) 
+        if(!newMessage) return;
+        const filteredChat = chats.find((chat) => chat.id === newMessage?.inboxId);
+        const newChats = chats.filter((chat) => newMessage?.inboxId !== chat.id);
+        if (!filteredChat) return
+        setChats([{
+            lastMessage: newMessage,
+            participants: filteredChat?.participants,
+            id: filteredChat?.id,
+
+        }, ...newChats])
+    }, [newMessage])
+    
+    useEffect(() => {
+        if (data?.status === 'success') setChats(data.data);
+    }, [data])
 
     return (
         <div className='flex flex-col col-span-2 lg:col-span-3 util-pad'>
@@ -41,7 +80,7 @@ export default function ChatSide() {
                     <BsThreeDots className='w-6 h-6 rounded-full sm:w-7 sm:h-7 lg:w-8 lg:h-8' />
                 </label>
                 {
-                        chats.map((chat) => {
+                    chats.map((chat) => {
                         const friend = chat.participants.find((u) => u.id != userStore.id);
                         if (friend) return (
                             <Chat
@@ -53,7 +92,8 @@ export default function ChatSide() {
                                     if (chatStore.openedChat === chat.id) chatStore.openChat("");
                                     else chatStore.openChat(chat.id)
                                 }}
-                                clicked={chat.id === chatStore.openedChat} />
+                                clicked={chat.id === chatStore.openedChat}
+                                key={`Side-${friend.id}`} />
                         )
                     })
                 }
@@ -74,18 +114,17 @@ export default function ChatSide() {
 
 
 const Chat = ({ id, friendName, lastMessage, click, clicked, isMessYours }: { id: string, friendName: string, lastMessage: IMessage | null, click: () => void, clicked: boolean, isMessYours: boolean }) => {
-    const [longAgo, setLongAgo] = useState(dayjs(lastMessage ? lastMessage.timeStamp : 0).fromNow());
+    const [longAgo, setLongAgo] = useState(dayjs(lastMessage ? lastMessage.createdAt : 0).fromNow());
     useEffect(() => {
         const interval = setInterval(() => {
-            if (lastMessage) setLongAgo(dayjs(lastMessage.timeStamp).fromNow());
+            if (lastMessage) setLongAgo(dayjs(lastMessage.createdAt).fromNow());
         }, 10000);
         return () => clearInterval(interval);
-    }, []);
-
-    useEffect(() => {
-        if (lastMessage) setLongAgo(dayjs(lastMessage.timeStamp).fromNow());
     }, [lastMessage]);
 
+    useEffect(() => {
+        if (lastMessage) setLongAgo(dayjs(lastMessage.createdAt).fromNow());
+    }, [lastMessage]);
     return (
         <div className={`grid lg:grid-cols-5 py-2 justify-center ${clicked ? "bg-gray-400" : ""}`} onClick={click}>
             <span className='flex items-center justify-center'>

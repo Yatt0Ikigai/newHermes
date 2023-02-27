@@ -1,14 +1,13 @@
-import React, { useRef, useState } from 'react';
-import axios from 'axios';
-import { trpc } from '../utils/trpc';
-import { toast, ToastContainer } from "react-toastify";
+import React, { useState } from 'react';
+import { trpc } from '../../../utils/trpc';
+import { toast } from "react-toastify";
 
 export default function UploadImage() {
     const [image, setImage] = useState<File>();
     const [desc, setDesc] = useState("");
 
     const updateAv = trpc.users.changeAvatarLink.useMutation();
-    
+
     const getLink = trpc.users.getUploadLink.useMutation({
         onSuccess: async (data) => {
             toast.promise(
@@ -19,7 +18,7 @@ export default function UploadImage() {
                         'Content-Type': image?.type,
                         file: image
                     }
-                    for (const name in img) formData.append(name, img[name])
+                    for (const name in img) formData.append(name, img?.file?.name as string)
                     await fetch(data.data.link.url, {
                         method: 'POST',
                         body: formData,

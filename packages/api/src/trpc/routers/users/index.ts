@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { getAvatar, updateAvatarLink } from "./controllers";
-import { t, authedProcedure } from "../../utils/[trpc]";
+import { t, authedProcedure, procedure } from "../../utils/[trpc]";
 import { createUploadLink } from "../../../utils/awsUtils";
 import { findUser } from '../../../utils/userUitls';
 
@@ -52,19 +52,23 @@ const userRoute = t.router({
             }),
 
     getSelfInfo:
-        authedProcedure.
-            query(async ({ ctx }) => {
+            procedure
+            .query(async ({ ctx }) => {
                 const user = await findUser(
-                    { id: ctx?.user?.id},
+                    { id: ctx?.user?.id },
                     {
                         id: true,
                         firstName: true,
                         lastName: true,
                     }
                 )
-                return {
+                if(user)  return {
                     status: 'success',
                     user
+                }
+                else return {
+                    status: 'failed',
+                    user: null,
                 }
             })
 });

@@ -3,16 +3,16 @@ import { useNavigate } from 'react-router-dom';
 
 
 //comontents
-import Navbar from "../components/NavbarLanding";
-import LoadingSpinner from "../components/LoadingSpinner";
+import Navbar from "../../components/Navbar/NavbarLanding";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
-import WritePost from '../components/WritePost';
-import Post from '../components/Post';
-import Sidebar from '../components/Sidebar';
-import PostModal from '../components/PostModal';
-import StoriesMini from '../components/StoriesMini';
+import WritePost from '../../components/Post/WritePost';
+import Post from '../../components/Post/Post';
+import Sidebar from '../../components/Sidebar';
+import PostModal from '../../components/Post/PostModal';
+import StoriesMini from '../../components/StoriesMini';
 
-import useLoad from "../hooks/useLoad";
+import useLoad from "../../hooks/useLoad";
 import Cookies from 'js-cookie';
 interface chat {
   participants: String[]

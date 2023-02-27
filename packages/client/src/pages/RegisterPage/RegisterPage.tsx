@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import authStore from '../stores/loginStore';
-import { trpc } from '../utils/trpc';
+import authStore from '../../stores/loginStore';
+import { trpc } from '../../utils/trpc';
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');

@@ -8,7 +8,7 @@ import { IReqUser } from "../index";
 
 
 export const generateAccessToken = (user: IReqUser) => {
-  return jwt.sign(user, access_token_secret, { expiresIn: '10m' });
+  return jwt.sign(user, access_token_secret, { expiresIn: '10s' });
 }
 
 export const verifyJWT = (token: string, key: string) => {

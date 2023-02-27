@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { CgProfile } from 'react-icons/cg';
 import { useParams } from 'react-router-dom';
-import { getRequest } from '../utils/axios.util';
-import Avatar from './Avatar';
-import LoadingSpinner from './LoadingSpinner';
-import Post from "./Post"
-import WritePost from './WritePost';
+import { getRequest } from '../../../utils/axios.util';
+import Avatar from '../../../components/Avatar';
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import Post from "../../../components/Post/Post"
+import WritePost from '../../../components/Post/WritePost';
 export default function UserContainer() {
     const { userId } = useParams();
     const [loading, setLoading] = useState(false);

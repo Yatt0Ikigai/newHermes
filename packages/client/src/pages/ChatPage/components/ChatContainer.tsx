@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BsCardImage, BsEmojiSmile, BsMic, BsThreeDots } from 'react-icons/bs';
 import { CgProfile } from 'react-icons/cg';
 import { GrAttachment } from "react-icons/gr";
 
 
-import { trpc } from "../utils/trpc";
-import storeChat from '../stores/chatStore';
-import storeUser from '../stores/userStore';
+import { trpc } from "../../../utils/trpc";
+import storeChat from '../../../stores/chatStore';
+import storeUser from '../../../stores/userStore';
+import { socket } from '../../../App';
 
-import { IMessage } from "../interfaces/messages.interface";
-import LoadingSpinner from './LoadingSpinner';
+import { IMessage } from "../../../interfaces/messages.interface";
+import getMessage from "../../../hooks/sockets/getMessage";
+import LoadingSpinner from '../../../components/LoadingSpinner';
 
 
 export default function ChatContainer() {
@@ -18,9 +20,6 @@ export default function ChatContainer() {
     const [loading, setLoading] = useState(false);
 
     const chatStore = storeChat();
-    const userStore = storeUser();
-
-    const socket = userStore.socket;
 
     const { data: init } = trpc.users.getSelfInfo.useQuery();
     const sendMessage = trpc.messages.sendMessage.useMutation();
@@ -32,18 +31,11 @@ export default function ChatContainer() {
         }
     })
 
-    useEffect(() => {
-        if (socket) {
-            socket.on('newMessage', (message: IMessage) => {
-                if (message.inboxId === chatStore.openedChat)
-                    setMessages([message, ...messages]);
-            })
-        }
-        return () => {
-            socket?.off('newMessage');
-        };
-    }, [socket, chatStore.openedChat, messages])
+    const { message: newMessage } = getMessage();
 
+    useEffect(() => {
+        if (chatStore.openedChat === newMessage?.inboxId) setMessages([newMessage, ...messages]);
+    }, [newMessage])
 
     useEffect(() => {
         if (chatStore.openedChat) {
@@ -83,7 +75,7 @@ export default function ChatContainer() {
                         </div> : messages ?
                             messages.map((mess) => {
                                 return (
-                                    <span className={`m-2 util-pad util-round w-max max-w-full ${mess.senderId === init?.user.id ? "self-end bg-blue-400" : "bg-gray-200"}`}>
+                                    <span className={`m-2 util-pad util-round w-max max-w-full ${mess.senderId === init?.user?.id ? "self-end bg-blue-400" : "bg-gray-200"}`} key={mess.id}>
                                         {mess.message}
                                     </span>
                                 )
@@ -99,10 +91,17 @@ export default function ChatContainer() {
                 <form action="" onSubmit={(e) => {
                     e.preventDefault();
                     if (!chatStore.openedChat) return;
+                    socket.emit('sendMessage', {
+                        chatId: chatStore.openedChat,
+                        userId: init?.user?.id,
+                        content: input
+                    });
+                    /* 
                     sendMessage.mutate({
-                        chatID: chatStore.openedChat,
-                        message: input
-                    })
+                         chatID: chatStore.openedChat,
+                         message: input
+                     })
+                     */
                     setInput("");
                 }} className="grow">
                     <input type="text" placeholder='Write Your message' className='w-full p-2 text-black bg-transparent border-t-2 placeholder:text-black focus:outline-none'

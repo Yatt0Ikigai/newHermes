@@ -4,7 +4,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import { CgProfile } from 'react-icons/cg';
 import { GoComment } from 'react-icons/go';
 import { RiShareForwardLine } from 'react-icons/ri';
-import Avatar from './Avatar';
+import Avatar from '../Avatar';
 
 export default function Post(post: IPost) {
   const [liked, setLiked] = useState(false);

@@ -1,18 +1,12 @@
 import React from 'react'
-
-import { CgProfile } from "react-icons/cg";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
-import storeFriends from "../stores/friendStore";
-import storeAction from "../stores/actionStore";
-import { Link, useNavigate } from 'react-router-dom';
-import { trpc } from '../utils/trpc';
-import Avatar from './Avatar';
+import { useNavigate } from 'react-router-dom';
+import { trpc } from '../../../utils/trpc';
+import Avatar from '../../../components/Avatar';
 
 export default function FriendsContainer() {
     const { data: friends } = trpc.friends.fetchFriendList.useQuery();
-    const friendStore = storeFriends();
-    const actionStore = storeAction();
     const navigate = useNavigate();
 
     return (

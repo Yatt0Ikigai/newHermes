@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { AiOutlinePlus } from 'react-icons/ai';
-import AddFriendsModal from './AddFriendModal';
+import AddFriendsModal from '../AddFriendModal';
 
 
 export default function Navbar() {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { trpc } from "../utils/trpc";
-import { IUser } from "../types";
+import { IUser } from "../../types";
 
 import { Link } from 'react-router-dom';
 
