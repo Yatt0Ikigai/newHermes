@@ -12,54 +12,20 @@ const chatStore = create<IChatStore>()(
         messages: [],
         chatsList: [],
 
-        openChat: (chatID) => {
+        openChat: (obj: {
+            chatId: string,
+            name: string
+        }) => {
             set((state) => ({
                 ...state,
-                openedChat:chatID
+                openedChat: {
+                    id: obj.chatId,
+                    name: obj.name
+                }
             }))
         },
 
-
-        sendMessage: async (mess) => {
-            await postRequest(`chats/${mess.chatId}/message`, { message: mess.message })
-        },
-
-        receiveMessage: (mess) => {
-            let openedChat = get().openedChat;
-            let chats = get().chatsList;
-            //Sidebar
-            let selectChat = chats.find((chat) => chat.id === mess.chatId)
-            if (selectChat) {
-                //bring to top
-                const indexOfSelect = chats.indexOf(selectChat);
-                selectChat.lastMessage = mess;
-                chats.splice(indexOfSelect, 1);
-                set((state) => ({
-                    ...state,
-                    chatsList: [selectChat as IChat, ...chats]
-                }))
-            } else {
-                //Need Rework
-                set((state) => ({
-                    ...state,
-                    chatsList: [{ id: mess.chatId, lastMessage: mess, name: "unknown", participants: [] }, ...chats]
-                }))
-            }
-            //main mess
-            if (openedChat && mess.chatId === openedChat) {
-                const messages = get().messages;
-                set((state) => ({
-                    ...state,
-                    messages: [mess, ...messages]
-                }))
-            }
-        },
-
-        closeChat: (chatId) => {
-
-        },
-
-        startChat: async (friendId, selfId) => {
+        startChat: async (friendId: string, selfId: string) => {
             const isChat = get().chatsList.find((chat: any) => {
                 return chat.participats.includes(friendId) === true;
             })
@@ -73,7 +39,7 @@ const chatStore = create<IChatStore>()(
             return res.data;
         },
 
-        findChat: (chatId) => {
+        findChat: (chatId: string) => {
             return get().chatsList.find(el => el.id === chatId) as IChat;
         },
 
@@ -90,12 +56,15 @@ const chatStore = create<IChatStore>()(
 
 export interface IChatStore {
     chatsList: IChat[],
-    openedChat: string | null,
+    openedChat: {
+        name: string,
+        id: string
+    } | null,
     messages: IMessage[],
-    receiveMessage: (message: IMessage) => void,
-    sendMessage: (mess: ISendMess) => Promise<any>,
-    closeChat: (chatId: string) => void;
-    openChat: (chatID: string) => void;
+    openChat: (obj: {
+        chatId: string,
+        name: string
+    }) => void;
 
     init: () => Promise<any>,
 }

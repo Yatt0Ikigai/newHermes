@@ -2,9 +2,7 @@ import { z } from 'zod';
 
 import { getMessages, trpcPostMessage } from "./controllers";
 import { t, authedProcedure } from "../../utils/[trpc]";
-import { observable } from '@trpc/server/observable';
 import { EventEmitter } from 'node:events';
-const ee = new EventEmitter();
 
 const messagesRoute = t.router({
     sendMessage:
@@ -39,23 +37,6 @@ const messagesRoute = t.router({
                     status: 'success',
                     data: messages
                 };
-            }),
-
-    receiveMessage:
-        authedProcedure
-            .input(z.object({
-                chatID: z.string()
-            }))
-            .subscription(async ({ input, ctx }) => {
-                return observable<IMessage>(emit => {
-                    const onUpdate = (data: IMessage) => {
-                        emit.next(data);
-                    }
-                    ee.on('onUpdate', onUpdate);
-                    return () => {
-                        ee.off('onUpdate', onUpdate)
-                    }
-                })
             })
 });
 

@@ -25,16 +25,7 @@ app.use(cors({
 }));
 
 require('./src/sockets/index')(app);
-/*
-app.use(session({
-  secret: process.env.SECRET as string,
-  resave: true,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 86400000
-  }
-}));
-*/
+
 
 app.use(cookieParser(process.env.SECRET as string))
 

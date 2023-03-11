@@ -68,16 +68,12 @@ export default function Sidebar() {
                 }}>
                     <GrClose />
                 </button>
-                {
-                    data && data.user &&
-                    <section className='flex items-center mt-auto mb-4 bg-gray-400 rounded-lg xl:py-2 xl:px-4 justify-self-end'>
-                        <div className='relative w-12 h-12 rounded-full'>
+                <section className='flex items-center mt-auto mb-4 bg-gray-400 rounded-lg xl:py-2 xl:px-4 justify-self-end'>
+                    <div className='relative w-12 h-12 rounded-full'>
+                        <Avatar id={null} />
+                    </div>
+                </section>
 
-                            <Avatar id={data.user.id} />
-                        </div>
-                        <span className='hidden xl:block'>{data.user.firstName} {data.user.lastName}</span>
-                    </section>
-                }
 
             </div>
             <div className='absolute top-0 right-0 z-40 md:hidden'>

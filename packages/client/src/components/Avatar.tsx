@@ -6,7 +6,7 @@ import { trpc } from '../utils/trpc';
 
 
 
-export default function Avatar({ id }: { id: string }) {
+export default function Avatar({ id }: { id: string | null }) {
     const { data } = trpc.users.getAvatar.useQuery({ id });
 
     return (

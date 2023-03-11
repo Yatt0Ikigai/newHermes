@@ -5,8 +5,6 @@ import { findUser } from "../../../utils/userUitls";
 
 
 export const trpcPostMessage = async ({ chatId, userID, message }: { chatId: string, userID: string, message: string }) => {
-
-
     return 'mes';
 }
 
