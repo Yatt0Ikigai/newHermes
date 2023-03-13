@@ -15,17 +15,15 @@ module.exports = {
         xxs: '0.5rem',
       },
       colors: {
-        'primaryBlue': '#4E69A3',
-        'secondaryBlue': '#5085E8',
-        'gray': {
-          100: "#dadada",
-          200: "#cdcdcd",
-          300: "#c0c0c0",
-          400: "#b4b4b4",
-          500: "#a7a7a7",
-          900: '#454545',
-        },
-        'white': "#D8D8D8"
+        'primaryBackground': "#242526",
+        'secondaryBackground': "#3a3b3c",
+        'tertiaryBackground': "#252f3c",
+        'iconFill': "#acafb4",
+        'icons': "#8f9295",
+        'accent': "#38393a",
+        'primaryHighlight': "#0084ff",
+        'secondaryHighlight': "#3e4042",
+        'white': "#e4e6eb",
       },
       fontFamily: {
         'montserrat': ['montserrat', 'sans-serif']

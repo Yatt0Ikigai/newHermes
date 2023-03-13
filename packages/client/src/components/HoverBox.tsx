@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function ({ children, description, variant = "topUpToRight" }: { children: React.ReactNode | undefined, description: string, variant?: IVariations }) {
+export default function ({ children, description, variant = "topUpToRight" }: { children: React.ReactNode | undefined, description: string | React.ReactNode, variant?: IVariations }) {
   const [timeout, setModalTimeout] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -8,7 +8,7 @@ export default function ({ children, description, variant = "topUpToRight" }: { 
     <div
       onMouseEnter={() => {
         timeout && !showModal && clearTimeout(timeout);
-        setModalTimeout(setTimeout(() => setShowModal(true), 1000))
+        setModalTimeout(setTimeout(() => setShowModal(true), 500))
       }}
       onMouseLeave={() => {
         timeout && clearTimeout(timeout)

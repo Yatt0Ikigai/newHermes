@@ -1,8 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { BsCardImage, BsEmojiSmile, BsMic, BsThreeDots } from 'react-icons/bs';
-import { CgProfile } from 'react-icons/cg';
-import { GrAttachment } from "react-icons/gr";
-
+import React, { useEffect, useState } from 'react';
 
 import { trpc } from "../../../utils/trpc";
 import storeChat from '../../../stores/chatStore';
@@ -14,6 +10,7 @@ import Message from "./Messages";
 import Avatar from '../../../components/Avatar';
 
 import ChatInput from "./ChatInput";
+import { AiOutlineInfo } from 'react-icons/ai';
 
 export default function ChatContainer() {
     const [messages, setMessages] = useState<IMessage[]>([]);
@@ -88,16 +85,17 @@ export default function ChatContainer() {
 
     return (
         <div className='box-border flex flex-col h-full grow'>
-            <section className='flex items-center gap-2 py-2 border-b-2'>
-                <div className='w-8 h-8 overflow-hidden rounded-full'>
-                    <Avatar id={null} />
+            <section className='flex items-center gap-2 py-2 border-b border-accent'>
+                <div className='p-2'>
+                    <div className='w-12 h-12 overflow-hidden rounded-full'>
+                        <Avatar id={null} />
+                    </div>
                 </div>
-                <span>{chatStore.openedChat.name}</span>
-                <div className="self-center ml-auto dropdown dropdown-end">
-                    <label tabIndex={0}> <BsThreeDots className='p-2 icons' /></label>
-                    <ul tabIndex={0} className="p-2 bg-gray-300 shadow dropdown-content menu rounded-box w-52">
-                        <li><a>Delete user</a></li>
-                    </ul>
+                <span className='font-semibold text-white'>{chatStore.openedChat.name}</span>
+                <div className="self-center ml-auto">
+                    <div className='flex px-4'>
+                        <AiOutlineInfo className='w-6 h-6 p-2 rounded-full bg-secondaryBackground' />
+                    </div>
                 </div>
             </section >
             {MessageBox}

@@ -47,35 +47,37 @@ export default function ChatSide() {
     }, [data])
 
     return (
-        <div className='flex flex-col w-14 md:w-60 lg:w-80 util-pad border-box'>
-            <div className='flex py-2'>
-                <p className='text-xl font-bold text-white grow'>Chats</p>
-                <BsThreeDots className='hidden w-6 h-6 p-1 bg-gray-600 rounded-full md:block' />
-            </div>
-            <input type="text" placeholder=' Search in hermes' className='hidden w-full rounded-xl md:block' />
+        <div className='flex flex-col border-r border-accent w-14 md:w-60 lg:w-80 util-pad border-box'>
+            <section className='mb-4'>
+                <div className='flex mb-2'>
+                    <p className='text-2xl font-bold text-white grow'>Chats</p>
+                    <BsThreeDots className='hidden w-5 h-5 p-2 rounded-full bg-secondaryBackground text-iconFill md:block' />
+                </div>
+                <input type="text" placeholder='Search in hermes' className='box-border hidden w-full px-4 py-2 text-white rounded-2xl md:block bg-secondaryBackground focus:outline-none' />
+            </section>
             <div className='mt-4 overflow-auto grow'>
                 <div className=''>
-                {
-                    chats.map((chat) => {
-                        const friend = chat.participants.find((u) => u.id != userStore.id);
-                        if (friend) return (
-                            <Chat
-                                id={friend.id}
-                                friendName={friend.firstName + ' ' + friend.lastName}
-                                lastMessage={chat.lastMessage}
-                                isMessYours={chat.lastMessage?.senderId === userStore.id}
-                                click={() => {
-                                    if (chatStore.openedChat?.id !== chat.id)
-                                        chatStore.openChat({
-                                            chatId: chat.id,
-                                            name: friend.firstName + ' ' + friend.lastName
-                                        })
-                                }}
-                                clicked={chat.id === chatStore.openedChat?.id}
-                                key={`Side-${friend.id}`} />
-                        )
-                    })
-                }
+                    {
+                        chats.map((chat) => {
+                            const friend = chat.participants.find((u) => u.id != userStore.id);
+                            if (friend) return (
+                                <Chat
+                                    id={friend.id}
+                                    friendName={friend.firstName + ' ' + friend.lastName}
+                                    lastMessage={chat.lastMessage}
+                                    isMessYours={chat.lastMessage?.senderId === userStore.id}
+                                    click={() => {
+                                        if (chatStore.openedChat?.id !== chat.id)
+                                            chatStore.openChat({
+                                                chatId: chat.id,
+                                                name: friend.firstName + ' ' + friend.lastName
+                                            })
+                                    }}
+                                    clicked={chat.id === chatStore.openedChat?.id}
+                                    key={`Side-${friend.id}`} />
+                            )
+                        })
+                    }
                 </div>
             </div>
 
@@ -106,13 +108,13 @@ const Chat = ({ id, friendName, lastMessage, click, clicked, isMessYours }: { id
         if (lastMessage) setLongAgo(dayjs(lastMessage.createdAt).fromNow());
     }, [lastMessage]);
     return (
-        <div className={`flex py-2 px-1 items-center rounded-md ${clicked ? "bg-blue-200" : "hover:bg-gray-600"}`} onClick={click}>
-            <div className={"w-12 h-12 rounded-full overflow-hidden flex items-center justify-center"} >
+        <div className={`flex p-2 items-center rounded-md ${clicked ? "bg-tertiaryBackground" : "hover:bg-secondaryBackground"}`} onClick={click}>
+            <div className={"w-16 h-16 rounded-full overflow-hidden flex items-center justify-center"} >
                 <Avatar id={id} />
             </div>
             <section className='flex-col justify-center hidden px-2 md:flex grow'>
                 <span className='font-sans text-sm font-semibold text-white'>{friendName}</span>
-                <span className='text-xs font-normal '>{isMessYours ? "You: " : ""} {lastMessage ? lastMessage.message.length < 15 ? lastMessage.message : lastMessage.message.slice(0,15) + "..." : "Noone Sent yet"}</span>
+                <span className='text-xs font-normal '>{isMessYours ? "You: " : ""} {lastMessage ? lastMessage.message.length < 15 ? lastMessage.message : lastMessage.message.slice(0, 15) + "..." : "Noone Sent yet"}</span>
             </section>
             <section className='flex-col items-center justify-center hidden md:flex'>
                 <span className='text-xxs'>{lastMessage ? longAgo : ""}</span>
