@@ -20,6 +20,7 @@ module.exports = {
         'tertiaryBackground': "#252f3c",
         'iconFill': "#acafb4",
         'icons': "#8f9295",
+        'iconsNabar': "#adb0b5",
         'accent': "#38393a",
         'primaryHighlight': "#0084ff",
         'secondaryHighlight': "#3e4042",

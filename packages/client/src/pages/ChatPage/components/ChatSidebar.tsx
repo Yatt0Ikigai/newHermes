@@ -108,7 +108,7 @@ const Chat = ({ id, friendName, lastMessage, click, clicked, isMessYours }: { id
         if (lastMessage) setLongAgo(dayjs(lastMessage.createdAt).fromNow());
     }, [lastMessage]);
     return (
-        <div className={`flex p-2 items-center rounded-md ${clicked ? "bg-tertiaryBackground" : "hover:bg-secondaryBackground"}`} onClick={click}>
+        <div className={`flex p-2 items-center rounded-md transition-all ${clicked ? "bg-tertiaryBackground" : "hover:bg-secondaryBackground"}`} onClick={click}>
             <div className={"w-16 h-16 rounded-full overflow-hidden flex items-center justify-center"} >
                 <Avatar id={id} />
             </div>
