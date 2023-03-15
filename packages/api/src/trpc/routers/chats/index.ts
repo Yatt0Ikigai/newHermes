@@ -25,7 +25,6 @@ const chatsRoute = t.router({
                     }
                 };
             }),
-    
     fetchChats:
         authedProcedure
             .query(async ({ ctx }) => {
@@ -34,7 +33,7 @@ const chatsRoute = t.router({
                     status: 'success',
                     data: sideChats
                 }
-            })
+            }),
 });
 
 export default chatsRoute;

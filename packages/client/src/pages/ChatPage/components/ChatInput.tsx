@@ -27,7 +27,7 @@ export default function ChatInput({ userId }: { userId: string }) {
                     e.preventDefault();
                     if (!chatStore.openedChat || !input) return;
                     socket.emit('sendMessage', {
-                        chatId: chatStore.openedChat.id as string,
+                        chatId: chatStore.openedChat.chatId as string,
                         userId: userId,
                         content: input
                     });
@@ -52,7 +52,7 @@ export default function ChatInput({ userId }: { userId: string }) {
                                     e.preventDefault();
                                     if (!chatStore.openedChat) return;
                                     socket.emit('sendMessage', {
-                                        chatId: chatStore.openedChat.id,
+                                        chatId: chatStore.openedChat.chatId,
                                         userId: userId,
                                         content: "👍"
                                     });

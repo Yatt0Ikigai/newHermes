@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { AiOutlinePlus } from "react-icons/ai";
+import { createSearchParams, useNavigate } from "react-router-dom";
 
 import StoreUser from "../../../stores/userStore";
 import StoreChat from "../../../stores/chatStore";
@@ -16,16 +16,23 @@ import Avatar from '../../../components/Avatar';
 import { IChat } from "../../../../types";
 import getMessage from '../../../hooks/sockets/getMessage';
 
-
+interface IChatData {
+    chatId: string,
+    chatName: string,
+    chatImage: string,
+}
 
 dayjs.extend(relativeTime);
 
 
 export default function ChatSide() {
     const userStore = StoreUser();
+    const navigate = useNavigate();
+
     const chatStore = StoreChat();
 
     const [chats, setChats] = useState<IChat[]>([]);
+    const [chatData, setChatData] = useState<IChatData | null>(null);
     const { data } = trpc.chats.fetchChats.useQuery();
     const { message: newMessage } = getMessage();
 
@@ -38,7 +45,6 @@ export default function ChatSide() {
             lastMessage: newMessage,
             participants: filteredChat?.participants,
             id: filteredChat?.id,
-
         }, ...newChats])
     }, [newMessage])
 
@@ -47,9 +53,9 @@ export default function ChatSide() {
     }, [data])
 
     return (
-        <div className='flex flex-col border-r border-accent w-14 md:w-60 lg:w-80 util-pad border-box'>
+        <div className='flex flex-col w-20 border-r border-accent md:w-60 lg:w-80 util-pad border-box'>
             <section className='mb-4'>
-                <div className='flex mb-2'>
+                <div className='flex justify-center mb-2'>
                     <p className='text-2xl font-bold text-white grow'>Chats</p>
                     <BsThreeDots className='hidden w-5 h-5 p-2 rounded-full bg-secondaryBackground text-iconFill md:block' />
                 </div>
@@ -67,13 +73,25 @@ export default function ChatSide() {
                                     lastMessage={chat.lastMessage}
                                     isMessYours={chat.lastMessage?.senderId === userStore.id}
                                     click={() => {
-                                        if (chatStore.openedChat?.id !== chat.id)
-                                            chatStore.openChat({
-                                                chatId: chat.id,
-                                                name: friend.firstName + ' ' + friend.lastName
-                                            })
+                                        if (chat.id === chatData?.chatId) return;
+                                        chatStore.openChat({
+                                            chatId: chat.id,
+                                            chatName: friend.firstName + ' ' + friend.lastName,
+                                            chatImage: friend.id,
+                                            chatParticipants: chat.participants
+                                        })
+                                        setChatData({
+                                            chatId: chat.id,
+                                            chatImage: friend.id,
+                                            chatName: friend.firstName + ' ' + friend.lastName,
+                                        })
+                                        navigate({
+                                            search: createSearchParams({
+                                                chatId: chat.id
+                                            }).toString()
+                                        })
                                     }}
-                                    clicked={chat.id === chatStore.openedChat?.id}
+                                    clicked={chat.id === chatData?.chatId}
                                     key={`Side-${friend.id}`} />
                             )
                         })

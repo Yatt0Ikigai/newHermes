@@ -18,7 +18,7 @@ export default function Messages({ author, message, roundTop, roundBottom, id }:
             <div className='flex self-start mt-0 text-black w-min'>
                 <div className='w-4 h-4'></div>
                 <span
-                    className={`min-w-[1rem] my-0 px-2 py-1 w-max max-w-sm rounded-r-lg bg-secondaryHighlight text-white text-sm font-medium ${aditionalClasses}`} key={id}>
+                    className={`min-w-[1rem] my-0 px-2 py-1 max-w-[12rem] rounded-r-lg bg-secondaryHighlight text-white text-sm font-medium ${aditionalClasses}`} key={id}>
                     {message}
                 </span>
             </div>
@@ -37,7 +37,7 @@ export default function Messages({ author, message, roundTop, roundBottom, id }:
                 </span>
             }
             <span
-                className={`min-w-[1rem] my-0 px-4 py-2 w-max max-w-sm break-words rounded-l-lg bg-primaryHighlight text-white text-sm font-medium ${aditionalClasses}`} key={id}
+                className={`min-w-[1rem] my-0 px-4 py-2 max-w-[16rem] lg:max-w-sm break-words rounded-l-lg bg-primaryHighlight text-white text-sm font-medium ${aditionalClasses}`} key={id}
             >
                 {message}
             </span>

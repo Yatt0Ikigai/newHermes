@@ -49,7 +49,7 @@ const App = () => {
 };
 
 
-const socket = io('http://localhost:8000', {
+const socket = io('http://localhost:8100', {
   withCredentials: true,
 });
 
@@ -58,25 +58,27 @@ export { socket };
 const SocketWraper = () => {
   const { data } = trpc.users.getSelfInfo.useQuery()
   useEffect(() => {
-    console.log(data);
-    if (data?.status === "success"){
-      console.log(data);
+    if (data?.status === "success") {
       socket.emit('handshake');
     }
   }, [data])
 
   return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/profile/:userId" element={<ProfilePage />} />
-          <Route path="/chats" element={<ChatPage />} />
-          <Route path="/friends" element={<FriendsPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-        </Routes>
-      </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/profile/:userId" element={<ProfilePage />}>
+          <Route path="/profile/:userId/info" />
+          <Route path="/profile/:userId/friends" />
+          <Route path="/profile/:userId/pictures" />
+        </Route>
+        <Route path="/chats" element={<ChatPage />} />
+        <Route path="/friends" element={<FriendsPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

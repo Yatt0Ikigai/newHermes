@@ -11,42 +11,40 @@ import Avatar from '../../../components/Avatar';
 
 import ChatInput from "./ChatInput";
 import { AiOutlineInfo } from 'react-icons/ai';
+import { useSearchParams, useLocation, Link } from 'react-router-dom';
+
 
 export default function ChatContainer() {
+    const { data: init } = trpc.users.getSelfInfo.useQuery();
+    const [urlParams, setUrlParams] = useSearchParams();
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [loading, setLoading] = useState(false);
+    const { message: newMessage } = getMessage();
 
     const chatStore = storeChat();
 
-    const { data: init } = trpc.users.getSelfInfo.useQuery();
     const fetchMessages = trpc.messages.fetchMessages.useMutation({
         onSuccess: (data) => {
-            if (data.status === 'success' && chatStore.openedChat?.id === data.data.chatID) {
-                setMessages(data.data.messages);
-            }
+            if (data.status === 'success') setMessages(data.data.messages);
             else alert("sth went wrong");
             setLoading(false);
         }
     })
 
-    const { message: newMessage } = getMessage();
+    useEffect(() => {
+        const chatId = urlParams.get("chatId");
+        if (chatId) {
+            setLoading(true);
+            fetchMessages.mutate({ chatID: chatId })
+        }
+    }, [urlParams])
 
     useEffect(() => {
-        if (newMessage && chatStore.openedChat?.id === newMessage?.inboxId)
-            setMessages([newMessage, ...messages]);
+        const chatId = urlParams.get("chatId");
+        if (newMessage && chatId === newMessage.inboxId) setMessages([newMessage, ...messages])
     }, [newMessage])
 
-    useEffect(() => {
-        if (chatStore.openedChat) {
-            setLoading(true);
-            fetchMessages.mutate({ chatID: chatStore.openedChat.id });
-        } else {
-            setLoading(true);
-            setMessages([]);
-        }
-    }, [chatStore.openedChat])
-
-    if (!chatStore.openedChat) return (
+    if (!urlParams.get("chatId")) return (
         <section className={'flex items-center justify-center grow'}>
             Open any chat
         </section>
@@ -85,19 +83,19 @@ export default function ChatContainer() {
 
     return (
         <div className='box-border flex flex-col h-full grow'>
-            <section className='flex items-center gap-2 py-2 border-b border-accent'>
-                <div className='p-2'>
+            <div className='flex items-center gap-2 py-2 border-b border-accent '>
+                <Link to={`/profile/${chatStore.openedChat?.chatImage}`} className="flex items-center gap-2 px-2 py-1 mx-2 rounded-2xl hover:bg-secondaryBackground">
                     <div className='w-12 h-12 overflow-hidden rounded-full'>
-                        <Avatar id={null} />
+                        <Avatar id={chatStore.openedChat?.chatImage as string} />
                     </div>
-                </div>
-                <span className='font-semibold text-white'>{chatStore.openedChat.name}</span>
+                    <span className='font-semibold text-white'>{chatStore.openedChat?.chatName}</span>
+                </Link>
                 <div className="self-center ml-auto">
                     <div className='flex px-4'>
                         <AiOutlineInfo className='w-6 h-6 p-2 rounded-full bg-secondaryBackground' />
                     </div>
                 </div>
-            </section >
+            </div >
             {MessageBox}
             <ChatInput userId={init?.user?.id as string} />
         </div >
