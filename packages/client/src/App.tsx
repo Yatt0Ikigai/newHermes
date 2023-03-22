@@ -49,7 +49,7 @@ const App = () => {
 };
 
 
-const socket = io('http://localhost:8100', {
+const socket = io('http://localhost:8000', {
   withCredentials: true,
 });
 

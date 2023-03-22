@@ -11,7 +11,7 @@ import { findChat, updateChat } from "../utils/chatUtils";
 import { findUser } from "../utils/userUitls";
 import { createMessage } from "../utils/messageUtils";
 
-const socketPort = 8100;
+const socketPort = 8000;
 
 module.exports = (app: Express) => {
     let sockets = new HTTPServer(app);

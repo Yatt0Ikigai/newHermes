@@ -9,80 +9,16 @@ body {
   box-sizing: border-box;
 }
 
-* {
-  @apply font-montserrat box-content;
+
+@layer base {
+  * {
+    @apply font-montserrat box-content;
+  }
 }
+
 /*Layouts*/
-@layer{
-  .box{
-    @apply grid h-screen grid-cols-12 gap-5 px-2 text-gray-600 bg-white md:px-0;
-  }
-  .content{
-    @apply col-span-12 md:col-span-10 xl:col-span-8;
-  }
-  .avatar-img{
-    @apply w-10 h-10 rounded-full;
+@layer components {
+  .box {
+    @apply lg:px-40 xl:px-64 box-border;
   }
 }
-.main{
-  @apply grid gap-5 grid-cols-5;
-}
-
-.main-friendlist{
-  @apply col-span-1 bg-black;
-}
-
-.main-content{
-  @apply col-span-3 bg-white;
-}
-
-/*Components*/
-
-.cont{
-  @apply bg-gray-200 w-full box-border util-padding-box util-standard-round 
-}
-
-
-.icon--navbar{
-  @apply relative w-10 h-10 rounded-full p-2 mx-1  text-secondary;
-}
-
-.icon--sidebar{
-  @apply relative w-8 h-8 my-1 p-1;
-}
-
-
-
-.reaction--menu{
-  @apply hidden;
-}
-
-
-/*Utils*/
-
-.util-child-center{
-  @apply [&>*]:flex [&>*]:items-center;
-}
-.util-center-child-row{
-  @apply flex items-center;
-}
-
-.util-padding-box{
-  @apply p-3
-}
-
-
-.util-standard-round{
-  @apply rounded-md;
-}
-.util-standard-shadow{
-  @apply shadow-lg;
-}
-
-.util-pad{
-  @apply p-3
-}
-.util-round{
-  @apply rounded-md;
-}
-

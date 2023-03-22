@@ -1,6 +1,7 @@
 import React from 'react'
 import { BsCardImage, BsEmojiSmile, BsCameraVideo } from 'react-icons/bs';
 import { CgProfile } from 'react-icons/cg'
+import Avatar from '../Avatar';
 
 export default function WritePost() {
     const hiddenFileInput = React.useRef<HTMLInputElement>(null);
@@ -10,12 +11,27 @@ export default function WritePost() {
     }
 
     return (
-        <label htmlFor="my-modal" className='box-border flex items-center justify-center w-full h-12 p-2 bg-gray-200 util-standard-round util-standard-shadow'>
-            <CgProfile className={"avatar-img"} />
-            <span className="flex items-center w-full p-2 bg-transparent resize-none focus:outline-none h-14">What's on your mind</span>
-            <BsCardImage className='w-6 h-6 m-2'/>
-            <BsEmojiSmile className='w-6 h-6 m-2'/>
-            <BsCameraVideo className='w-8 h-8 pl-2 border-l-2 text-secondaryBlue border-gray'/>
+        <label htmlFor="my-modal" className='box-border flex flex-col w-full p-2 bg-primaryBackground rounded-2xl'>
+            <div className='flex items-center gap-2 pb-2 m-2 border-b border-accent'>
+                <div className='w-10 h-10 overflow-hidden rounded-full'>
+                    <Avatar id={null} />
+                </div>
+                <span className="flex items-center w-full bg-transparent resize-none focus:outline-none">What's on your mind</span>
+            </div>
+            <div className='flex justify-between'>
+                <div className='flex items-center justify-center w-full py-2 hover:bg-tertiaryBackground rounded-xl'>
+                    <BsCardImage className='w-6 h-6 mx-1 text-green-500 ' />
+                    <span>Add Image</span>
+                </div>
+                <div className='flex items-center justify-center w-full hover:bg-tertiaryBackground rounded-xl'>
+                    <BsEmojiSmile className='w-6 h-6 mx-1 text-yellow-300' />
+                    <span>How you feel</span>
+                </div>
+                <div className='flex items-center justify-center w-full hover:bg-tertiaryBackground rounded-xl'>
+                    <BsCameraVideo className='w-6 h-6 mx-1 text-red-600' />
+                    <span>LiveStream</span>
+                </div>
+            </div>
         </label >
     )
 }

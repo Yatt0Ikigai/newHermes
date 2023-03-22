@@ -18,7 +18,7 @@ export default function PresentationModal() {
   }, [location])
 
   return (
-    <div className='box-border flex flex-col w-screen bg-primaryBackground lg:px-40 xl:px-64'>
+    <div className='flex flex-col w-screen bg-primaryBackground box'>
       <div className='h-[20rem] bg-black md:h-[25rem] rounded-b-2xl'>
         {/* BACKGROUND TODO */}
       </div>

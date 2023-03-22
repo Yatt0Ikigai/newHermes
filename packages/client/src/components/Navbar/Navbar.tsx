@@ -22,7 +22,7 @@ export default function Navbar() {
     });
 
     return (
-        <div className='flex col-span-12 py-1 border-b bg-primaryBackground context-box border-accent'>
+        <div className='flex py-1 border-b bg-primaryBackground context-box border-accent'>
             <div className='flex items-center gap-4'>
                 <Link to={"/"} >Logo</Link>
                 <BsSearch className='w-4 h-4 p-3 rounded-full text-iconsNabar bg-secondaryBackground' />
