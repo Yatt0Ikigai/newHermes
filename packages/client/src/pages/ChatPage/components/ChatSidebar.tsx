@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { createSearchParams, useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
 
 import StoreUser from "../../../stores/userStore";
 import StoreChat from "../../../stores/chatStore";
@@ -26,6 +26,8 @@ dayjs.extend(relativeTime);
 
 
 export default function ChatSide() {
+    const [urlParams, setUrlParams] = useSearchParams();
+
     const userStore = StoreUser();
     const navigate = useNavigate();
 
@@ -54,10 +56,9 @@ export default function ChatSide() {
 
     return (
         <div className='flex flex-col w-20 border-r border-accent md:w-60 lg:w-80 util-pad border-box'>
-            <section className='mb-4'>
-                <div className='flex justify-center mb-2'>
-                    <p className='text-2xl font-bold text-white grow'>Chats</p>
-                    <BsThreeDots className='hidden w-5 h-5 p-2 rounded-full bg-secondaryBackground text-iconFill md:block' />
+            <section className='p-2 mb-4'>
+                <div className='flex justify-center'>
+                    <span className='mb-2 text-2xl font-bold text-white grow'>Chats</span>
                 </div>
                 <input type="text" placeholder='Search in hermes' className='box-border hidden w-full px-4 py-2 text-white rounded-2xl md:block bg-secondaryBackground focus:outline-none' />
             </section>
@@ -91,7 +92,7 @@ export default function ChatSide() {
                                             }).toString()
                                         })
                                     }}
-                                    clicked={chat.id === chatData?.chatId}
+                                    clicked={chat.id === urlParams.get("chatId")}
                                     key={`Side-${friend.id}`} />
                             )
                         })

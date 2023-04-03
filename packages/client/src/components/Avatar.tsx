@@ -8,10 +8,18 @@ import { trpc } from '../utils/trpc';
 
 export default function Avatar({ id }: { id: string | null }) {
     const { data } = trpc.users.getAvatar.useQuery({ id });
+    const [isLoaded, setIsLoaded] = useState(false);
 
     return (
         <div className={`avatar`}>
-            <img src={data?.data ? data.data?.avatar : ""} />
+            {
+                !isLoaded && <div className='aspect-square'></div>
+            }
+            <img 
+            src={data?.data ? data.data?.avatar : ""} 
+            onLoad={() => setIsLoaded(true)}
+            className={`${isLoaded ? "" : "hidden"}`}
+            />
         </div>
     )
 }

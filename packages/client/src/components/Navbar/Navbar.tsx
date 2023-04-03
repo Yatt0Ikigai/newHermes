@@ -30,7 +30,9 @@ export default function Navbar() {
 
             <div className='flex items-center justify-center gap-2 grow'>
                 <BiHomeAlt className='w-6 h-6 px-6 py-2 transition-all rounded-lg text-iconsNabar hover:bg-secondaryBackground' />
+                <Link to="/friends">
                 <FaUserFriends className='w-6 h-6 px-6 py-2 transition-all rounded-lg text-iconsNabar hover:bg-secondaryBackground' />
+                </Link>
                 <FaBars className='w-6 h-6 px-6 py-2 transition-all rounded-lg text-iconsNabar hover:bg-secondaryBackground' />
             </div>
             <div className='relative flex items-center gap-4'>

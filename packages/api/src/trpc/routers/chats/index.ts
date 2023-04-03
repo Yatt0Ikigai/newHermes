@@ -29,7 +29,7 @@ const chatsRoute = t.router({
         authedProcedure
             .query(async ({ ctx }) => {
                 const sideChats = await trpcfetchSideChats({ selfId: ctx?.user?.id as string });
-                return {
+                if( sideChats ) return {
                     status: 'success',
                     data: sideChats
                 }

@@ -15,7 +15,7 @@ import userRouter from './routers/users';
 import authRouter from './routers/auth';
 import actionRouter from './routers/actions';
 import friendsRouter from './routers/friends';
-
+import profileRouter from "./routers/profile";
 
 export const createContext = async ({ req, res, }: trpcExpress.CreateExpressContextOptions | CreateNextContextOptions) => {
     const notAuthenticated = { req, res, user: null };
@@ -73,6 +73,7 @@ const appRouter = t.router({
     auth: authRouter,
     action: actionRouter,
     friends: friendsRouter,
+    profile: profileRouter,
 })
 
 

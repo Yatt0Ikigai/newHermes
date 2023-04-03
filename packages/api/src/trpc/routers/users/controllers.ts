@@ -19,3 +19,18 @@ export const getAvatar = async ({ id }: { id: string }) => {
 export const updateAvatarLink = async ({ id, key }: { id: string, key: string }) => {
     return await updateUser({ id }, { avatar: key })
 }
+
+export const getUserInfoById = async ({ id, selfId }: { id: string, selfId: string }) => {
+    const user = await findUser({ id: id });
+    
+    const res = {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        friend: user.friendList.includes(selfId),
+        friendRequest: user.pendingFriendRequest.includes(selfId),
+        sentFriendRequest: user.friendRequestList.includes(selfId),
+        admin: (id === selfId)
+    }
+    return res;
+}

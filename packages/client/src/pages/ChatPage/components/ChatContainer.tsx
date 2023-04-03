@@ -12,6 +12,7 @@ import Avatar from '../../../components/Avatar';
 import ChatInput from "./ChatInput";
 import { AiOutlineInfo } from 'react-icons/ai';
 import { useSearchParams, useLocation, Link } from 'react-router-dom';
+import { IChat } from '../../../../types';
 
 
 export default function ChatContainer() {
@@ -20,6 +21,24 @@ export default function ChatContainer() {
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [loading, setLoading] = useState(false);
     const { message: newMessage } = getMessage();
+    
+    const { data } = trpc.chats.fetchChats.useQuery(undefined,{
+        onSuccess: function (data) {
+            if( chatStore.openedChat ) return;
+            const chatId = urlParams.get('chatId');
+            const chats = data.data as IChat[];
+            chats.map((chat) => {
+                if( chat.id != chatId ) return;
+                const friend = chat.participants.find((u) => u.id != init?.user?.id);
+                chatStore.openChat({
+                    chatId: chat.id,
+                    chatName: friend?.firstName + ' ' + friend?.lastName,
+                    chatImage: friend?.id as string,
+                    chatParticipants: chat.participants
+                })
+            })
+        }
+    });
 
     const chatStore = storeChat();
 
@@ -33,17 +52,18 @@ export default function ChatContainer() {
 
     useEffect(() => {
         const chatId = urlParams.get("chatId");
+        if (newMessage && chatId === newMessage.inboxId) setMessages([newMessage, ...messages])
+    }, [newMessage])
+
+    useEffect(() => {
+        const chatId = urlParams.get("chatId");
         if (chatId) {
             setLoading(true);
             fetchMessages.mutate({ chatID: chatId })
         }
     }, [urlParams])
 
-    useEffect(() => {
-        const chatId = urlParams.get("chatId");
-        if (newMessage && chatId === newMessage.inboxId) setMessages([newMessage, ...messages])
-    }, [newMessage])
-
+    
     if (!urlParams.get("chatId")) return (
         <section className={'flex items-center justify-center grow'}>
             Open any chat

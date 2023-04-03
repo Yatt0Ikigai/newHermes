@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 //comontents
-import Navbar from "../../components/Navbar/NavbarLanding";
+import Navbar from "../../components/Navbar/Navbar";
 import LoadingSpinner from "../../components/LoadingSpinner";
 
 import WritePost from '../../components/Post/WritePost';
@@ -29,16 +29,13 @@ export default function LoginPage() {
 
   return (
     <div className='h-screen'>
-      <div className='box'>
-        <Sidebar />
+      <Navbar />
+      <div className='px-40 mt-10'>
         <div className='content lg:col-span-9 xl:col-span-8'>
-          <Navbar />
           <WritePost />
           <Post comments={[]} content={{ attachment: null, text: "Hello iys my first post :)" }} createdAt={"12"} creatorID={"63751e85e542323a25132b1b"} likes={20} />
         </div>
-        <StoriesMini />
       </div >
-      <PostModal />
     </div>
 
   )

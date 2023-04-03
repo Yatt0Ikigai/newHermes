@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { getAvatar, updateAvatarLink } from "./controllers";
+import { getAvatar, updateAvatarLink, getUserInfoById } from "./controllers";
 import { t, authedProcedure, procedure } from "../../utils/[trpc]";
 import { createUploadLink } from "../../../utils/awsUtils";
 import { findUser } from '../../../utils/userUitls';
@@ -16,9 +16,9 @@ const userRoute = t.router({
                 id: z.string().nullable(),
             }))
             .query(async ({ input, ctx }) => {
-                let avatar 
-                if( input.id ) avatar = await getAvatar({ id: input.id });
-                else if( ctx.user ) avatar = await getAvatar({ id: ctx.user.id})
+                let avatar
+                if (input.id) avatar = await getAvatar({ id: input.id });
+                else if (ctx.user) avatar = await getAvatar({ id: ctx.user.id })
                 else throw new TRPCError({
                     code: 'BAD_REQUEST',
                     message: `Didn't provide id or user not logged in`
@@ -59,7 +59,7 @@ const userRoute = t.router({
             }),
 
     getSelfInfo:
-            procedure
+        procedure
             .query(async ({ ctx }) => {
                 const user = await findUser(
                     { id: ctx?.user?.id },
@@ -69,13 +69,30 @@ const userRoute = t.router({
                         lastName: true,
                     }
                 )
-                if(user)  return {
+                if (user) return {
                     status: 'success',
                     user
                 }
                 else return {
                     status: 'failed',
                     user: null,
+                }
+            }),
+
+    getUserInfoById:
+        procedure
+            .input(z.object({
+                id: z.string()
+            }))
+            .query(async ({ ctx, input }) => {
+                const result = await getUserInfoById({ id: input.id, selfId: ctx.user?.id as string })
+                if (result) return {
+                    status: 'success',
+                    result
+                }
+                else return {
+                    status: 'failed',
+                    result: null,
                 }
             })
 });
