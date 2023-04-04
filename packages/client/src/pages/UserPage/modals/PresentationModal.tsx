@@ -8,16 +8,18 @@ import OutsideAlerter from '../../../utils/outsideAlerter';
 import { trpc } from "../../../utils/trpc";
 
 export default function PresentationModal() {
-  const [isYou, setIsYou] = useState(false);
-  const [isFriend, setIsFriend] = useState(false);
-  const [isInvited, setIsInvited] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    isYou: false,
+    isFriend: false,
+    isInvited: false,
+    sendedInvite: false
+  })
+  const [isLoading, setIsLoading] = useState(true);
   const { userId } = useParams();
   const { data } = trpc.profile.getProfileInfo.useQuery({ id: userId as string }, {
     onSuccess: (e) => {
-      setIsYou(e.result.owner);
-      setIsFriend(e.result.friend);
-      setIsInvited(e.result.pendingRequest);
+      setUserInfo((prev) => ({ isYou: e.result.owner, isFriend: e.result.friend, isInvited: e.result.pendingRequest, sendedInvite: e.result.sendedRequest }))
+      setIsLoading(false);
     }
   });
   const [menu, setMenu] = useState<string | null>("posts");
@@ -31,15 +33,23 @@ export default function PresentationModal() {
   }, [location])
 
   const handleUnfriend = trpc.action.removeFriendship.useMutation({
-    onSuccess: (e) => { if (e.status === "success") setIsFriend(false); setIsLoading(false); }
+    onSuccess: (e) => { if (e.status === "success") setUserInfo((prev) => ({ ...prev, isFriend: false })); setIsLoading(false); }
   })
 
   const handleSendInvite = trpc.action.sendFriendshipInvite.useMutation({
-    onSuccess: (e) => { if (e.status === "success") setIsInvited(true); setIsLoading(false); }
+    onSuccess: (e) => { if (e.status === "success") setUserInfo((prev) => ({ ...prev, isInvited: true })); setIsLoading(false); }
   })
 
   const handleCancelInvite = trpc.action.cancelFriendshipInvite.useMutation({
-    onSuccess: (e) => { if (e.status === "success") setIsInvited(false); setIsLoading(false); }
+    onSuccess: (e) => { if (e.status === "success") setUserInfo((prev) => ({ ...prev, isInvited: false })); setIsLoading(false); }
+  })
+
+  const handleAcceptInvite = trpc.action.acceptFriendship.useMutation({
+    onSuccess: (e) => { if (e.status === "success") setUserInfo((prev) => ({ ...prev, sendedInvite: false, isFriend: true })); setIsLoading(false); }
+  })
+
+  const handleDeclineInvite = trpc.action.declineFrienship.useMutation({
+    onSuccess: (e) => { if (e.status === "success") setUserInfo((prev) => ({ ...prev, sendedInvite: false, isFriend: false })); setIsLoading(false); }
   })
 
   return (
@@ -62,10 +72,17 @@ export default function PresentationModal() {
           </span>
         </div>
         {
-          isFriend && <FriendButtons callback={() => handleUnfriend.mutate({ friendId: userId as string })} />
+          userInfo.isFriend && <FriendButtons callback={() => handleUnfriend.mutate({ friendId: userId as string })} />
         }
         {
-          !isFriend && !isYou && <InviteButtons pendingInvite={isInvited} inviteCallback={() => {
+          userInfo.sendedInvite && <DecideFriendshipButton acceptCallback={() => {
+            handleAcceptInvite.mutate({ friendId: userId as string });
+          }} declineCallback={() => {
+            handleDeclineInvite.mutate({ friendId: userId as string });
+          }} />
+        }
+        {
+          !userInfo.isFriend && !userInfo.isYou && !userInfo.sendedInvite && <InviteButtons pendingInvite={userInfo.isInvited} inviteCallback={() => {
             setIsLoading(true);
             handleSendInvite.mutate({ friendId: userId as string })
           }
@@ -132,7 +149,27 @@ const FriendButtons = ({ callback }: { callback: () => void }) => {
           </div>
         }
       </div>
+    </div>
+  )
+}
 
+const DecideFriendshipButton = ({ acceptCallback, declineCallback }: { acceptCallback: () => void, declineCallback: () => void }) => {
+  return (
+    <div className='flex items-center gap-2 md:ml-auto'>
+      <button
+        onClick={() => {
+          acceptCallback();
+        }}
+        className='px-4 py-2 font-medium text-white transition-all rounded-md bg-primaryHighlight h-max hover:brightness-125 active:scale-95'>
+        Accept
+      </button>
+      <button
+        onClick={() => {
+          declineCallback();
+        }}
+        className='px-4 py-2 font-medium text-white transition-all rounded-md bg-accent h-max hover:brightness-125 active:scale-95'>
+        Decline
+      </button>
     </div>
   )
 }
@@ -148,7 +185,7 @@ const InviteButtons = ({ pendingInvite, inviteCallback, removeInviteCallback, is
                 removeInviteCallback();
               }}
               className='px-4 py-2 font-medium text-white transition-all rounded-md bg-primaryHighlight h-max hover:brightness-125 active:scale-95'>
-              {isLoading ?  <>Wait...</> : <>Cancel Request</>}
+              {isLoading ? <>Wait...</> : <>Cancel Request</>}
             </button>
             :
             <button
@@ -164,3 +201,4 @@ const InviteButtons = ({ pendingInvite, inviteCallback, removeInviteCallback, is
     </div>
   )
 }
+

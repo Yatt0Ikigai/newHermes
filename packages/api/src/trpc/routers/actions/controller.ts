@@ -1,35 +1,36 @@
 import { TRPCError } from "@trpc/server";
 import { findUser, updateUser, findManyUsers } from "../../../utils/userUitls";
 
-export const acceptFriendRequest = async ({ friendID, selfID }: { friendID: string, selfID: string }) => {
-    const user = await findUser({ id: selfID })
-    const self = await findUser({ id: friendID })
+export const acceptFriendRequest = async ({ friendId, selfId }: { friendId: string, selfId: string }) => {
+    const user = await findUser({ id: friendId })
+    const self = await findUser({ id: selfId })
 
+    console.log(user, self)
     if (!user) throw new TRPCError({
         code: 'NOT_FOUND',
         message: `Can't find user`
     })
 
-    if (!user.pendingFriendRequest.includes(selfID)) throw new TRPCError({
+    if (!user.pendingFriendRequest.includes(selfId)) throw new TRPCError({
         code: 'NOT_FOUND',
         message: `Request does not exist`
     })
 
-    const newUserPendingFriendRequest = user.pendingFriendRequest.filter((id: string) => { return id != selfID })
-    const newSelfFriendRequest = self.friendRequestList.filter((id: string) => { return id != friendID })
+    const newUserPendingFriendRequest = user.pendingFriendRequest.filter((id: string) => { return id != selfId })
+    const newSelfFriendRequest = self.friendRequestList.filter((id: string) => { return id != friendId })
 
 
-    await updateUser({ id: friendID }, {
+    await updateUser({ id: friendId }, {
         pendingFriendRequest: newUserPendingFriendRequest,
         friendList: {
-            push: selfID
+            push: selfId
         }
     })
 
-    await updateUser({ id: selfID }, {
+    await updateUser({ id: selfId }, {
         friendRequestList: newSelfFriendRequest,
         friendList: {
-            push: friendID
+            push: friendId
         }
     })
 
@@ -48,9 +49,10 @@ export const findUserByString = async ({ username, userID }: { username: string,
         select: {
             firstName: true,
             lastName: true,
+            avatar: true,
             id: true,
         },
-        take: 15,
+        take: 10,
     })
 
     const user = await findUser({ id: userID })
@@ -97,6 +99,22 @@ export const handleCancelFriendshipInvite = async ({ friendId, selfId }: { frien
 
     await updateUser({ id: friendId }, { friendRequestList: newUserFriendRequestList, })
     await updateUser({ id: selfId }, { pendingFriendRequest: newSelfPendingFriendRequest })
+
+    return true;
+}
+
+export const handleDeclineFriendshipInvite = async ({ friendId, selfId }: { friendId: string, selfId: string }) => {
+    const friend = await findUser({ id: friendId })
+    const self = await findUser({ id: selfId })
+
+    if (!friend) throw new Error("User doesnt exist");
+    if (!friend.pendingFriendRequest.includes(selfId)) throw new Error("Cant decline nonexistent request");
+
+    const newUserPendingFriendRequest = friend.pendingFriendRequest.filter((id: string) => { return id != selfId })
+    const newSelfFriendRequest = self.friendRequestList.filter((id: string) => { return id != friendId })
+
+    await updateUser({ id: friendId }, { pendingFriendRequest: newUserPendingFriendRequest, })
+    await updateUser({ id: selfId }, { friendRequestList: newSelfFriendRequest, });
 
     return true;
 }

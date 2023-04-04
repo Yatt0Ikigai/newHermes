@@ -82,19 +82,4 @@ export const getFriendRequests = async ({ selfId }: { selfId: string }) => {
     return friendRequests;
 }
 
-export const declineFriendRequest = async ({ userId, selfId }: { userId: string, selfId: string }) => {
-    const user = await findUser({ id: userId })
 
-    const self = await findUser({ id: selfId })
-
-    if (!user) throw new Error("User doesnt exist");
-    if (!user.pendingFriendRequest.includes(selfId)) throw new Error("Cant decline nonexistent request");
-
-    const newUserPendingFriendRequest = user.pendingFriendRequest.filter((id: string) => { return id != selfId })
-    const newSelfFriendRequest = self.friendRequestList.filter((id: string) => { return id != userId })
-
-    await updateUser({ id: userId }, { pendingFriendRequest: newUserPendingFriendRequest, })
-    await updateUser({ id: selfId }, { friendRequestList: newSelfFriendRequest, })
-
-    return true;
-}

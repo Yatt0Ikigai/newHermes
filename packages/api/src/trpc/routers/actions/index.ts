@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { t, authedProcedure } from "../../utils/[trpc]";
-import { acceptFriendRequest, findUserByString, handleRemoveFriendship, handleSendFriendshipInvite, handleCancelFriendshipInvite } from "./controller";
+import { acceptFriendRequest, findUserByString, handleRemoveFriendship, handleSendFriendshipInvite, handleCancelFriendshipInvite, handleDeclineFriendshipInvite } from "./controller";
 
 
 
@@ -8,13 +8,14 @@ const userRoute = t.router({
     acceptFriendship:
         authedProcedure
             .input(z.object({
-                strangerID: z.string()
+                friendId: z.string()
             }))
             .mutation(async ({ ctx, input }) => {
-                await acceptFriendRequest({ friendID: input.strangerID, selfID: ctx.user?.id as string });
+                await acceptFriendRequest({ friendId: input.friendId, selfId: ctx.user?.id as string });
                 return {
                     status: 'success',
                     data: {
+                        friendId: input.friendId,
                         message: 'Request succesfully accepted'
                     }
                 };
@@ -64,7 +65,21 @@ const userRoute = t.router({
                     }
                 };
             }),
-
+    declineFrienship:
+        authedProcedure
+            .input(z.object({
+                friendId: z.string()
+            }))
+            .mutation(async ({ ctx, input }) => {
+                await handleDeclineFriendshipInvite({ friendId: input.friendId, selfId: ctx.user?.id as string })
+                return {
+                    status: 'success',
+                    data: {
+                        friendId: input.friendId,
+                        message: 'Friendship invite succesfully cancelled'
+                    }
+                };
+            }),
     searchUsers:
         authedProcedure
             .input(z.object({

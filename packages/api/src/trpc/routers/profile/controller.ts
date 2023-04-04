@@ -8,7 +8,9 @@ export const getUserInfo = async ({ getUser, authorId }: { getUser: string, auth
         firstName: true,
         lastName: true,
         friendList: true,
-        friendRequestList: true
+        friendRequestList: true,
+        pendingFriendRequest: true,
+        
     });
 
     return {
@@ -20,5 +22,6 @@ export const getUserInfo = async ({ getUser, authorId }: { getUser: string, auth
         owner: getUser === authorId,
         friend: requestedUser.friendList.includes(authorId),
         pendingRequest: requestedUser.friendRequestList.includes(authorId),
+        sendedRequest: requestedUser.pendingFriendRequest.includes(authorId)
     }
 }
