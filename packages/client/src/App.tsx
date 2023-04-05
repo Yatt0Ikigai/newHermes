@@ -16,6 +16,8 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import ChatPage from "./pages/ChatPage/ChatPage";
 import FriendsPage from "./pages/FriendsPage/FriendsPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
+import NewChatPage from "./pages/ChatPage/subPage/NewChatPage";
+
 import { trpc } from "./utils/trpc";
 import { httpBatchLink } from '@trpc/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -75,6 +77,7 @@ const SocketWraper = () => {
           <Route path="/profile/:userId/pictures" />
         </Route>
         <Route path="/chats" element={<ChatPage />} />
+        <Route path='/chats/new' element={<NewChatPage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>

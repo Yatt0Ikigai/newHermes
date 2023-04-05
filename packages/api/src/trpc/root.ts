@@ -78,5 +78,5 @@ const appRouter = t.router({
 
 
 
-export default appRouter
+export default appRouter;
 export type AppRouter = typeof appRouter;

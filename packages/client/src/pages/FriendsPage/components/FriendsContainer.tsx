@@ -30,7 +30,7 @@ export default function FriendsContainer() {
             <span className='text-xl font-semibold text-white'>
                 Friend Invites
             </span>
-            <div className='grid w-full grid-cols-4 gap-4 mt-4 lg:grid-cols-6 xl:grid-cols-9 bg-tertiaryBackground'>
+            <div className='grid w-full grid-cols-3 gap-4 mt-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-9 bg-tertiaryBackground'>
                 {
                     friends && friends.map((friend) => {
                         return (

@@ -4,13 +4,10 @@ import storeUser from '../stores/userStore';
 
 import { Link } from 'react-router-dom';
 
-import { HiOutlineNewspaper } from 'react-icons/hi';
 import { BiMessageDetail } from 'react-icons/bi';
 import { BsFillGearFill, BsFillPersonFill } from 'react-icons/bs';
 import { FaUserFriends, FaBars } from 'react-icons/fa';
-import { AiOutlineCalendar } from 'react-icons/ai';
 import { IconType } from 'react-icons/lib';
-import { GiBootStomp } from "react-icons/gi";
 import { GrClose } from "react-icons/gr";
 import Avatar from './Avatar';
 import { trpc } from '../utils/trpc';

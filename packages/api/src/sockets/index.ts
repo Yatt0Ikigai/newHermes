@@ -8,7 +8,6 @@ import { redisClient } from "../../src/trpc/redisServer";
 
 import { Express } from "express";
 import { findChat, updateChat } from "../utils/chatUtils";
-import { findUser } from "../utils/userUitls";
 import { createMessage } from "../utils/messageUtils";
 
 const socketPort = 8000;

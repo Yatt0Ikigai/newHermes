@@ -39,12 +39,12 @@ export default function Navbar() {
                        // onBlur={() => setIsSearchFocus(false)}
                         type="text"
                         placeholder='Search for User'
-                        className='box-border px-2 text-white border focus:outline-none bg-secondaryBackground rounded-xl border-accent'
+                        className='box-border w-24 px-2 text-white border md:w-full focus:outline-none bg-secondaryBackground rounded-xl border-accent'
                         onChange={(e) => {
                             if (e.currentTarget.value) handleSearchUser.mutate({ username: e.currentTarget.value })
                         }} />
                     {
-                        isSearchFocus && <div className='absolute bottom-0 z-10 flex flex-col w-full gap-2 p-4 -translate-x-1/2 translate-y-[calc(100%+.5rem)] left-1/2 bg-primaryBackground rounded-xl  border border-accent'>
+                        isSearchFocus && <div className='absolute bottom-0 z-10 flex flex-col w-full gap-2 p-4 -translate-x-1/2 translate-y-[calc(100%+.5rem)] left-1/2 bg-primaryBackground rounded-xl  border border-accent min-w-min'>
                             {
                                 searchedUsers.map((user) => {
                                     return (
@@ -60,20 +60,18 @@ export default function Navbar() {
                 </div>
             </div>
 
-            <div className='flex items-center justify-center gap-2 grow'>
+            <div className='flex items-center justify-center md:gap-2 grow'>
                 <Link to={'/chats'}>
-                    <BsChatSquare className='w-6 h-6 px-6 py-2 transition-all rounded-lg text-iconsNabar hover:bg-secondaryBackground' />
+                    <BsChatSquare className='w-6 h-6 px-2 py-2 transition-all rounded-lg text-iconsNabar hover:bg-secondaryBackground' />
                 </Link>
                 <Link to={"/"} >
-                    <BiHomeAlt className='w-6 h-6 px-6 py-2 transition-all rounded-lg text-iconsNabar hover:bg-secondaryBackground' />
+                    <BiHomeAlt className='w-6 h-6 px-2 py-2 transition-all rounded-lg text-iconsNabar hover:bg-secondaryBackground' />
                 </Link>
                 <Link to="/friends">
-                    <FaUserFriends className='w-6 h-6 px-6 py-2 transition-all rounded-lg text-iconsNabar hover:bg-secondaryBackground' />
+                    <FaUserFriends className='w-6 h-6 px-2 py-2 transition-all rounded-lg text-iconsNabar hover:bg-secondaryBackground' />
                 </Link>
-                <FaBars className='w-6 h-6 px-6 py-2 transition-all rounded-lg text-iconsNabar hover:bg-secondaryBackground' />
             </div>
             <div className='relative flex items-center gap-4'>
-                <BsBell className='w-4 h-4 p-3 rounded-full text-iconsNabar bg-secondaryBackground' />
                 <div className='relative'>
                     <div className='w-10 h-10 rounded-full active:scale-[0.9] active:grayscale overflow-hidden'
                         onClick={() => setOpenMenu(!openMenu)}

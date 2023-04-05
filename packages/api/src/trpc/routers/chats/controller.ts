@@ -1,4 +1,4 @@
-import { findChat, updateChat, cChat} from "../../../utils/chatUtils";
+import { findChat, updateChat, cChat } from "../../../utils/chatUtils";
 import { gMessages } from "../../../utils/messageUtils";
 import { updateUser, findUser } from "../../../utils/userUitls";
 import { TRPCError } from "@trpc/server";
@@ -7,7 +7,7 @@ export const trpcCreateChat = async ({ participantsIDs, userID }: { participants
     const flag = await Promise.all(
         participantsIDs.map(async (id) => {
             if (id === userID) return true;
-            return (await findUser({ id }, { friendList: true })).friendList.includes(id);
+            return (await findUser({ id }, { friendList: true })).friendList.includes(userID);
         })
     )
     if (!flag.every((el) => el === true)) throw new TRPCError({
@@ -15,7 +15,7 @@ export const trpcCreateChat = async ({ participantsIDs, userID }: { participants
         message: `You can't create chat with not friends`
     });
 
-    const chat = await cChat({ participantsIds: participantsIDs });
+    const chat = await cChat({ participantsIds: [...participantsIDs, userID] });
 
     await Promise.all(
         chat.participantsIds.map((userId: string) => {
@@ -29,9 +29,9 @@ export const trpcCreateChat = async ({ participantsIDs, userID }: { participants
         })
     )
 
-    const participants = Promise.all(
-        chat.participantsIds.map((id: string) => {
-            return findUser({ id }, { firstName: true, lastName: true, id: true })
+    const participants = await Promise.all(
+        chat.participantsIds.map(async (id: string) => {
+            return await findUser({ id }, { firstName: true, lastName: true, id: true })
         }))
 
     return {
