@@ -34,7 +34,6 @@ export default function Post(post: IPost) {
           setShowComments(!showComments)
           commentRef.current?.focus();
         }}><GoComment className='icons' /></button>
-        <span><RiShareForwardLine className='icons' /></span>
       </section>
       <section className={`border-accent pt-2 border-t ${showComments ? "visible" : "hidden"}`}>
         <div className='flex h-12 gap-2'>

@@ -1,14 +1,12 @@
 
-import multer from "multer";
-import { S3Client, PutObjectCommand, GetObjectCommand, } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 
 import dotenv from 'dotenv';
 
 
 import crypto from "crypto";
-import { blob } from "stream/consumers";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 
 dotenv.config();
 
@@ -57,14 +55,16 @@ export const readImg = async (fileName: string | null) => {
 
 
 export const createUploadLink = async () => {
-    return await createPresignedPost(S3, {
+    const Key = generateKey();
+    const putObjectParams = {
         Bucket: awsBucket,
-        Key: generateKey(),
-        Expires: 30,
-        Conditions: [
-            ["starts-with", "$Content-Type", "image/"],
-            ["content-length-range", 0, 1000000],
-        ]
-    });
+        Key
+    }
+    const command = new PutObjectCommand(putObjectParams);
+    return {
+        link: await getSignedUrl(S3, command, {
+            expiresIn: 3600
+        }),
+        name: Key
+    }
 }
-

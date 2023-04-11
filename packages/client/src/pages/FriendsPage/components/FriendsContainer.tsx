@@ -24,13 +24,17 @@ export default function FriendsContainer() {
         }
     });
 
-    if (isLoading) return <></>
+    if (!isLoading) return <div className='m-auto'>Loading...</div>
+    if(!friends)  return (
+        <>
+        </>
+    )
     return (
         <div className='p-4'>
             <span className='text-xl font-semibold text-white'>
                 Friend Invites
             </span>
-            <div className='grid w-full grid-cols-3 gap-4 mt-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-9 bg-tertiaryBackground'>
+            <div className='grid w-full grid-cols-3 gap-4 mt-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-9'>
                 {
                     friends && friends.map((friend) => {
                         return (
@@ -51,7 +55,7 @@ export default function FriendsContainer() {
 
 const FriendCard = ({ acceptCallback, id, firstName, lastName, declineCallback }: { acceptCallback: () => void, declineCallback: () => void, firstName: string, lastName: string, id: string, }) => {
     return (
-        <div className='flex flex-col items-center h-full overflow-hidden rounded-md bg-secondaryBackground' >
+        <div className='flex flex-col items-center h-full overflow-hidden rounded-md bg-tertiaryBackground' >
             <Link className='w-full overflow-hidden aspect-square' to={`/profile/${id}`}>
                 <Avatar id={id} />
             </Link>

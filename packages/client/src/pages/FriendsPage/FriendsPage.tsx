@@ -6,7 +6,7 @@ import Navbar from '../../components/Navbar/Navbar';
 
 export default function FriendsPage() {
     return (
-        <div>
+        <div className='bg-secondaryBackground h-screen overflow-y-auto'>
             <Navbar />
             <div className='flex'>
                 <FriendsContainer />

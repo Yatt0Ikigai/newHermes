@@ -21,6 +21,7 @@ export default function ChatContainer() {
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [loading, setLoading] = useState(false);
     const { message: newMessage } = getMessage();
+    const chatStore = storeChat();
     
     const { data } = trpc.chats.fetchChats.useQuery(undefined,{
         onSuccess: function (data) {
@@ -40,7 +41,6 @@ export default function ChatContainer() {
         }
     });
 
-    const chatStore = storeChat();
 
     const fetchMessages = trpc.messages.fetchMessages.useMutation({
         onSuccess: (data) => {

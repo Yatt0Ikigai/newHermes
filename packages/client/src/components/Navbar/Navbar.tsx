@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { Link, useNavigate } from "react-router-dom";
 
-import { BsSearch, BsBell, BsChatSquare } from "react-icons/bs";
-import { FaUserFriends, FaBars } from "react-icons/fa";
+import { BsChatSquare } from "react-icons/bs";
+import { FaUserFriends } from "react-icons/fa";
 import { BiHomeAlt } from "react-icons/bi";
 import { FiSettings } from "react-icons/fi";
 import { MdLogout } from "react-icons/md";
@@ -11,13 +11,16 @@ import { RiMessage2Line } from "react-icons/ri";
 
 import Avatar from '../Avatar';
 import { trpc } from "../../utils/trpc";
+import outsideAlerter from '../../utils/outsideAlerter';
 
 export default function Navbar() {
     const navigate = useNavigate();
     const { data } = trpc.users.getSelfInfo.useQuery();
     const [openMenu, setOpenMenu] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
     const [isSearchFocus, setIsSearchFocus] = useState(false);
     const [searchedUsers, setSearchedUsers] = useState<{ id: string, firstName: string, lastName: string, avatar: string | null }[]>([]);
+    outsideAlerter({ ref: inputRef, callback: () => { setIsSearchFocus(false)}})
 
     const logOut = trpc.auth.logOut.useMutation({
         onSuccess: () => { navigate("/login") }
@@ -33,7 +36,7 @@ export default function Navbar() {
         <div className='flex py-1 border-b bg-primaryBackground context-box border-accent'>
             <div className='flex items-center gap-4'>
                 <Link to={"/"} >Logo</Link>
-                <div className="relative">
+                <div className="relative" ref={inputRef}>
                     <input
                         onFocus={() => setIsSearchFocus(true)}
                        // onBlur={() => setIsSearchFocus(false)}

@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-import { Link, createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import StoreUser from "../../../stores/userStore";
 import StoreChat from "../../../stores/chatStore";
 
 import { trpc } from '../../../utils/trpc';
-
-import { IMessage } from "../../../../types";
+import { IMessage, IUser } from "../../../../types";
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { BsThreeDots } from 'react-icons/bs';
 import Avatar from '../../../components/Avatar';
 import { IChat } from "../../../../types";
 import getMessage from '../../../hooks/sockets/getMessage';
@@ -30,6 +28,7 @@ export default function ChatSide() {
     const userStore = StoreUser();
     const chatStore = StoreChat();
     const navigate = useNavigate();
+    const [userInput, setUserInput] = useState("");
     const [urlParams, setUrlParams] = useSearchParams();
     const [chats, setChats] = useState<IChat[]>([]);
     const [chatData, setChatData] = useState<IChatData | null>(null);
@@ -61,13 +60,15 @@ export default function ChatSide() {
                         <AiOutlinePlus className="w-6 h-6" />
                     </Link>
                 </div>
-                <input type="text" placeholder='Search in hermes' className='box-border hidden w-full px-4 py-2 text-white rounded-2xl md:block bg-secondaryBackground focus:outline-none' />
+                <input type="text" placeholder='Search in hermes' className='box-border hidden w-full px-4 py-2 text-white rounded-2xl md:block bg-secondaryBackground focus:outline-none' value={userInput} onChange={(e) => setUserInput(e.currentTarget.value)} />
             </section>
             <div className='mt-4 overflow-auto grow'>
                 <div className=''>
                     {
                         chats.map((chat) => {
-                            const friend = chat.participants.find((u) => u.id != userStore.id);
+                            const friend = chat.participants.find((u) => u.id != userStore.id) as IUser;
+                            const friendName = friend.firstName + " " + friend.lastName;
+                            if (friendName.toLocaleLowerCase().includes(userInput.toLowerCase() as string))
                             if (friend) return (
                                 <Chat
                                     id={friend.id}

@@ -9,9 +9,6 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import appRouter from "./src/trpc/root";
 import { createContext } from "./src/trpc/root";
 
-
-
-
 dotenv.config();
 const port = 8080;
 

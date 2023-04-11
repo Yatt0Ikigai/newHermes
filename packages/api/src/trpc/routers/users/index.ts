@@ -37,9 +37,7 @@ const userRoute = t.router({
             .mutation(async () => {
                 return {
                     status: 'success',
-                    data: {
-                        link: await createUploadLink()
-                    }
+                    data: await createUploadLink()
                 }
             }),
 

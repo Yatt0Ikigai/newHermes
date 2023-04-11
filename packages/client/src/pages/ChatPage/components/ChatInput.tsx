@@ -8,10 +8,12 @@ import { BiPlus } from "react-icons/bi";
 
 import { socket } from '../../../App';
 import HoverBox from "../../../components/HoverBox";
+import { useSearchParams } from 'react-router-dom';
 
 export default function ChatInput({ userId }: { userId: string }) {
     const [input, setInput] = useState("");
     const [active, setActive] = useState(false);
+    const [urlParams, setUrlParams] = useSearchParams();
 
     const chatStore = storeChat();
 
@@ -27,7 +29,7 @@ export default function ChatInput({ userId }: { userId: string }) {
                     e.preventDefault();
                     if (!chatStore.openedChat || !input) return;
                     socket.emit('sendMessage', {
-                        chatId: chatStore.openedChat.chatId as string,
+                        chatId: urlParams.get('chatId') as string,
                         userId: userId,
                         content: input
                     });

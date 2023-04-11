@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-//comontents
 import Navbar from "../../components/Navbar/Navbar";
-import LoadingSpinner from "../../components/LoadingSpinner";
-
 import WritePost from '../../components/Post/WritePost';
 import Post from '../../components/Post/Post';
-import Sidebar from '../../components/Sidebar';
-import PostModal from '../../components/Post/PostModal';
-import StoriesMini from '../../components/StoriesMini';
 
-import useLoad from "../../hooks/useLoad";
 import Cookies from 'js-cookie';
 interface chat {
   participants: String[]
@@ -28,9 +21,9 @@ export default function LoginPage() {
 
 
   return (
-    <div className='h-screen'>
+    <div className='h-screen bg-secondaryBackground'>
       <Navbar />
-      <div className='px-40 mt-10'>
+      <div className='px-10 md:px-32 lg:px-52 xl:px-96 mt-10'>
         <div className='content lg:col-span-9 xl:col-span-8'>
           <WritePost />
           <Post comments={[]} content={{ attachment: null, text: "Hello iys my first post :)" }} createdAt={"12"} creatorID={"63751e85e542323a25132b1b"} likes={20} />

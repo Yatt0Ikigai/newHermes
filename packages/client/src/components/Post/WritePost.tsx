@@ -44,14 +44,6 @@ export default function WritePost() {
                         <BsCardImage className='w-6 h-6 mx-1 text-green-500 ' />
                         <span>Add Image</span>
                     </div>
-                    <div className='flex items-center justify-center w-full hover:bg-tertiaryBackground rounded-xl'>
-                        <BsEmojiSmile className='w-6 h-6 mx-1 text-yellow-300' />
-                        <span>How you feel</span>
-                    </div>
-                    <div className='flex items-center justify-center w-full hover:bg-tertiaryBackground rounded-xl'>
-                        <BsCameraVideo className='w-6 h-6 mx-1 text-red-600' />
-                        <span>LiveStream</span>
-                    </div>
                 </div>
             </label >
         )
@@ -61,40 +53,55 @@ export default function WritePost() {
 
 const WritePostModal = ({ closeFunction, name }: { closeFunction: () => void, name: string }) => {
     const textRef = useRef<HTMLTextAreaElement>(null);
+    const getLink = trpc.users.getUploadLink.useMutation({});
+
+    const [image, setImage] = useState<File>();
+
     return (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-            <div className='flex flex-col p-4 border border-accent bg-primaryBackground w-[40rem] rounded-2xl'>
-                <div className='relative flex items-center justify-center pb-2 border-b border-accent'>
-                    <span className='text-xl font-bold text-white'>Create Post</span>
-                    <button className='absolute top-0 right-0 p-1 rounded-full'>
-                        <AiOutlineClose className='w-6 h-6' onClick={closeFunction} />
+        <form>
+            <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+                <div className='flex flex-col p-4 border border-accent bg-primaryBackground w-[40rem] rounded-2xl'>
+                    <div className='relative flex items-center justify-center pb-2 border-b border-accent'>
+                        <span className='text-xl font-bold text-white'>Create Post</span>
+                        <button className='absolute top-0 right-0 p-1 rounded-full'>
+                            <AiOutlineClose className='w-6 h-6' onClick={closeFunction} />
+                        </button>
+                    </div>
+                    <div className='flex items-center py-2'>
+                        <div className='w-12 h-12 overflow-hidden rounded-full'>
+                            <Link to={'/profile'}>
+                                <Avatar id={null} />
+                            </Link>
+                        </div>
+                        <span className='text-sm font-bold text-white'>
+                            {name}
+                        </span>
+                    </div>
+                    <textarea placeholder={"What do you think?"} ref={textRef} className='z-50 text-2xl font-medium text-white bg-transparent resize-none placeholder:text-gray-400 focus:outline-none' />
+                    <div className='box-border flex items-center p-4 mb-4 border border-accent rounded-xl'>
+                        <span className='mr-auto text-white'>Add to post</span>
+                        <label htmlFor="imageInputWritePostModal">
+                            <span className='rounded-xl hover:bg-secondaryBackground'>
+                                <input
+                                    className='hidden'
+                                    type="file"
+                                    onChange={
+                                        (e) => {
+                                            if (e.target.files) {
+                                                const file = e.target.files[0];
+                                                setImage(file);
+                                            }
+                                        }
+                                    } name="image" id="imageInputWritePostModal" />
+                                <BsCardImage className='w-6 h-6 text-green-500 px-4 py-2 hover:bg-secondaryBackground rounded-xl' />
+                            </span>
+                        </label>
+                    </div>
+                    <button className='w-full py-2 font-bold text-white bg-primaryHighlight rounded-xl'>
+                        Publish Post
                     </button>
                 </div>
-                <div className='flex items-center py-2'>
-                    <div className='w-12 h-12 overflow-hidden rounded-full'>
-                        <Link to={'/profile'}>
-                            <Avatar id={null} />
-                        </Link>
-                    </div>
-                    <span className='text-sm font-bold text-white'>
-                        {name}
-                    </span>
-                </div>
-                <textarea placeholder={"What do you think?"} ref={textRef} className='z-50 text-2xl font-medium text-white bg-transparent resize-none placeholder:text-gray-400 focus:outline-none' />
-                <div className='box-border flex items-center p-4 mb-4 border border-accent rounded-xl'>
-                    <span className='mr-auto text-white'>Add to post</span>
-                    <span className='p-2 rounded-full hover:bg-secondaryBackground'>
-                        <BsCardImage className='w-6 h-6 text-green-500' />
-                    </span>
-                    <span className='p-2 rounded-full hover:bg-secondaryBackground'>
-                        <BsEmojiSmile className='w-6 h-6 text-yellow-300' />
-                    </span>
-                </div>
-                <button className='w-full py-2 font-bold text-white bg-primaryHighlight rounded-xl'>
-                    Publish Post
-                </button>
             </div>
-
-        </div>
+        </form>
     )
 }
