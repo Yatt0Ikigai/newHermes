@@ -24,11 +24,8 @@ export default function FriendsContainer() {
         }
     });
 
-    if (!isLoading) return <div className='m-auto'>Loading...</div>
-    if(!friends)  return (
-        <>
-        </>
-    )
+    if (isLoading) return <div className='m-auto'>Loading...</div>
+
     return (
         <div className='p-4'>
             <span className='text-xl font-semibold text-white'>
@@ -47,6 +44,12 @@ export default function FriendsContainer() {
                             />
                         )
                     })
+                }
+                {
+                    friends && friends.length <= 0 && 
+                    <span>
+                        U have no invites
+                    </span>
                 }
             </div>
         </div>

@@ -40,10 +40,13 @@ export default function WritePost() {
                     }
                 </div>
                 <div className='flex justify-between'>
-                    <div className='flex items-center justify-center w-full py-2 hover:bg-tertiaryBackground rounded-xl'>
-                        <BsCardImage className='w-6 h-6 mx-1 text-green-500 ' />
+                    <button className='flex items-center justify-center w-full py-2 hover:bg-tertiaryBackground rounded-xl'>
+                        <BsCardImage className='w-6 h-6 mx-1 text-green-500 ' onClick={() => {
+                            setMount(true);
+                        }}>
+                        </BsCardImage>
                         <span>Add Image</span>
-                    </div>
+                    </button>
                 </div>
             </label >
         )
@@ -93,7 +96,7 @@ const WritePostModal = ({ closeFunction, name }: { closeFunction: () => void, na
                                             }
                                         }
                                     } name="image" id="imageInputWritePostModal" />
-                                <BsCardImage className='w-6 h-6 text-green-500 px-4 py-2 hover:bg-secondaryBackground rounded-xl' />
+                                <BsCardImage className='w-6 h-6 px-4 py-2 text-green-500 hover:bg-secondaryBackground rounded-xl' />
                             </span>
                         </label>
                     </div>
