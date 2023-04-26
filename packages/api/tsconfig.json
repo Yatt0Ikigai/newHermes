@@ -3,7 +3,7 @@
     "./src/*.ts",
     "./src/*/**.ts",
     "./types.d.ts"
-, "src/utils/prisma/userUitls.ts", "src/utils/prisma/prisma.ts", "src/utils/prisma/postUtils.ts", "src/utils/prisma/messageUtils.ts", "src/utils/prisma/chatUtils.ts"  ],
+  ],
   /* Skip type checking all .d.ts files. */
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */

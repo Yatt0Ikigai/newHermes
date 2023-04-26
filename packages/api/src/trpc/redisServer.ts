@@ -5,7 +5,7 @@ export const redisClient =  createClient({
         connectTimeout: 5000,
         reconnectStrategy() {
             console.log('reconnectStrategy', new Date().toJSON());
-            return 5000
+            return 5000;
         }
     }
 });

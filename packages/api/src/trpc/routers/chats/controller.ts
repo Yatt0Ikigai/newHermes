@@ -1,6 +1,6 @@
-import { findChat, cChat } from "../../../utils/prisma/chatUtils";
-import { gMessages } from "../../../utils/prisma/messageUtils";
-import { updateUser, findUser } from "../../../utils/prisma/userUitls";
+import { findChat, updateChat, cChat } from "../../../utils/chatUtils";
+import { gMessages } from "../../../utils/messageUtils";
+import { updateUser, findUser } from "../../../utils/userUitls";
 import { TRPCError } from "@trpc/server";
 
 export const trpcCreateChat = async ({ participantsIDs, userID }: { participantsIDs: string[], userID: string }) => {

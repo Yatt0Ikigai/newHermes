@@ -1,5 +1,6 @@
-import { readImg } from "../../../utils/awsUtils";
-import { findUser, updateUser } from "../../../utils/prisma/userUitls";
+import { string } from "zod";
+import { readImg, uploadImg } from "../../../utils/awsUtils";
+import { findUser, updateUser } from "../../../utils/userUitls";
 
 export const getAvatar = async ({ id }: { id: string }) => {
     try {

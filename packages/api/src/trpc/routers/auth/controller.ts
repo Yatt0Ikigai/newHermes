@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcryptjs';
 import { Context } from '../../root';
-import { signTokens, verifyJWT } from '../../../utils/jwt';
+import { authenticateToken, signTokens, verifyJWT } from '../../../utils/jwt';
 import { redisClient } from "../../redisServer";
 
 
@@ -20,7 +20,7 @@ export const createUserHandler = async ({ email, password, firstName, lastName }
   } else throw new Error("User already exists");
 }
 import { Prisma, Users } from "@prisma/client"
-import { prisma } from '../../../utils/prisma/prisma';
+import { prisma } from '../../../utils/prisma';
 import { refresh_token_secret } from '../../../config/default';
 
 export const createUser = async (input: Prisma.UsersCreateInput) => {

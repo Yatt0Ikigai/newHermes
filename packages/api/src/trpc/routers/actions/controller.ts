@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { findUser, updateUser, findManyUsers } from "../../../utils/prisma/userUitls";
+import { findUser, updateUser, findManyUsers } from "../../../utils/userUitls";
 
 export const acceptFriendRequest = async ({ friendId, selfId }: { friendId: string, selfId: string }) => {
     const user = await findUser({ id: friendId })

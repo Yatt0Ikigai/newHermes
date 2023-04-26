@@ -18,7 +18,7 @@ export default function Avatar({ id }: { id: string | null }) {
             <img 
             src={data?.data ? data.data?.avatar : ""} 
             onLoad={() => setIsLoaded(true)}
-            className={`object-fill ${isLoaded ? "" : "hidden"}`}
+            className={`${isLoaded ? "" : "hidden"}`}
             />
         </div>
     )
