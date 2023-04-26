@@ -24,6 +24,8 @@ export const S3 = new S3Client({
     region: awsRegion,
 });
 
+
+
 export const uploadImg = async (file: Express.Multer.File, name?: string) => {
     let avatar = name;
     if (!name) avatar = crypto.randomBytes(32).toString('hex');
@@ -49,7 +51,7 @@ export const readImg = async (fileName: string | null) => {
         Key: fileName
     }
     const command = new GetObjectCommand(getObjectParams)
-    return await getSignedUrl(S3, command, { expiresIn: 3600 });
+    return await getSignedUrl(S3, command, { expiresIn: 36000 });
 }
 
 
@@ -62,9 +64,7 @@ export const createUploadLink = async () => {
     }
     const command = new PutObjectCommand(putObjectParams);
     return {
-        link: await getSignedUrl(S3, command, {
-            expiresIn: 3600
-        }),
+        link: await getSignedUrl(S3, command, { expiresIn: 36000 }),
         name: Key
     }
 }

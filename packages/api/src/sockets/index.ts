@@ -7,8 +7,8 @@ import { access_token_secret, refresh_token_secret } from "../../src/config/defa
 import { redisClient } from "../../src/trpc/redisServer";
 
 import { Express } from "express";
-import { findChat, updateChat } from "../utils/chatUtils";
-import { createMessage } from "../utils/messageUtils";
+import { findChat, updateChat } from "../utils/prisma/chatUtils";
+import { createMessage } from "../utils/prisma/messageUtils";
 
 const socketPort = 8000;
 

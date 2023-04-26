@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 import { getFriendList, getFriendRequests } from "./controllers";
 import { t, authedProcedure } from "../../utils/[trpc]";
 

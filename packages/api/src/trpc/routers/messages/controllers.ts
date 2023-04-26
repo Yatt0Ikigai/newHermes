@@ -1,12 +1,6 @@
-import { createMessage, gMessages } from "../../../utils/messageUtils";
-import { findChat, updateChat } from "../../../utils/chatUtils";
+import { gMessages } from "../../../utils/prisma/messageUtils";
+import { findChat } from "../../../utils/prisma/chatUtils";
 import { TRPCError } from "@trpc/server";
-import { findUser } from "../../../utils/userUitls";
-
-
-export const trpcPostMessage = async ({ chatId, userID, message }: { chatId: string, userID: string, message: string }) => {
-    return 'mes';
-}
 
 export const getMessages = async ({ chatID, userID, skip }: { chatID: string, userID: string, skip?: number }) => {
     const chat = await findChat({ id: chatID });

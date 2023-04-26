@@ -1,8 +1,5 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { access_token_secret, refresh_token_secret } from '../config/default';
-import { TRPCError } from '@trpc/server';
-import trpcExpress from "@trpc/server/adapters/express";
-import { redisClient } from '../trpc/redisServer';
 import { Context } from "../trpc/root";
 import { IReqUser } from "../index";
 

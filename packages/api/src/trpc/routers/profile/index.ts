@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-import { t, authedProcedure, procedure } from "../../utils/[trpc]";
-import { TRPCError } from '@trpc/server';
+import { t, authedProcedure } from "../../utils/[trpc]";
 import { getUserInfo } from "./controller";
 
 

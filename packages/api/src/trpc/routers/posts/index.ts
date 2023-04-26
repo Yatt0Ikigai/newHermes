@@ -1,8 +1,5 @@
 import { z } from 'zod';
-
 import { t, authedProcedure } from "../../utils/[trpc]";
-
-
 
 const chatsRoute = t.router({
     createPost:

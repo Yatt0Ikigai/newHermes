@@ -1,4 +1,4 @@
-import { findUser } from "../../../utils/userUitls";
+import { findUser } from "../../../utils/prisma/userUitls";
 
 export const getFriendList = async ({ userId }: { userId: string }) => {
     const user = await findUser({ id: userId })
